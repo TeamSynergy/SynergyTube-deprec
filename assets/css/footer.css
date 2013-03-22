@@ -1,0 +1,61 @@
+html,body {
+  height: 100%;
+}
+
+#wrap {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  /* Negative indent footer by it's height */
+  margin: 0 auto -60px;
+}
+
+.content {
+  padding-top: 56px;
+}
+
+/* Set the fixed height of the footer here */
+#push,#footer {
+height: 60px;
+}
+#footer {
+background-color: #444;
+}
+
+/* Lastly, apply responsive CSS fixes as necessary */
+@media (max-width: 767px) {
+#footer {
+margin-left: -20px;
+margin-right: -20px;
+padding-left: 20px;
+padding-right: 20px;
+}
+}
+.fContainer {
+padding-top: 20px;
+}
+
+.img-wrap{
+overflow:hidden;
+position:relative;
+}
+.img-overlay{
+background-color:#000;
+bottom:0;
+color:#fff;
+opacity:0;
+filter: alpha(opacity = 0);
+position:absolute;
+width:100%;
+z-index:1000;
+transition:opacity 0.25s;
+-moz-transition:opacity 0.25s;
+-webkit-transition:opacity 0.25s;
+}
+.img-overlay p{
+padding:0 10px;
+}
+.thumbnail:hover .img-overlay{
+opacity:0.75;
+filter: alpha(opacity = 75);
+}
