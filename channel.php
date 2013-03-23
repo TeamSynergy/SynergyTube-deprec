@@ -39,28 +39,38 @@
     <div class="container content">
       <div class="channel-cover">
         <div class="channel-cover-text">
-          <h1>BroniesBW</h1>
+          <h1>Bronies BW</h1>
           <p>Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia</p>
         </div>
       </div>
 
-      <div class="youtube-player">
-        <div id="player"></div>
-      </div>
+        <div class="channel-second row">
+          <div class="span6 youtube-player">
+            <div id="player"></div>
+          </div>
+          <div class="span6 channel-sidebar">
+            <ul class="sidebar-header inline">
+              <li>Watching: 0</li>
+              <li>Favourites: 0</li>
+              <li>Visits: 0</li>
+            </ul>
 
-      <div class="channel-sidebar">
-        <ul class="sidebar-header inline">
-          <li>Watching: 25</li>
-          <li>Favourites: 421</li>
-          <li>Visits: 1502</li>
-        </ul>
-        <ul class="sidebar-chat unstyled">
-          <li><p><strong>Caio Zahel</strong><br>Gehst dich heute eh betrinken</p></li>
-          <li><p><strong>Alexander Mohwinkel</strong><br>Nee, dieses we trink ich mal nix</p></li>
-          <li><p><strong>Caio Zahel</strong><br>Ja, dass hoff ich doch</p></li>
-          <li><p><strong>Sebastian Langer</strong><br>trololo</p></li>
-        </ul>
-      </div>
+            <ul class="sidebar-chat unstyled">
+              <li><p><strong>Greycode</strong><small class="muted">16:04</small><br>
+                Lorem Ipsum Dolor</p></li>
+              <li><p><strong>Ipsum</strong><small>16:05</small><br>
+                Dreamcatcher - you probably haven't heard of them, umami art party pinterest authentic intelligentsia raw denim williamsburg beard chillwave sriracha.</p></li>
+            </ul>
+
+            <ul class="sidebar-user unstyled">
+              <li>Greycode</li>
+              <li>Lorem</li>
+              <li>Little Crow</li>
+              <li>Button Mash</li>
+            </ul>
+
+          </div>
+        </div>
 
       <div class="playlist">
         

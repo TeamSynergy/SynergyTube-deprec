@@ -137,35 +137,54 @@ html,body {
   text-shadow:0 1px 0px #000;
   font:19px 'PT Sans Narrow', sans-serif;
 }
+.channel-second{
+  overflow:hidden;
+}
 .youtube-player iframe{
-  float:left;
-  width:50%;
-  min-height:380px;
+  width:100%;
+}
+.youtube-player{
 }
 .channel-sidebar {
   float: left;
   width:50%;
-  background:#999;
+  background:#222;
   color:#fff;
   height:100%;
-  min-height:380px;
+  overflow:hidden;
+  padding-bottom:32000px;
+  margin-bottom:-32000px;
+}
+.sidebar-header{
+  background:#444;
 }
 .sidebar-chat{
   float:left;
-  width:100%;
-  overflow:auto;
+  width:70%;
 }
 .sidebar-chat li{
-  line-height:14px;
-  background:#ccc;
+  margin:0 0 1px;
+  padding:3px;
+  background:rgba(255,255,255,0.2);
 }
 .sidebar-chat li p{
   margin:0;
+  font:1.2em;
 }
 .sidebar-chat li:nth-child(odd){
-  background:#bbb;
+  
 }
-.eq-container{
+.sidebar-user{
   float:left;
-  width:100%;
+  width:30%;
+  font:bold 19px 'PT Sans Narrow', sans-serif;
+  text-shadow:0 1px 0px #000;
+  background:#111;
+  padding-bottom:32000px;
+  margin-bottom:-32000px;
+}
+.sidebar-user li{
+  padding: 3px;
+  margin: 0 0 1px 0;
+  background:rgba(255,255,255,0.1);
 }
