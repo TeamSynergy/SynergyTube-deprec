@@ -9,6 +9,7 @@
   <link href="/assets/css/custom.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold">
+
 </head>
 <body>
   <div class="navbar navbar-fixed-top navbar-inverse">
@@ -50,30 +51,68 @@
           </div>
           <div class="span6 channel-sidebar">
             <ul class="sidebar-header inline">
-              <li>Watching: 0</li>
-              <li>Favourites: 0</li>
-              <li>Visits: 0</li>
+              <li>11 <i class="icon-eye-open icon-white"></i></li>
+              <li>0 <i class="icon-star icon-white"></i></li>
+              <li>0 <i class="icon-globe icon-white"></i></li>
             </ul>
 
-            <ul class="sidebar-chat unstyled">
-              <li><p><strong>Greycode</strong><small class="muted">16:04</small><br>
-                Lorem Ipsum Dolor</p></li>
-              <li><p><strong>Ipsum</strong><small>16:05</small><br>
-                Dreamcatcher - you probably haven't heard of them, umami art party pinterest authentic intelligentsia raw denim williamsburg beard chillwave sriracha.</p></li>
-            </ul>
+            <div class="sidebar-chat">
+              <h3>Chat:</h3>
+              <ul class="unstyled">
+                <li><p><strong>Greycode</strong><small class="muted">16:04</small><br>
+                  Hello, World!</p></li>
+                <li><p><strong>Blankblade</strong><small class="muted">16:05</small><br>
+                  Dreamcatcher - you probably haven't heard of them, umami art party pinterest authentic intelligentsia raw denim williamsburg beard chillwave sriracha.</p></li>
+                <li><p><strong>Button Mash</strong><small class="muted">16:12</small><br>
+                  Beard kogi mustache, iphone fanny pack pinterest biodiesel umami hella cred godard irony fap post-ironic selvage. Fashion axe gluten-free williamsburg cray.</p></li>
+                <li><p><strong>Sunflare</strong><small class="muted">17:20</small><br>
+                  Food truck american apparel you probably haven't heard of them meh typewriter 90's, mixtape vice photo booth chambray.</p></li>
+                <li><p><strong>Blankblade</strong><small class="muted">16:05</small><br>
+                  Dreamcatcher - you probably haven't heard of them, umami art party pinterest authentic intelligentsia raw denim williamsburg beard chillwave sriracha.</p></li>
+              </ul>
 
-            <ul class="sidebar-user unstyled">
-              <li>Greycode</li>
-              <li>Lorem</li>
-              <li>Little Crow</li>
-              <li>Button Mash</li>
-            </ul>
+              <div class="chat-submit-div">
+                <div class="input-append">
+                  <input type="text">
+                  <button class="btn btn-primary" type="button">Submit</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sidebar-user">
+              <h3>Online:</h3>
+              <ul class="unstyled">
+                <li><i class="icon-star icon-white"></i>Graycode</li>
+                <li>Blankblade</li>
+                <li>Little Crow</li>
+                <li>Button Mash</li>
+                <li>Wolfprint</li>
+                <li>Brushwipe</li>
+                <li>Rune</li>
+                <li>Masky</li>
+                <li>Tigerstripe</li>
+                <li>Sunflare</li>
+                <li>Rira Timeturner</li>
+                <li>Sunflare</li>
+              </ul>
+            </div>
+
+
 
           </div>
         </div>
 
       <div class="playlist">
-        
+        <h3>Now Playing: Epic Wub Time</h3>
+        <ul class="unstyled playlist">
+          <li>[PMV] Love Me Cherilee Music Video</li>
+          <li>TuXe - Epic Wub Time MoP Wub Remix</li>
+          <li>[PMV] Rainbow Factory Music Video</li>
+          <li>[PMV] VIP Clouds Music Video</li>
+          <li>[PMV] Beyond Her Tomb Music Video</li>
+          <li>Replacer - Song for an Earth Pony</li>
+          <li>MLP-FiM: Smile Song (Rock Cover)</li>
+        </ul>
       </div>
 
     </div>
@@ -89,7 +128,7 @@
 
   <script src="/assets/js/jquery.min.js"></script>
   <script src="/assets/js/tube.jquery.min.js"></script>
-  <script src="/assets/js/player.js"></script>
+  <script src="/assets/js/channel.js"></script>
   <script src="/assets/js/bootstrap.min.js"></script>
 </body>
 </html>

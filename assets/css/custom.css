@@ -13,6 +13,7 @@ html,body {
 
 .content {
   padding-top: 50px;
+  background:#222;
 }
 
 /* Set the fixed height of the footer here */
@@ -143,36 +144,53 @@ html,body {
 .youtube-player iframe{
   width:100%;
 }
-.youtube-player{
+.channel-second > .youtube-player{
+
 }
-.channel-sidebar {
-  float: left;
-  width:50%;
+.channel-second > .channel-sidebar {
   background:#222;
   color:#fff;
-  height:100%;
   overflow:hidden;
   padding-bottom:32000px;
   margin-bottom:-32000px;
 }
+.channel-second > .channel-sidebar h3{
+  margin: 0;
+  padding-left:5px;
+}
 .sidebar-header{
   background:#444;
+  font:20px sans-serif;
+  text-shadow:0 1px 0px #000;
 }
 .sidebar-chat{
   float:left;
   width:70%;
+  height:100%;
+}
+.sidebar-chat ul{
+  height:250px;
+  overflow:auto;
 }
 .sidebar-chat li{
   margin:0 0 1px;
   padding:3px;
   background:rgba(255,255,255,0.2);
 }
+.sidebar-chat li:nth-child(odd){
+  
+}
 .sidebar-chat li p{
   margin:0;
   font:1.2em;
 }
-.sidebar-chat li:nth-child(odd){
-  
+.chat-submit-div{
+  width:100%;
+  height:30px;
+  background:#444;
+}
+.input-append{
+  width:100%;
 }
 .sidebar-user{
   float:left;
@@ -183,8 +201,20 @@ html,body {
   padding-bottom:32000px;
   margin-bottom:-32000px;
 }
+.sidebar-user ul{
+  overflow:auto;
+  max-height:280px;
+}
 .sidebar-user li{
   padding: 3px;
   margin: 0 0 1px 0;
   background:rgba(255,255,255,0.1);
+}
+.playlist{
+  width:100%;
+  background:#333;
+}
+.playlist > ul{
+  max-height: 100px;
+  overflow:auto;
 }
