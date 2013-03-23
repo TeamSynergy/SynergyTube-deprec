@@ -12,12 +12,12 @@ html,body {
 }
 
 .content {
-  padding-top: 56px;
+  padding-top: 50px;
 }
 
 /* Set the fixed height of the footer here */
 .footer-pusher,.footer {
-  height: 60px;
+  height: 59px;
 }
 .footer {
   background-color: #444;
@@ -25,7 +25,7 @@ html,body {
 
 /* Lastly, apply responsive CSS fixes as necessary */
 @media (max-width: 767px) {
-  #footer {
+  .footer {
     margin-left: -20px;
     margin-right: -20px;
     padding-left: 20px;
@@ -77,10 +77,6 @@ html,body {
 .txt-wrap p{
   height:80px;
 }
-.txt-wrap p small{
-  position:absolute;
-  bottom:0;
-}
 .channel-thumb:hover .img-overlay{
   bottom:0;
 }
@@ -107,4 +103,69 @@ html,body {
 }
 .channel-thumb h4 {
   margin:0;
+}
+.channel-cover{
+  position:relative;
+  top:0;
+  left:0;
+  margin:0 !important;
+  padding:0 !important;
+  background-image: url(/assets/img/2.png);
+  background-repeat: no-repeat;
+  height:380px;
+  width:100%;
+  -webkit-background-size: cover;
+     -moz-background-size: cover;
+       -o-background-size: cover;
+          background-size: cover;
+}
+.channel-cover-text{
+  background:rgba(0, 0, 0, 0.8);
+  min-height:130px;
+}
+.channel-cover h1{
+  float:left;
+  color:#fff;
+  margin:0 10px 0 10px;
+  font:bold 110px 'PT Sans Narrow', sans-serif;
+  text-shadow: 0 3px 3px #000;
+  letter-spacing:-2px;
+}
+.channel-cover p{
+  padding-top:30px;
+  margin:0 10px 0 10px;
+  text-shadow:0 1px 0px #000;
+  font:19px 'PT Sans Narrow', sans-serif;
+}
+.youtube-player iframe{
+  float:left;
+  width:50%;
+  min-height:380px;
+}
+.channel-sidebar {
+  float: left;
+  width:50%;
+  background:#999;
+  color:#fff;
+  height:100%;
+  min-height:380px;
+}
+.sidebar-chat{
+  float:left;
+  width:100%;
+  overflow:auto;
+}
+.sidebar-chat li{
+  line-height:14px;
+  background:#ccc;
+}
+.sidebar-chat li p{
+  margin:0;
+}
+.sidebar-chat li:nth-child(odd){
+  background:#bbb;
+}
+.eq-container{
+  float:left;
+  width:100%;
 }
