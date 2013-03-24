@@ -143,6 +143,7 @@ html,body {
 }
 .youtube-player iframe{
   width:100%;
+  height:390px;
 }
 .channel-second > .youtube-player{
 

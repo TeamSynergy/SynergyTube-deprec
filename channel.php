@@ -47,7 +47,7 @@
 
         <div class="channel-second row">
           <div class="span6 youtube-player">
-            <div id="player"></div>
+            <iframe id="player" type="text/html" height="390" src="http://www.youtube.com/embed/WgAqoXT-2kM?enablejsapi=1&origin=http://localhost" frameborder="0"></iframe>
           </div>
           <div class="span6 channel-sidebar">
             <ul class="sidebar-header inline">
@@ -121,14 +121,13 @@
 
   <div class="footer">
     <div class="container footer-container">
-      <p>&copy; SynergyTube by Screeny05; Fork me on <a href="#">GitHub</a></p>
+      <p>&copy; SynergyTube by Screeny05; Fork me on <a href="https://github.com/screeny05/synergyTube">GitHub</a></p>
     </div>
   </div>
 
-
+  <script src="//www.youtube.com/iframe_api"></script>
   <script src="/assets/js/jquery.min.js"></script>
-  <script src="/assets/js/tube.jquery.min.js"></script>
-  <script src="/assets/js/channel.js"></script>
   <script src="/assets/js/bootstrap.min.js"></script>
+  <script src="/assets/js/channel.js"></script>
 </body>
 </html>

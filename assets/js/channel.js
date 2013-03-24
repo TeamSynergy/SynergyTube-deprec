@@ -1,11 +1,19 @@
-$("#player").tubeplayer({
-    allowFullScreen: true,
-    initialVideo: "WgAqoXT-2kM",
-    autoPlay: false,
-    theme: 'light',
-    start: 10
+$(document).ready(function(){
+
 });
 
-var submitChat = function(){
-	
-};
+function onPlayerReady(event){
+	event.target.playVideo();
+}
+function onPlayerStateChange(event){
+
+}
+var player;
+function onYouTubeIframeAPIReady() {
+	player = new YT.Player('player', {
+		events: {
+			'onReady': onPlayerReady,
+			'onStateChange': onPlayerStateChange
+		}
+	});
+}
