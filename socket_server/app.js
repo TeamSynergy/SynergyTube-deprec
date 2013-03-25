@@ -20,7 +20,7 @@ io.sockets.on('connection', function (socket) {
 		
 		socket.join(socket.channel_id);
 		socket.broadcast.to(socket.channel_id).emit('user_join', { status: 0, username: data.user_name });
-		socket.emit('channel.init', { status: 0, online: init_online(socket.channel_id), last_chat: [], playlist: [] });
+		socket.emit('channel.init', { status: 0, online: init_online(socket.channel_id), last_chat: [{ timestamp: 0, content: "Hello, World!", name: "Graycode" },{timestamp: 0, content: "Dreamcatcher - you probably haven't heard of them, umami art party pinterest authentic intelligentsia raw denim williamsburg beard chillwave sriracha.", name: "Blankbade"},{timestmp:250, content:"Beard kogi mustache, iphone fanny pack pinterest biodiesel umami hella cred godard irony fap post-ironic selvage. Fashion axe gluten-free williamsburg cray.", name:"Button Mash"},{timestamp: 1337, content:"Food truck american apparel you probably haven't heard of them meh typewriter 90's, mixtape vice photo booth chambray.", name:"Sunflare"}], playlist: [] });
 	});
 	
 	socket.on('disconnect', function(){

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app>
 <head>
   <meta charset="utf-8">
   <title>SynergyTube | Channel: BroniesBW</title>
@@ -81,7 +81,7 @@
 
             <div class="sidebar-user">
               <h3>Online:</h3>
-              <ul class="unstyled">
+              <ul class="unstyled sidebar-user-list">
                 <li><i class="icon-star icon-white"></i>Graycode</li>
                 <li>Blankblade</li>
                 <li>Little Crow</li>
