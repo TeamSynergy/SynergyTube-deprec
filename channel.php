@@ -44,7 +44,12 @@
           <p>Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia</p>
         </div>
       </div>
-
+      <div class="alert-stack">
+        <div ng-repeat="alert in alert_stack" class="alert alert-info" style="margin:0">
+          <a href="" class="close" ng-click="dismiss_alert(alert)">&times;</a>
+          <strong>Error {{alert.status}}:</strong> {{alert.content.code}}
+        </div>
+      </div>
         <div class="channel-second row">
           <div class="span6 youtube-player">
             <iframe id="player" type="text/html" height="390" src="http://www.youtube.com/embed/WgAqoXT-2kM?enablejsapi=1&origin=http://localhost" frameborder="0"></iframe>
@@ -120,7 +125,7 @@
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
   <script>window.jQuery || document.write('<script type="text/javascript" src="/assets/js/jquery.min.js"><\/script>')</script>
   <script>$.fn.modal || document.write('<script type="text/javascript" src="/assets/js/bootstrap.min.js"><\/script>')</script>
-  <script>document.write('<script type="text/javascript" src="//' + document.location.host + ':8080/socket.io/socket.io.js"><\/script>')</script>
+  <script>document.write('<script type="text/javascript" src="//' + document.location.host + ':8080/socket.io/socket.io.js"><\/script>'); window.io || document.write('<script type="text/javascript" src="/assets/js/socket.io.js"><\/script>')</script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
   <script src="/assets/js/channel.js"></script>
 </body>

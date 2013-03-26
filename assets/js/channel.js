@@ -6,6 +6,7 @@ function channel_controller($scope){
 	$scope.playlist = [];
 	$scope.chat = [];
 	$scope.online = [];
+	$scope.alert_stack = [];
 	$scope.active_item = 1;
 	$scope.reordered = false;
 	
@@ -29,10 +30,24 @@ function channel_controller($scope){
 	socket.on('channel.user_join', function(data){
 		
 	});
+	socket.socket.on('error',function(data){
+		$scope.alert_stack.push({ status: "", content: {code: "Unable to connect to Synergy-Server"}})
+	});
+	socket.on('error', function(data){
+		$scope.alert_stack.push(data);
+		$scope.$apply();
+	});
+	window.onerror = function(msg, url, lineNo){
+		$scope.alert_stack.push({ status: msg, content: {code: "@" + url + ":" + lineNo } })
+	}
 	
 	$scope.sendMessage = function(){
 		socket.emit('chat.send', { content: $scope.message });
 		$scope.message = '';
+	}
+
+	$scope.dismiss_alert = function(alert){
+		$scope.alert_stack.splice($scope.alert_stack.indexOf(alert), 1);
 	}
 	
 	$scope.$watch("playlist", function(value){

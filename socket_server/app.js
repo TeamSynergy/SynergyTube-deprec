@@ -2,7 +2,7 @@ var io  = require('socket.io').listen(8080);
 var mysql = require('mysql');
 var sql = mysql.createConnection({
 	user: 'root',
-	password: 'michael',
+	password: 'root',
 	database: 'synergy'
 });
 
