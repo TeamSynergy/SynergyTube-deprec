@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app>
+<html ng-app="channel" ng-controller="channel_controller">
 <head>
   <meta charset="utf-8">
   <title>SynergyTube | Channel: BroniesBW</title>
@@ -51,7 +51,7 @@
           </div>
           <div class="span6 channel-sidebar">
             <ul class="sidebar-header inline">
-              <li>11 <i class="icon-eye-open icon-white"></i></li>
+              <li>{{online.length}} <i class="icon-eye-open icon-white"></i></li>
               <li>0 <i class="icon-star icon-white"></i></li>
               <li>0 <i class="icon-globe icon-white"></i></li>
             </ul>
@@ -59,41 +59,22 @@
             <div class="sidebar-chat">
               <h3>Chat:</h3>
               <ul class="unstyled">
-                <li><p><strong>Greycode</strong><small class="muted">16:04</small><br>
-                  Hello, World!</p></li>
-                <li><p><strong>Blankblade</strong><small class="muted">16:05</small><br>
-                  Dreamcatcher - you probably haven't heard of them, umami art party pinterest authentic intelligentsia raw denim williamsburg beard chillwave sriracha.</p></li>
-                <li><p><strong>Button Mash</strong><small class="muted">16:12</small><br>
-                  Beard kogi mustache, iphone fanny pack pinterest biodiesel umami hella cred godard irony fap post-ironic selvage. Fashion axe gluten-free williamsburg cray.</p></li>
-                <li><p><strong>Sunflare</strong><small class="muted">17:20</small><br>
-                  Food truck american apparel you probably haven't heard of them meh typewriter 90's, mixtape vice photo booth chambray.</p></li>
-                <li><p><strong>Blankblade</strong><small class="muted">16:05</small><br>
-                  Dreamcatcher - you probably haven't heard of them, umami art party pinterest authentic intelligentsia raw denim williamsburg beard chillwave sriracha.</p></li>
+			  <li ng-repeat="message in chat | orderBy:'timestamp'"><p><strong>{{message.display_name}}</strong><small class="muted">{{message.timestamp}}</small><br>
+				{{message.content}}</p></li>
               </ul>
 
-              <div class="chat-submit-div">
+              <form class="chat-submit-div" ng-submit="sendMessage()">
                 <div class="input-append">
-                  <input type="text">
-                  <button class="btn btn-primary" type="button">Submit</button>
+                  <input type="text" ng-model="message" placeholder="New Message...">
+                  <button class="btn btn-primary" type="submit" value="send">Submit</button>
                 </div>
-              </div>
+              </form>
             </div>
 
             <div class="sidebar-user">
               <h3>Online:</h3>
               <ul class="unstyled sidebar-user-list">
-                <li><i class="icon-star icon-white"></i>Graycode</li>
-                <li>Blankblade</li>
-                <li>Little Crow</li>
-                <li>Button Mash</li>
-                <li>Wolfprint</li>
-                <li>Brushwipe</li>
-                <li>Rune</li>
-                <li>Masky</li>
-                <li>Tigerstripe</li>
-                <li>Sunflare</li>
-                <li>Rira Timeturner</li>
-                <li>Sunflare</li>
+				<li ng-repeat="user in online | orderBy:'name'">{{user.name}}</li>
               </ul>
             </div>
 
@@ -103,16 +84,24 @@
         </div>
 
       <div class="playlist">
-        <h3>Now Playing: Epic Wub Time</h3>
-        <ul class="unstyled playlist">
-          <li>[PMV] Love Me Cherilee Music Video</li>
-          <li>TuXe - Epic Wub Time MoP Wub Remix</li>
-          <li>[PMV] Rainbow Factory Music Video</li>
-          <li>[PMV] VIP Clouds Music Video</li>
-          <li>[PMV] Beyond Her Tomb Music Video</li>
-          <li>Replacer - Song for an Earth Pony</li>
-          <li>MLP-FiM: Smile Song (Rock Cover)</li>
-        </ul>
+		<table class="table table-striped table-condensed">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Video</th>
+					<th>User</th>
+					<th><a href="#"><i class="icon-plus-sign"></i></a></th>
+				</tr>
+			</thead>
+			<tbody dnd-list="playlist">
+				<tr ng-repeat="item in playlist | orderBy:'position'" ng-class="{warning: item._id == active_item}">
+					<td>{{item.position}}</td>
+					<td><a href="{{item.url}}">{{item.caption}}</a></td>
+					<td><a href="/user/{{item.login_name}}">{{item.display_name}}</a></td>
+					<td><a href="#/edit/{{item._id}}"><i class="icon-edit icon-white"></i></a><a href="#/delete/{{item._id}}"><i class="icon-trash icon-white"></i></a></td>
+				</tr>
+			<tbody>
+		</table>
       </div>
 
     </div>
@@ -127,10 +116,12 @@
 
   <script src="//www.youtube.com/iframe_api"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
   <script>window.jQuery || document.write('<script type="text/javascript" src="/assets/js/jquery.min.js"><\/script>')</script>
   <script>$.fn.modal || document.write('<script type="text/javascript" src="/assets/js/bootstrap.min.js"><\/script>')</script>
   <script>document.write('<script type="text/javascript" src="//' + document.location.host + ':8080/socket.io/socket.io.js"><\/script>')</script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
   <script src="/assets/js/channel.js"></script>
 </body>
 </html>
