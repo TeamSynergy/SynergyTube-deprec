@@ -1,221 +1,58 @@
-html,body {
-  height: 100%;
-  background-image: none !important;
+html,body {height:100%;background-image:none !important;color:#fff;}
+.content-wrap {min-height:100%;height:auto !important;height:100%;margin: 0 auto -60px;}
+.content {padding-top:50px;background:#222;}
+.footer-container {padding-top:20px;}
+.footer-pusher,.footer {height:59px;}
+.footer {background-color:#444;}
+
+@media (max-width: 979px) {
+  .sp1{width:100% !important;}
+  .sp2{width:100% !important;}
+  .chat-submit > div{width:90%!important}
+  .channel-second{height:100% !important;}
+  .footer{margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px;}
 }
 
-.content-wrap {
-  min-height: 100%;
-  height: auto !important;
-  height: 100%;
-  /* Negative indent footer by it's height */
-  margin: 0 auto -60px;
-}
 
-.content {
-  padding-top: 50px;
-  background:#222;
-}
 
-/* Set the fixed height of the footer here */
-.footer-pusher,.footer {
-  height: 59px;
-}
-.footer {
-  background-color: #444;
-}
-
-/* Lastly, apply responsive CSS fixes as necessary */
-@media (max-width: 767px) {
-  .footer {
-    margin-left: -20px;
-    margin-right: -20px;
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-}
-.footer-container {
-  padding-top: 20px;
-}
-
-.img-wrap{
-  height:100%;
-  width:100%;
-  overflow:hidden;
-  position:relative;
-  padding: -60px 0;
-}
-.img-wrap img{
-  display:block;
-  margin: 0 auto;
-}
-.img-overlay{
-  background-color:#060606;
-  color: #fff;
-  bottom:-100%;
-  position: absolute;
-  opacity: .8;
-  filter: alpha(opacity = .8);
-  width:100%;
-  z-index:1000;
-  -webkit-border-radius: 0px 0px 4px 4px;
-          border-radius: 0px 0px 4px 4px;
-  -webkit-transition: all 250ms ease;
-     -moz-transition: all 250ms ease;
-      -ms-transition: all 250ms ease;
-       -o-transition: all 250ms ease;
-          transition: all 250ms ease;
-}
-.img-overlay p{
-  padding:0 10px;
-}
-.txt-wrap{
-  padding:4px 4px 0;
-  position:relative;
-}
-.txt-wrap .muted{
-  color:#555;
-}
-.txt-wrap p{
-  height:80px;
-}
-.channel-thumb:hover .img-overlay{
-  bottom:0;
-}
-/*.channel-thumb:hover {
-  border-color: #33b5e5;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-     -moz-box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-          box-shadow: 0 1px 4px rgba(0, 105, 214, 0.25);
-}*/
-.channel-thumb {
-  display: block;
-  padding: 0;
-  border: 1px solid #222;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
-  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
-     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.055);
-  -webkit-transition: all 0.2s ease-in-out;
-     -moz-transition: all 0.2s ease-in-out;
-       -o-transition: all 0.2s ease-in-out;
-          transition: all 0.2s ease-in-out;
-}
-.channel-thumb h4 {
-  margin:0;
-}
-.channel-cover{
-  position:relative;
-  top:0;
-  left:0;
-  margin:0 !important;
-  padding:0 !important;
-  background-image: url(/assets/img/2.png);
-  background-repeat: no-repeat;
-  height:380px;
-  width:100%;
-  -webkit-background-size: cover;
-     -moz-background-size: cover;
-       -o-background-size: cover;
-          background-size: cover;
-}
-.channel-cover-text{
-  background:rgba(0, 0, 0, 0.8);
-  min-height:130px;
-}
-.channel-cover h1{
-  float:left;
-  color:#fff;
-  margin:0 10px 0 10px;
-  font:bold 110px 'PT Sans Narrow', sans-serif;
-  text-shadow: 0 3px 3px #000;
-  letter-spacing:-2px;
-}
-.channel-cover p{
-  padding-top:30px;
-  margin:0 10px 0 10px;
-  text-shadow:0 1px 0px #000;
-  font:19px 'PT Sans Narrow', sans-serif;
-}
 .channel-second{
   overflow:hidden;
-}
-.youtube-player iframe{
   width:100%;
-  height:390px;
+  height:600px;
 }
-.channel-second > .youtube-player{
-
+.youtube-player > iframe{
+  width:100%;
+  height:380px;
 }
 .channel-second > .channel-sidebar {
   background:#222;
-  color:#fff;
-  overflow:hidden;
   padding-bottom:32000px;
   margin-bottom:-32000px;
 }
-.channel-second > .channel-sidebar h3{
-  margin: 0;
-  padding-left:5px;
+.channel-chat{
+  height:100%;
+  background: #333;
+  -webkit-border-radius: 0px 0px 4px 4px;
+        border-radius: 0px 0px 4px 4px;
 }
-.sidebar-header{
-  background:#444;
-  font:20px sans-serif;
-  text-shadow:0 1px 0px #000;
+.channel-chat ul{
+  height:510px;
+  overflow:auto;
 }
-.sidebar-chat{
+.sp2{
+  width:42.5%;
   float:left;
-  width:70%;
   height:100%;
 }
-.sidebar-chat ul{
-  height:250px;
-  overflow:auto;
-}
-.sidebar-chat li{
-  margin:0 0 1px;
-  padding:3px;
-  background:rgba(255,255,255,0.2);
-}
-.sidebar-chat li:nth-child(odd){
-  
-}
-.sidebar-chat li p{
-  margin:0;
-  font:1.2em;
-}
-.chat-submit-div{
-  width:100%;
-  height:30px;
-  background:#444;
-}
-.input-append{
-  width:100%;
-}
-.sidebar-user{
+.sp1{
+  width:15%;
   float:left;
-  width:30%;
-  font:bold 19px 'PT Sans Narrow', sans-serif;
-  text-shadow:0 1px 0px #000;
-  background:#111;
-  padding-bottom:32000px;
-  margin-bottom:-32000px;
+  height:100%;
 }
-.sidebar-user ul{
-  overflow:auto;
-  max-height:280px;
+.chat-submit > div{
+  width:80%;
 }
-.sidebar-user li{
-  padding: 3px;
-  margin: 0 0 1px 0;
-  background:rgba(255,255,255,0.1);
-}
-.playlist{
+.chat-submit{
   width:100%;
-  background:#333;
-}
-.playlist > ul{
-  max-height: 100px;
-  overflow:auto;
+  margin:auto;
 }

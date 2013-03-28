@@ -4,6 +4,8 @@
 	"private": "true",
 	"dependencies": {
 		"socket.io": "*",
-		"mysql": "*"
+		"mysql": "*",
+		"passport": "*",
+		"passport-local": "*"
 	}
 }
