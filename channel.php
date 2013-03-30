@@ -9,7 +9,6 @@
   <link href="/assets/css/custom.css" rel="stylesheet">
   <link href="/assets/css/style.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold">
-
 </head>
 <body>
   <div class="navbar navbar-fixed-top navbar-inverse">
@@ -20,9 +19,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </a>
-
         <a class="brand" href="/">SynergyTube</a>
-        
         <div class="nav-collapse collapse">
           <ul class="nav">
             <li><a href="/">Channels</a></li>
@@ -52,10 +49,11 @@
       </div>
         <div class="channel-second">
           <div class="sp2 youtube-player">
-            <iframe id="player" type="text/html" height="390" src="http://www.youtube.com/embed/WgAqoXT-2kM?enablejsapi=1&origin=http://localhost" frameborder="0"></iframe>
-			<div class="playlist">
-				<table class="table table-striped table-condensed">
-					<thead>
+            <div id="replace-player">You need Flash player 8+ and JavaScript enabled to use SynergyTube.</div>
+
+			    <div class="playlist">
+				    <table class="table table-striped table-condensed">
+					    <thead>
 						<tr>
 							<th></th>
 							<th>Video</th>
@@ -65,12 +63,12 @@
 						</tr>
 					</thead>
 					<tbody dnd-list="playlist">
-						<tr ng-repeat="item in playlist | orderBy:'position'"><!--ng-class="{item-activated: item._id == active_item}"-->
+						<tr ng-repeat="item in playlist | orderBy:'position'" ng-class="{playc: item._id == active_item}">
 							<td>{{item.position}}</td>
 							<td><a href="{{item.url}}">{{item.caption}}</a></td>
-							<td>{{getLength(item.length)}}</td>
+							<td>{{getLength(item.duration)}}</td>
 							<td><a href="/user/{{item.login_name}}">{{item.display_name}}</a></td>
-							<td><a href="#/play/{{item._id}}"><i class="icon-play icon-white"></i></a> <a href="#/edit/{{item._id}}"><i class="icon-edit icon-white"></i></a> <a href="#/delete/{{item._id}}"><i class="icon-trash icon-white"></i></a></td>
+							<td><a href="#/play/{{item._id}}"><i class="icon-play icon-white"></i></a></td>
 						</tr>
 					<tbody>
 				</table>
@@ -101,9 +99,7 @@
 			
           </div>
         </div>
-
-      
-
+        
     </div>
     <div class="footer-pusher"></div>
   </div>
@@ -116,12 +112,12 @@
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
   <script>window.jQuery || document.write('<script type="text/javascript" src="/assets/js/jquery.min.js"><\/script>')</script>
   <script>$.fn.modal || document.write('<script type="text/javascript" src="/assets/js/bootstrap.min.js"><\/script>')</script>
   <script>document.write('<script type="text/javascript" src="//' + document.location.host + ':8080/socket.io/socket.io.js"><\/script>'); window.io || document.write('<script type="text/javascript" src="/assets/js/socket.io.js"><\/script>')</script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
   <script src="/assets/js/channel.js"></script>
-  <script src="//www.youtube.com/iframe_api"></script>
 </body>
 </html>

@@ -1,7 +1,18 @@
+$(function(){
+	// I hate the chromeless player, i'll never build my own controls. Take this dummy!
+	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "425", "356", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" });
+});
 var app = angular.module('channel',[]);
-var socket = io.connect('http://localhost:8080');
-// socket.emit('channel.init', { channel_id: 1, login_name: 'screeny05' });
+var socket = io.connect('http://' + window.location.host + ':8080');
+var start_time;
 var player;
+
+function onYouTubePlayerReady(playerId) {
+    player = document.getElementById("myytplayer");
+    player.addEventListener("onStateChange", "stateChangeProxy");
+    socket.emit('channel.init', { channel_id: 1, login_name: 'screeny05' });
+}
+function stateChangeProxy(state){angular.element('html').scope().playerStateChange(state);}
 
 function channel_controller($scope){
 	$scope.playlist = [];
@@ -10,7 +21,7 @@ function channel_controller($scope){
 	$scope.alert_stack = [];
 	$scope.views = 0;
 	$scope.favs = 0;
-	// The currently active media-item
+	// The currently active media-item-_id
 	$scope.active_item = 1;
 	$scope.reordered = false;
 	
@@ -20,7 +31,10 @@ function channel_controller($scope){
 		$scope.online = data.content.users_online;
 		$scope.favs = data.content.favourites;
 		$scope.views = data.content.views;
-		player.loadVideoById({ videoId:data.content.now_playing.yt_id, startSeconds:(new Date().getTime() - new Date(data.content.now_playing.start_time).getTime()) / 1000});
+		start_time = data.content.now_playing.start_time;
+		var start_seconds = (new Date().getTime() - new Date(data.content.now_playing.start_time).getTime()) / 1000;
+		player.loadVideoById(data.content.now_playing.yt_id);
+		player.seekTo(start_seconds);
 		$scope.$apply();
 		$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
 		
@@ -36,10 +50,12 @@ function channel_controller($scope){
 		
 	});
 	socket.on('channel.user_join', function(data){
-		
+		$scope.online.push(data);
+		$scope.$apply();
 	});
 	socket.socket.on('error',function(data){
 		$scope.alert_stack.push({ status: "-1", content: {code: "Unable to connect to Synergy-Server"}})
+		$scope.$apply();
 	});
 	socket.on('error', function(data){
 		$scope.alert_stack.push(data);
@@ -65,6 +81,7 @@ function channel_controller($scope){
 		return (s.getMinutes() < 10 ? '0' : '') + s.getMinutes() + ":" + (s.getSeconds() < 10 ? '0' : '') + s.getSeconds();
 	}
 	$scope.getPermLevel = function(lvl){
+		// some glitter for the admins
 		if(lvl == 1)
 			return '<i class="icon-star icon-white"></i>';
 		if(lvl == 2)
@@ -72,16 +89,33 @@ function channel_controller($scope){
 		else
 			return '';
 	}
+	$scope.playerStateChange = function(state){
+		if(state == 0){
+			var p = 0;
+			var next_item = null;
+
+			for(x in item){
+				if(x._id == $scope.active_item)
+					p = x.position;
+			}
+			alert(p);
+
+		}
+
+	}
 	
 	$scope.$watch("playlist", function(value){
 		if($scope.reordered){
-			var r = value.map(function(e){ return { _id: e._id, position: e.position, cap: e.caption} });
+			var r = value.map(function(e){ return { _id: e._id, position: e.position } });
 			socket.emit('playlist.reorder', r);
 		}
 	}, true);
 }
 
 app.directive('dndList', function(){
+	/*
+	** We may have a little bug here. Reordering for the first time results in crap!
+	*/
 	return function(scope, element, attrs){
 		var toUpdate;
 		var startIndex = -1;
@@ -111,20 +145,3 @@ app.directive('dndList', function(){
 		})
 	}
 });
-
-function onPlayerReady(e){
-	socket.emit('channel.init', { channel_id: 1, login_name: 'screeny05' });
-	
-}
-function onPlayerStateChange(e){
-
-}
-
-function onYouTubeIframeAPIReady(){
-	player = new YT.Player('player',{
-		events: {
-			'onReady': onPlayerReady,
-			'onStateChange': onPlayerStateChange
-		}
-	});
-}
