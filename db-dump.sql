@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 30. März 2013 um 17:22
+-- Erstellungszeit: 31. März 2013 um 00:46
 -- Server Version: 5.5.9
 -- PHP-Version: 5.2.17
 
@@ -106,11 +106,11 @@ CREATE TABLE IF NOT EXISTS `tblmedia` (
 --
 
 INSERT INTO `tblmedia` (`_id`, `caption`, `url`, `position`, `channel_id`, `user_id`, `duration`, `start_time`, `media_type`) VALUES
-(1, 'TuXe - Epic Wub Time MoP Wub Remix', 'https://www.youtube.com/watch?v=WgAqoXT-2kM', 1, 1, 1, 241, '0000-00-00 00:00:00', 'youtube'),
-(2, 'Eurobeat Brony - Discord (The Living Tombstone''s Remix)', 'https://www.youtube.com/watch?v=xPfMb50dsOk', 4, 1, 1, 194, '0000-00-00 00:00:00', 'youtube'),
-(3, 'Raise This Barn - MBAlpha (Remix)', 'https://www.youtube.com/watch?v=9FmzLk7jkSA', 5, 1, 1, 242, '0000-00-00 00:00:00', 'youtube'),
-(4, '[PMV] Rainbow Factory Music Video', 'https://www.youtube.com/watch?v=4PjIhs72l0A', 2, 1, 1, 210, '0000-00-00 00:00:00', 'youtube'),
-(5, '[PMV] Awoken', 'https://www.youtube.com/watch?v=KwW9slmrKXo', 3, 1, 1, 283, '0000-00-00 00:00:00', 'youtube');
+(1, 'TuXe - Epic Wub Time MoP Wub Remix', 'WgAqoXT-2kM', 2, 1, 1, 241, '0000-00-00 00:00:00', 'youtube'),
+(2, 'Eurobeat Brony - Discord (The Living Tombstone''s Remix)', 'xPfMb50dsOk', 3, 1, 1, 194, '0000-00-00 00:00:00', 'youtube'),
+(3, 'Raise This Barn - MBAlpha (Remix)', '9FmzLk7jkSA', 5, 1, 1, 242, '0000-00-00 00:00:00', 'youtube'),
+(4, '[PMV] Rainbow Factory Music Video', '4PjIhs72l0A', 4, 1, 1, 210, '0000-00-00 00:00:00', 'youtube'),
+(5, '[PMV] Awoken', 'KwW9slmrKXo', 1, 1, 1, 283, '0000-00-00 00:00:00', 'youtube');
 
 -- --------------------------------------------------------
 
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `tblmessages` (
   `user_id` int(11) NOT NULL,
   `channel_id` int(11) NOT NULL,
   PRIMARY KEY (`_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
 
 --
 -- Daten für Tabelle `tblmessages`
@@ -133,7 +133,49 @@ CREATE TABLE IF NOT EXISTS `tblmessages` (
 
 INSERT INTO `tblmessages` (`_id`, `timestamp`, `content`, `user_id`, `channel_id`) VALUES
 (1, '2013-03-28 00:00:00', 'Hello, World!', 1, 1),
-(3, '2013-03-29 19:48:45', 'blablub', 1, 1);
+(3, '2013-03-29 19:48:45', 'blablub', 1, 1),
+(4, '2013-03-30 17:48:17', 'ohai', 1, 1),
+(5, '2013-03-30 17:48:25', 'heyheyhey', 1, 1),
+(6, '2013-03-30 17:48:42', 'scheint ja schon ganz gut zu funktionieren', 1, 1),
+(7, '2013-03-30 17:48:47', 'ich bin graycode, du bist graycode, WIR ALLE SIND GRAYCODE xD', 1, 1),
+(8, '2013-03-30 17:49:23', 'jarp, was eig als nächstes anliegt ist ne funktionierende playlist :D', 1, 1),
+(9, '2013-03-30 17:49:51', 'ok, was funktioniert daran net?', 1, 1),
+(10, '2013-03-30 17:50:07', 'hm grob gesagt alles^^''', 1, 1),
+(11, '2013-03-30 17:51:03', 'ich hab ja ne mysql-db als backend und weil ich kein sonderlich ausgeklügeltes konzept habe (bis jetzt) gibts dafür noch keine idee^^', 1, 1),
+(12, '2013-03-30 17:51:50', '<script type="text/javascript§', 1, 1),
+(13, '2013-03-30 17:51:53', 'damnit :D', 1, 1),
+(14, '2013-03-30 17:52:02', 'harhar', 1, 1),
+(15, '2013-03-30 17:52:04', 'ok', 1, 1),
+(16, '2013-03-30 17:52:14', '<script type="text/javascript">alert("blarblarblar");</script>', 1, 1),
+(17, '2013-03-30 17:52:20', 'perfekt :D', 1, 1),
+(18, '2013-03-30 17:54:17', 'wie hat denn die playlist bei synchtube funktioniert?', 1, 1),
+(19, '2013-03-30 17:54:33', 'eine playlist pro channel?', 1, 1),
+(20, '2013-03-30 17:54:39', 'jap', 1, 1),
+(21, '2013-03-30 17:54:50', 'und dann kann man die als moderator verändern?', 1, 1),
+(22, '2013-03-30 17:54:56', 'genau ;)', 1, 1),
+(23, '2013-03-30 17:55:03', 'ok', 1, 1),
+(24, '2013-03-30 17:55:10', 'ja müsst man sich halt mal n schema überlegen', 1, 1),
+(25, '2013-03-30 17:55:20', 'und die reihenfolge ändern, neue hinzufügen', 1, 1),
+(26, '2013-03-30 17:55:30', 'hmmmm wart kurz^^', 1, 1),
+(27, '2013-03-30 17:55:42', 'kurz meinen laptop booten..', 1, 1),
+(28, '2013-03-30 17:56:54', 'hab noch ein kleines modell davon', 1, 1),
+(29, '2013-03-30 17:58:05', 'in der tabelle vor de videotitel gibts ja diese nummern, das sind quasi meine positionsangaben', 1, 1),
+(30, '2013-03-30 17:58:47', 'wenn der aktuelle titel fertig gespielt ist läuft einfach der nächste in der liste an', 1, 1),
+(31, '2013-03-30 17:59:03', 'das problem ist: alles muss sekundengenau auf allen clients laufen', 1, 1),
+(32, '2013-03-30 18:03:28', 'joa', 1, 1),
+(33, '2013-03-30 18:03:29', 'klar', 1, 1),
+(34, '2013-03-30 18:03:46', 'gibts da irgendwelche interfaces mit youtube?', 1, 1),
+(35, '2013-03-30 18:04:16', 'apis? ja, zwei eine mit iframes und eine direct mit flash', 1, 1),
+(36, '2013-03-30 18:05:11', 'ok', 1, 1),
+(37, '2013-03-30 18:05:17', 'https://developers.google.com/youtube/js_api_reference', 1, 1),
+(38, '2013-03-30 18:05:28', 'theoretisch kannst du damit alles machen was du willst :D', 1, 1),
+(39, '2013-03-30 18:05:59', 'ahja', 1, 1),
+(40, '2013-03-30 18:06:55', 'mhm', 1, 1),
+(41, '2013-03-30 18:08:17', 'ich benutz im moment die mit directem flash-access, weil die iframe-api unter chrome nicht funktioniert, wenn man kein ssl-zertifikat hat', 1, 1),
+(42, '2013-03-30 18:08:50', 'irgendeine policy.. im firefox, ie und safari funktioniert das tadellos aber mit chrome nicht :DD', 1, 1),
+(43, '2013-03-30 18:11:54', 'hmkay', 1, 1),
+(44, '2013-03-30 18:14:59', 'aber ist nicht so schlimm^^', 1, 1),
+(45, '2013-03-30 18:19:07', 'http://94.218.64.58/db-uml.png', 1, 1);
 
 -- --------------------------------------------------------
 
