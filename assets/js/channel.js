@@ -54,7 +54,7 @@ function channel_controller($scope){
 		$scope.$apply();
 	});
 	socket.socket.on('error',function(data){
-		$scope.alert_stack.push({ status: "-1", content: {code: "Unable to connect to Synergy-Server"}})
+		$scope.alert_stack.push({ status: "-1", content: {code: "Unable to connect to Synergy-Server"}});
 		$scope.$apply();
 	});
 	socket.on('error', function(data){
@@ -66,47 +66,60 @@ function channel_controller($scope){
 		if($scope.message)
 			socket.emit('chat.send', { content: $scope.message });
 		$scope.message = '';
-	}
+	};
 
 	$scope.dismiss_alert = function(alert){
 		$scope.alert_stack.splice($scope.alert_stack.indexOf(alert), 1);
-	}
+	};
 	
 	$scope.getTime = function(t){
 		t = new Date(t);
 		return (t.getHours() < 10 ? '0' : '') + t.getHours() + ":" + (t.getMinutes() < 10 ? '0' : '') + t.getMinutes();
-	}
+	};
 	$scope.getLength = function(s){
-		var s = new Date(s * 1000);
+		s = new Date(s * 1000);
 		return (s.getMinutes() < 10 ? '0' : '') + s.getMinutes() + ":" + (s.getSeconds() < 10 ? '0' : '') + s.getSeconds();
-	}
+	};
 	$scope.getPermLevel = function(lvl){
 		// some glitter for the admins
-		if(lvl == 1)
+		if(lvl === 1)
 			return '<i class="icon-star icon-white"></i>';
-		if(lvl == 2)
+		if(lvl === 2)
 			return '<i class="icon-star icon-white"></li>';
 		else
 			return '';
-	}
+	};
+
 	$scope.playerStateChange = function(state){
-		if(state == 0){
-			var p = 0;
+		if(state === 0){
+			var pos = -1;
 			var next_item = null;
-
-			for(x in item){
-				if(x._id == $scope.active_item)
-					p = x.position;
+			// This'll be a torture!
+			for (var i = 0; i < $scope.playlist.length; i++) {
+				if($scope.playlist[i]._id === $scope.active_item)
+					pos = $scope.playlist[i].position;
+				if(pos !== -1)
+					if($scope.playlist[i].position === pos + 1)
+						next_item = $scope.playlist[i];
 			}
-			alert(p);
+			if(next_item === null)
+				for (var i = 0; i < $scope.playlist.length; i++)
+					if($scope.playlist[i].position === pos + 1)
+						next_item = $scope.playlist[i];
+			if(next_item === null)
+				for (var i = 0; i < $scope.playlist.length; i++)
+					if($scope.playlist[i].position === 1)
+						next_item = $scope.playlist[i];
 
+			$scope.active_item = next_item._id;
+			$scope.$apply();
+			player.loadVideoById(next_item.url);
 		}
-
-	}
+	};
 	
 	$scope.$watch("playlist", function(value){
 		if($scope.reordered){
-			var r = value.map(function(e){ return { _id: e._id, position: e.position } });
+			var r = value.map(function(e){ return { _id: e._id, position: e.position }; });
 			socket.emit('playlist.reorder', r);
 		}
 	}, true);
@@ -142,6 +155,6 @@ app.directive('dndList', function(){
 				scope.$apply(scope.playlist);
 			},
 			axis: 'y'
-		})
-	}
+		});
+	};
 });
