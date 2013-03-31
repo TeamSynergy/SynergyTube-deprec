@@ -36,21 +36,21 @@ io.sockets.on('connection', function (socket) {
 		socket.login_name = data.login_name;
 		
 		socket.join(socket.channel_id);
-		
-		//r_query("SELECT ")
 
-		r_query("SELECT _id, display_name, email FROM tblUser WHERE login_name = " + sql.escape(socket.login_name),socket, function(user_data){
+		r_query("SELECT _id, display_name, email FROM tblUser WHERE login_name = " + sql.escape(socket.login_name), socket, function(user_data){
 			r_query("SELECT tblMedia._id, position, url, caption, duration, display_name, login_name FROM tblMedia RIGHT JOIN tblUser ON tblUser._id = tblMedia.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position DESC", socket, function(playlist_data){
-				r_query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY timestamp DESC LIMIT 0, 15", socket, function(message_data){
-					var tmt = new Date();
-					tmt.setMinutes(tmt.getMinutes() - 1);
-					socket.user_id = user_data[0]._id;
-					socket.display_name = user_data[0].display_name;
-					socket.email = user_data[0].email;
-					socket.level = 2;
+				r_query("SELECT _id, start_time, url FROM tblMedia WHERE _id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(current_item_data){
+					r_query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY timestamp DESC LIMIT 0, 15", socket, function(message_data){
+						var tmt = new Date();
+						tmt.setMinutes(tmt.getMinutes() - 1);
+						socket.user_id = user_data[0]._id;
+						socket.display_name = user_data[0].display_name;
+						socket.email = user_data[0].email;
+						socket.level = 2;
 
-					socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, data: { display_name: user_data.display_name, login_name: data.login_name, level: 2, user_id: user_data._id }});
-					socket.emit('channel.init', { status: 0, content: { users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: { _id: 0, start_time: tmt, yt_id: 'WgAqoXT-2kM' }}});
+						socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, data: { display_name: user_data.display_name, login_name: data.login_name, level: 2, user_id: user_data._id }});
+						socket.emit('channel.init', { status: 0, content: { users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: { _id: current_item_data[0]._id, start_time: current_item_data[0].start_time, url: current_item_data[0].url }}});
+					});
 				});
 			});
 		});
@@ -84,12 +84,12 @@ io.sockets.on('connection', function (socket) {
 		for(var i = 0; i < data.length; i++){
 			i_query("UPDATE tblMedia SET position=" + (data[i].position) + " WHERE _id = " + sql.escape(data[i]._id), socket, "playlist.reorder");
 		}
-		// Use a method with less overhead
-		e_query("SELECT tblMedia._id, position, url, caption, duration, display_name, login_name FROM tblMedia RIGHT JOIN tblUser ON tblUser._id = tblMedia.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position DESC", socket, "playlist.reorder", true);
+		socket.broadcast.to(socket.channel_id).emit('playlist.reorder', { status:0, content: data});
 	});
 	
-	socket.on('playlist.play',function(data){
-		
+	socket.on('playlist.play_item', function(data){
+		// Add DB-Query!
+		socket.broadcast.to(socket.channel_id).emit('playlist.play_item', { status: 0, content: data });
 	});
 });
 
@@ -132,8 +132,6 @@ function init_online(channel_id){
 	io.sockets.clients(channel_id).forEach(function(socket){
 		arr.push({display_name: socket.display_name, login_name: socket.login_name, level: socket.level, user_id: socket.user_id });
 	});
-	// don't emit own name
-	// displayname/username
 	arr.push({display_name:"Blankblade",login_name:"Blankblade"});
 	arr.push({display_name:"Little Crow",login_name:"little_crow"});
 	arr.push({display_name:"Button Mash",login_name:"buttonMash"});

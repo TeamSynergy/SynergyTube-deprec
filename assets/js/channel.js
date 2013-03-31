@@ -4,15 +4,14 @@ $(function(){
 });
 var app = angular.module('channel',[]);
 var socket = io.connect('http://' + window.location.host + ':8080');
-var start_time;
 var player;
 
+function stateChangeProxy(state){angular.element('html').scope().playerStateChange(state);}
 function onYouTubePlayerReady(playerId) {
     player = document.getElementById("myytplayer");
     player.addEventListener("onStateChange", "stateChangeProxy");
-    socket.emit('channel.init', { channel_id: 1, login_name: 'screeny05' });
+    socket.emit('channel.init', { channel_id: channel_id, login_name: 'screeny05' });
 }
-function stateChangeProxy(state){angular.element('html').scope().playerStateChange(state);}
 
 function channel_controller($scope){
 	$scope.playlist = [];
@@ -31,10 +30,8 @@ function channel_controller($scope){
 		$scope.online = data.content.users_online;
 		$scope.favs = data.content.favourites;
 		$scope.views = data.content.views;
-		start_time = data.content.now_playing.start_time;
 		var start_seconds = (new Date().getTime() - new Date(data.content.now_playing.start_time).getTime()) / 1000;
-		player.loadVideoById(data.content.now_playing.yt_id);
-		player.seekTo(start_seconds);
+		player.loadVideoById(data.content.now_playing.url, start_seconds);
 		$scope.$apply();
 		$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
 		
@@ -43,11 +40,31 @@ function channel_controller($scope){
 		$scope.playlist.push(data.content);
 		$scope.$apply();
 	});
+	socket.on('playlist.play_item', function(data){
+		var start_seconds = (new Date().getTime() - new Date(data.content.start_time).getTime()) / 1000;
+		var item;
+		for (var i = 0; i < $scope.playlist.length; i++) {
+			if($scope.playlist[i]._id === data.content.item_id)
+				item = $scope.playlist[i];
+		};
+		player.loadVideoById(item.url, start_seconds);
+		$scope.active_item = item._id;
+		$scope.$apply();
+	});
+	socket.on('playlist.reorder', function(data){
+		// may we get this one more efficient?
+		for (var x = 0; x < $scope.playlist.length; x++) {
+			for (var y = 0; y < data.content.length; y++) {
+				if($scope.playlist[x]._id === data.content[y]._id)
+					$scope.playlist[x].position = data.content[y].position;
+			};
+		};
+		$scope.$apply();
+	});
 	socket.on('chat.incoming', function(data){
 		$scope.chat.push(data.content);
 		$scope.$apply();
 		$('.channel-chat > ul').animate({ scrollTop: $('.channel-chat > ul')[0].scrollHeight},800);
-		
 	});
 	socket.on('channel.user_join', function(data){
 		$scope.online.push(data);
@@ -115,6 +132,17 @@ function channel_controller($scope){
 			$scope.$apply();
 			player.loadVideoById(next_item.url);
 		}
+	};
+	$scope.playItem = function(item_id){
+		var item;
+		for (var i = 0; i < $scope.playlist.length; i++) {
+			if($scope.playlist[i]._id === item_id)
+				item = $scope.playlist[i];
+		};
+		player.loadVideoById(item.url);
+		$scope.active_item = item._id;
+		$scope.$apply();
+		socket.emit('playlist.play_item', { item_id: item_id, start_time: new Date() });
 	};
 	
 	$scope.$watch("playlist", function(value){

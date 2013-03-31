@@ -1,3 +1,10 @@
+<?php
+  $con = new mysqli("localhost", "root", "root", "synergy");
+  if($con->connect_errno)
+    print("Error: DB-Fuckup");
+  $channel = mysqli_fetch_object($con->query("SELECT count(*) AS '_c', _id, name, cover_id, description, views FROM tblChannels WHERE custom_url = '".$con->real_escape_string($_GET['c'])."'"));
+?>
+
 <!DOCTYPE html>
 <html ng-app="channel" ng-controller="channel_controller">
 <head>
@@ -37,8 +44,8 @@
     <div class="container content">
       <div class="channel-cover">
         <div class="channel-cover-text">
-          <h1>Bronies BW</h1>
-          <p>Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia</p>
+          <h1><?php if($channel->_c > 0) print($channel->name); else print("Error - Channel not found!");?></h1>
+          <p><?php print($channel->description); ?></p>
         </div>
       </div>
       <div class="alert-stack">
@@ -49,7 +56,10 @@
       </div>
         <div class="channel-second">
           <div class="sp2 youtube-player">
-            <div id="replace-player">You need Flash player 8+ and JavaScript enabled to use SynergyTube.</div>
+            <div id="replace-player">
+              <p><h1>An Error happened</h1>
+              You need Flash player 8+ and JavaScript enabled to use SynergyTube.</p>
+            </div>
 
 			    <div class="playlist">
 				    <table class="table table-striped table-condensed">
@@ -68,7 +78,7 @@
 							<td><a href="{{item.url}}">{{item.caption}}</a></td>
 							<td>{{getLength(item.duration)}}</td>
 							<td><a href="/user/{{item.login_name}}">{{item.display_name}}</a></td>
-							<td><a href="#/play/{{item._id}}"><i class="icon-play icon-white"></i></a></td>
+							<td><a href="" ng-click="playItem(item._id)"><i class="icon-play icon-white"></i></a></td>
 						</tr>
 					<tbody>
 				</table>
@@ -99,7 +109,7 @@
 			
           </div>
         </div>
-        
+
     </div>
     <div class="footer-pusher"></div>
   </div>
@@ -110,6 +120,9 @@
     </div>
   </div>
 
+  <script><?php 
+    if($channel->_c > 0) print("var channel_id = ".$channel->_id.";");
+  ?></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>

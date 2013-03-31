@@ -119,3 +119,14 @@ h3{margin:0}
 .table tbody tr.playc > td {
   background-color: #ccc;
 }
+.youtube-player > #replace-player {
+  height: 380px;
+  background:#ccc;
+  padding-top:12px;
+  padding-left:12px;
+  color: #222;
+}
+.youtube-player > #replace-player * {
+  margin:0;
+  color: #222;
+}
