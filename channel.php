@@ -1,14 +1,14 @@
 <?php
   $con = new mysqli("localhost", "root", "root", "synergy");
   if($con->connect_errno)
-    print("Error: DB-Fuckup");
+    print("<h1>Error: DB-Fuckup</h1>");
   $channel = mysqli_fetch_object($con->query("SELECT count(*) AS '_c', _id, name, cover_id, description, views FROM tblChannels WHERE custom_url = '".$con->real_escape_string($_GET['c'])."'"));
 ?>
 
 <!DOCTYPE html>
 <html ng-app="channel" ng-controller="channel_controller">
 <head>
-  <title>SynergyTube | Channel: BroniesBW</title>
+  <title>SynergyTube | Channel: <?php print($channel->name); ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.1/cyborg/bootstrap.min.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">

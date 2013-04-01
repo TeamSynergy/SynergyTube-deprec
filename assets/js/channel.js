@@ -30,8 +30,13 @@ function channel_controller($scope){
 		$scope.online = data.content.users_online;
 		$scope.favs = data.content.favourites;
 		$scope.views = data.content.views;
+		$scope.active_item = data.content.now_playing._id;
+		
 		var start_seconds = (new Date().getTime() - new Date(data.content.now_playing.start_time).getTime()) / 1000;
-		player.loadVideoById(data.content.now_playing.url, start_seconds);
+		if(start_seconds > data.content.now_playing.duration){
+			socket.emit('playlist.check_playing');
+		} else
+			player.loadVideoById(data.content.now_playing.url, start_seconds);
 		$scope.$apply();
 		$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
 		
@@ -52,7 +57,7 @@ function channel_controller($scope){
 		$scope.$apply();
 	});
 	socket.on('playlist.reorder', function(data){
-		// may we get this one more efficient?
+		// may we get this a little more efficient?
 		for (var x = 0; x < $scope.playlist.length; x++) {
 			for (var y = 0; y < data.content.length; y++) {
 				if($scope.playlist[x]._id === data.content[y]._id)
@@ -61,13 +66,16 @@ function channel_controller($scope){
 		};
 		$scope.$apply();
 	});
+	socket.on('playlist.play_next', function() {
+		$scope.playNext();
+	});
 	socket.on('chat.incoming', function(data){
 		$scope.chat.push(data.content);
 		$scope.$apply();
 		$('.channel-chat > ul').animate({ scrollTop: $('.channel-chat > ul')[0].scrollHeight},800);
 	});
 	socket.on('channel.user_join', function(data){
-		$scope.online.push(data);
+		$scope.online.push(data.content);
 		$scope.$apply();
 	});
 	socket.socket.on('error',function(data){
@@ -108,30 +116,37 @@ function channel_controller($scope){
 	};
 
 	$scope.playerStateChange = function(state){
+		alert(state);
 		if(state === 0){
-			var pos = -1;
-			var next_item = null;
-			// This'll be a torture!
-			for (var i = 0; i < $scope.playlist.length; i++) {
-				if($scope.playlist[i]._id === $scope.active_item)
-					pos = $scope.playlist[i].position;
-				if(pos !== -1)
-					if($scope.playlist[i].position === pos + 1)
-						next_item = $scope.playlist[i];
-			}
-			if(next_item === null)
-				for (var i = 0; i < $scope.playlist.length; i++)
-					if($scope.playlist[i].position === pos + 1)
-						next_item = $scope.playlist[i];
-			if(next_item === null)
-				for (var i = 0; i < $scope.playlist.length; i++)
-					if($scope.playlist[i].position === 1)
-						next_item = $scope.playlist[i];
-
-			$scope.active_item = next_item._id;
-			$scope.$apply();
-			player.loadVideoById(next_item.url);
+			$scope.playNext();
+			console.log("Media_Item ended");
 		}
+	};
+	$scope.playNext = function() {
+		var pos = -1;
+		var next_item = null;
+		// This'll be a torture!
+		for (var i = 0; i < $scope.playlist.length; i++) {
+			if($scope.playlist[i]._id === $scope.active_item)
+				pos = $scope.playlist[i].position;
+			if(pos !== -1)
+				if($scope.playlist[i].position === pos + 1)
+					next_item = $scope.playlist[i];
+		}
+		if(next_item === null)
+			for (var i = 0; i < $scope.playlist.length; i++)
+				if($scope.playlist[i].position === pos + 1)
+					next_item = $scope.playlist[i];
+		if(next_item === null)
+			for (var i = 0; i < $scope.playlist.length; i++)
+				if($scope.playlist[i].position === 1)
+					next_item = $scope.playlist[i];
+
+		console.log("Old pos: " + pos + " New pos: " + next_item.pos);
+		$scope.active_item = next_item._id;
+		$scope.$apply();
+		player.loadVideoById(next_item.url);
+		socket.emit('playlist.item_changed', { _id: $scope.active_item });
 	};
 	$scope.playItem = function(item_id){
 		var item;
@@ -167,11 +182,11 @@ app.directive('dndList', function(){
 		
 		$(element[0]).sortable({
 			items:'tr',
-			start:function(event, ui){
+			start: function(event, ui){
 				startIndex = ($(ui.item).index());
 				scope.reordered = true;
 			},
-			stop:function(event,ui){
+			stop: function(event, ui){
 				console.log("Item: " + toUpdate[startIndex]._id + "; Old Position: " + toUpdate[startIndex].position + "; New Position: " + ($(ui.item).index() + 1));
 				var newIndex = ($(ui.item).index());
 				var toMove = toUpdate[startIndex];
