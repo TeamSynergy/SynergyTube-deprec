@@ -42,7 +42,7 @@
 
         <div class="span4 channel-thumb">
           <div class="txt-wrap">
-            <h4><a href="#">BroniesBW</a></h4>
+            <h4><a href="/c/bronies-bw">BroniesBW</a></h4>
             <p>Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat.<br>
             <small class="muted">Viewers: 127 | Favourites: 981</small></p>
           </div>

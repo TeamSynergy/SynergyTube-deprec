@@ -23,10 +23,12 @@ html,body {height:100%;background-image:none !important;color:#fff;}
 .youtube-player > object{
   width:100%;
   height:380px;
+  margin:0;
+  padding:0;
 }
 .youtube-player > .playlist {
   overflow: auto;
-  height:220px;
+  height:216px;
 }
 .channel-second > .channel-sidebar {
   background:#222;
