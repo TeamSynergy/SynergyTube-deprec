@@ -108,21 +108,26 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 	socket.on('playlist.check_playing', function(){
-		// IF (now() > start_time + duration) THEN play_next()
+		// IF (now() > start_time + duration) THEN play_next() ELSE play_current()
 		r_query("SELECT start_time, _id, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(data){
 			if((new Date().getTime() - new Date(data[0].start_time).getTime()) / 1000 > data[0].duration) {
 				i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data[0]._id), socket, 'playlist.check_playing');
 				io.sockets.in(socket.channel_id).emit('playlist.play_next');
+			} else {
+				socket.emit('playlist.play_item', { status: 0, content: { _id: data[0]._id, start_time: data[0].start_time }});
 			}
 		});
 	});
 	socket.on('playlist.item_changed', function(data){
 		// To prevent multiple Executions
 		console.log("media_item ended; from: " + socket.login_name + "/" + io.sockets.clients(socket.channel_id)[0].login_name);
-		if(socket.login_name === io.sockets.clients(socket.channel_id)[0].login_name){
-			console.log("updated to " + data._id);
-			i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data._id), socket, 'playlist.item_changed');
-		}
+		r_query("SELECT start_time, _id, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(data){
+			if((new Date().getTime() - new Date(data[0].start_time).getTime()) / 1000 > data[0].duration) {
+				if(socket.login_name === io.sockets.clients(socket.channel_id)[0].login_name)
+					i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data._id), socket, 'playlist.item_changed');
+			} else
+				socket.emit('playlist.play_item', { status: 0, content: { _id: data[0]._id, start_time: data[0].start_time }});
+		});
 	});
 });
 

@@ -61,7 +61,7 @@ function channel_controller($scope){
 		var start_seconds = (new Date().getTime() - new Date(data.content.start_time).getTime()) / 1000;
 		var item;
 		for (var i = 0; i < $scope.playlist.length; i++) {
-			if($scope.playlist[i]._id === data.content.item_id)
+			if($scope.playlist[i]._id === data.content._id)
 				item = $scope.playlist[i];
 		};
 		player.loadVideoById(item.url, start_seconds);
@@ -169,7 +169,7 @@ function channel_controller($scope){
 		player.loadVideoById(item.url);
 		$scope.active_item = item._id;
 		$scope.$apply();
-		socket.emit('playlist.play_item', { item_id: item_id, start_time: new Date() });
+		socket.emit('playlist.play_item', { _id: item_id, start_time: new Date() });
 	};
 	$scope.addItem = function(){
 		alert("add");
