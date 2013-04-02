@@ -1,11 +1,22 @@
 $(function(){
 	// I hate the chromeless player, i'll never build my own controls. Take this dummy!
 	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "425", "356", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" });
+	$('.media-url').keyup(function(){
+		var reg = /(v=|\/)([\w-]+)(&.+)?$/;
+		reg.exec($('.media-url').val());
+		if(RegExp.$2){
+			var tag = document.createElement('script');
+			tag.src = "https://gdata.youtube.com/feeds/api/videos/" + RegExp.$2 + "?alt=json-in-script&v=2&callback=gdataCallbackProxy";
+			var firstScriptTag = document.getElementsByTagName('script')[0];
+			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      	}
+	});
 });
 var app = angular.module('channel',[]);
 var socket = io.connect('http://' + window.location.host + ':8080');
 var player;
 
+function gdataCallbackProxy(data){angular.element('html').scope().gdataCallback(data);}
 function stateChangeProxy(state){angular.element('html').scope().playerStateChange(state);}
 function onYouTubePlayerReady(playerId) {
     player = document.getElementById("myytplayer");
@@ -31,6 +42,7 @@ function channel_controller($scope){
 		$scope.favs = data.content.favourites;
 		$scope.views = data.content.views;
 		$scope.active_item = data.content.now_playing._id;
+		$scope.addItem = {};
 		
 		var start_seconds = (new Date().getTime() - new Date(data.content.now_playing.start_time).getTime()) / 1000;
 		if(start_seconds > data.content.now_playing.duration){
@@ -67,7 +79,7 @@ function channel_controller($scope){
 		$scope.$apply();
 	});
 	socket.on('playlist.play_next', function() {
-		$scope.playNext();
+		$scope.playNext(false);
 	});
 	socket.on('chat.incoming', function(data){
 		$scope.chat.push(data.content);
@@ -78,7 +90,7 @@ function channel_controller($scope){
 		$scope.online.push(data.content);
 		$scope.$apply();
 	});
-	socket.socket.on('error',function(data){
+	socket.socket.on('error', function(data){
 		$scope.alert_stack.push({ status: "-1", content: {code: "Unable to connect to Synergy-Server"}});
 		$scope.$apply();
 	});
@@ -116,13 +128,12 @@ function channel_controller($scope){
 	};
 
 	$scope.playerStateChange = function(state){
-		alert(state);
 		if(state === 0){
-			$scope.playNext();
+			$scope.playNext(true);
 			console.log("Media_Item ended");
 		}
 	};
-	$scope.playNext = function() {
+	$scope.playNext = function(emit) {
 		var pos = -1;
 		var next_item = null;
 		// This'll be a torture!
@@ -146,7 +157,8 @@ function channel_controller($scope){
 		$scope.active_item = next_item._id;
 		$scope.$apply();
 		player.loadVideoById(next_item.url);
-		socket.emit('playlist.item_changed', { _id: $scope.active_item });
+		if(emit)
+			socket.emit('playlist.item_changed', { _id: $scope.active_item });
 	};
 	$scope.playItem = function(item_id){
 		var item;
@@ -159,6 +171,18 @@ function channel_controller($scope){
 		$scope.$apply();
 		socket.emit('playlist.play_item', { item_id: item_id, start_time: new Date() });
 	};
+	$scope.addItem = function(){
+		alert("add");
+		socket.emit('playlist.append_item', { url:$scope.addItem.url, duration:$scope.addItem.duration, caption:$scope.addItem.caption, media_type: $scope.addItem.media_type});
+	};
+	$scope.gdataCallback = function(data){
+		$scope.addItem.url = data.entry.media$group.yt$videoid.$t;
+		$scope.addItem.duration = data.entry.media$group.media$content[0].duration;
+		$scope.addItem.caption = data.entry.title.$t;
+		$scope.addItem.media_type = "youtube";
+		socket.emit('playlist.append_item', { url:$scope.addItem.url, duration:$scope.addItem.duration, caption:$scope.addItem.caption, media_type: $scope.addItem.media_type});
+		$scope.$apply();
+	};
 	
 	$scope.$watch("playlist", function(value){
 		if($scope.reordered){
@@ -169,9 +193,6 @@ function channel_controller($scope){
 }
 
 app.directive('dndList', function(){
-	/*
-	** We may have a little bug here. Reordering for the first time results in crap!
-	*/
 	return function(scope, element, attrs){
 		var toUpdate;
 		var startIndex = -1;

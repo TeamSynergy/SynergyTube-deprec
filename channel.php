@@ -18,6 +18,26 @@
   <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold">
 </head>
 <body>
+
+  <div id="addItem" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addItem-label" aria-hidden="true">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h3 id="addItem-label">Add new Media-Item</h3>
+    </div>
+    <div class="modal-body">
+      <form name="addItem-form">
+        <input class="input-block-level media-url" name="url" type="url" ng-model="new_item.url" placeholder="Paste Media-URL here..." required>
+        <span ng-show="addItem-form.url.$error.required" class="help-inline">Required</span>
+        <span ng-show="addItem-form.url.$error.url" class="help-inline">Not a URL</span>
+        <p>Provider: YouTube, Duration: {{getLength(addItem.duration)}}, Caption: {{addItem.caption}}, URL: {{addItem.url}}</p>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" data-dismiss="modal">Close</button>
+      <a href="" class="btn btn-primary btn-submit" ng-click="addItem()">Add Item</a>
+    </div>
+  </div>
+
   <div class="navbar navbar-fixed-top navbar-inverse">
     <div class="navbar-inner">
       <div class="container">
@@ -69,7 +89,7 @@
 							<th>Video</th>
 							<th>Length</th>
 							<th>User</th>
-							<th><a href="#"><i class="icon-plus-sign"></i></a></th>
+							<th><a href="#addItem" role="button" data-toggle="modal"><i class="icon-plus-sign"></i></a></th>
 						</tr>
 					</thead>
 					<tbody dnd-list="playlist">
@@ -129,7 +149,7 @@
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
   <script>window.jQuery || document.write('<script type="text/javascript" src="/assets/js/jquery.min.js"><\/script>')</script>
   <script>$.fn.modal || document.write('<script type="text/javascript" src="/assets/js/bootstrap.min.js"><\/script>')</script>
-  <script>document.write('<script type="text/javascript" src="//' + document.location.host + ':8080/socket.io/socket.io.js"><\/script>'); window.io || document.write('<script type="text/javascript" src="/assets/js/socket.io.js"><\/script>')</script>
+  <script>document.write('<script type="text/javascript" src="//' + document.location.host + ':8080/socket.io/socket.io.js"><\/script>');</script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
   <script src="/assets/js/channel.js"></script>
 </body>

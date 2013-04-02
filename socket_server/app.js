@@ -41,7 +41,7 @@ io.sockets.on('connection', function (socket) {
 		r_query("SELECT count(*) AS '_c' FROM tblUser INNER JOIN relAdmins ON tblUser._id = relAdmins.user_id WHERE tblUser.login_name = " + sql.escape(data.login_name) + " AND relAdmins.channel_id = " + sql.escape(data.channel_id), socket, function(admin_data){
 			r_query("SELECT count(*) AS '_c' FROM tblUser INNER JOIN tblChannels ON tblUser._id = tblChannels.owner_id WHERE tblUser.login_name = " + sql.escape(data.login_name) + " AND tblChannels._id = " + sql.escape(data.channel_id), socket, function(owner_data){
 				r_query("SELECT _id, display_name, login_name, email FROM tblUser WHERE login_name = " + sql.escape(socket.login_name), socket, function(user_data){
-					r_query("SELECT tblMedia._id, position, url, caption, duration, display_name, login_name FROM tblMedia RIGHT JOIN tblUser ON tblUser._id = tblMedia.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position ASC", socket, function(playlist_data){
+					r_query("SELECT tblMedia._id, position, url, caption, duration, display_name, login_name, media_type FROM tblMedia RIGHT JOIN tblUser ON tblUser._id = tblMedia.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position ASC", socket, function(playlist_data){
 						r_query("SELECT _id, start_time, url, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(current_item_data){
 							r_query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY timestamp DESC LIMIT 0, 15", socket, function(message_data){
 								var tmt = new Date();
@@ -83,8 +83,15 @@ io.sockets.on('connection', function (socket) {
 		
 	socket.on('playlist.append_item', function(data){
 		// Check Privileges
-		i_query("INSERT INTO tblVideos (user_id, channel_id, url, pos, duration) VALUES (" + socket.user_id + ", " + socket.channel_id + ", '" + sql.escape(data) + "', LAST?!?!, LENGTH?!?!)", socket, "playlist.append_item");
-		io.sockets.in(socket.channel_id).emit('playlist.append_item', data );
+		console.log("received");
+		r_query("SELECT position FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position DESC LIMIT 0,1", socket, function(rows){
+			console.log(rows[0].position);
+			i_query("INSERT INTO tblMedia (user_id, channel_id, url, position, duration, caption, media_type) VALUES (" + sql.escape(socket.user_id) + ", " + sql.escape(socket.channel_id) + ", " + sql.escape(data.url) + ", " + (rows[0].position + 1) + ", " + sql.escape(data.duration) + ", " + sql.escape(data.caption) + ", " + sql.escape(data.media_type) + ")", socket, "playlist.append_item");
+			r_query("SELECT MAX(_id) AS 'm' FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(idd){
+				io.sockets.in(socket.channel_id).emit('playlist.append_item', { _id: idd[0].m, position: (rows[0].position + 1), url: data.url, caption: data.caption, duration: data.duration, display_name: socket.display_name, login_Name: socket.login_name, media_type: data.media_type });
+				console.log(idd[0].m);
+			});
+		});
 	});
 	
 	socket.on('playlist.reorder', function(data){
@@ -96,14 +103,15 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('playlist.play_item', function(data){
 		if(socket.is_admin) {
-			i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data._id));
+			i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data._id), socket, 'playlist.play_item');
 			socket.broadcast.to(socket.channel_id).emit('playlist.play_item', { status: 0, content: data });
 		}
 	});
 	socket.on('playlist.check_playing', function(){
 		// IF (now() > start_time + duration) THEN play_next()
-		r_query("SELECT start_time, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(data){
+		r_query("SELECT start_time, _id, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(data){
 			if((new Date().getTime() - new Date(data[0].start_time).getTime()) / 1000 > data[0].duration) {
+				i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data[0]._id), socket, 'playlist.check_playing');
 				io.sockets.in(socket.channel_id).emit('playlist.play_next');
 			}
 		});
@@ -113,10 +121,12 @@ io.sockets.on('connection', function (socket) {
 		console.log("media_item ended; from: " + socket.login_name + "/" + io.sockets.clients(socket.channel_id)[0].login_name);
 		if(socket.login_name === io.sockets.clients(socket.channel_id)[0].login_name){
 			console.log("updated to " + data._id);
-			i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data._id));
+			i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data._id), socket, 'playlist.item_changed');
 		}
 	});
 });
+
+
 
 function r_query(statement, socket, callback) {
 	sql.query(statement, function(err, rows, fields){
