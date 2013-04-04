@@ -127,6 +127,7 @@ function channel_controller($scope){
 			return '';
 	};
 
+	
 	$scope.playerStateChange = function(state){
 		if(state === 0){
 			$scope.playNext(true);

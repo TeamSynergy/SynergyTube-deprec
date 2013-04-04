@@ -1,6 +1,7 @@
 var io  = require('socket.io').listen(8080);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var hasher = require('password-hash');
 var mysql = require('mysql');
 var sql = mysql.createConnection({
 	user: 'root',
@@ -12,16 +13,34 @@ sql.connect(function(err){
 	if(err) throw err;
 });
 
+function findByUsername(login_name, fn) {
+	r_query("SELECT COUNT(*) AS '_c', _id, login_name, display_name, email, avatar_id, hash FROM tbluser WHERE login_name = " + sql.escape(login_name), socket, function(user_data){
+		if(user_data[0]._c > 0)
+			return fn(null, user_data[0]);
+		else
+			return fn(null, null);
+	});
+}
+
+passport.serializeUser(function(user, done){
+	done(null, user.login_name);
+});
+passport.deserializeUser(function(login_name){
+	findByUsername(login_name, function(err, user){
+		done(err, user);
+	});
+});
+
 passport.use(new LocalStrategy(
 	function(username, password, done){
-		User.findOne({ username: username }, function(err, user){
+		findByUsername(username, function(err, user){
 			if(err)
 				return done(err);
 			if(!user)
 				return done(null, false, { message: 'Incorrect username.' });
-			if(!user.validPassword(password))
+			if(!hasher.verify(password, user.hash))
 				return done(null, false, { message: 'Invalid Password.' });
-			return done(null, user);
+			return done(null, user);				
 		});
 	}
 ));
@@ -31,7 +50,7 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('channel.init', function(data){
 		// Check credentials
-		console.log("")
+		
 		
 		socket.channel_id = data.channel_id;
 		socket.login_name = data.login_name;
