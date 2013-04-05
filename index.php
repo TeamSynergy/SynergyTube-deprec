@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <title>SynergyTube</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.1/cyborg/bootstrap.min.css" rel="stylesheet">
-  <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+  <link href="/assets/css/style.css" rel="stylesheet">
   <link href="/assets/css/custom.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
 </head>
 <body>
-  <div class="navbar navbar-fixed-top navbar-inverse">
+  <div class="navbar">
     <div class="navbar-inner">
       <div class="container">
         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -36,53 +36,39 @@
 
   <div class="content-wrap">
     <div class="container content">
-      <!--<p>SynergyTube is a foolish attempt on successing the now shut-down synchtube. We will try hard to keep the experience here as close as possible to the original while also following our own ideas.</p>-->
       <div class="page-header"><h1>Browse all Channels</h1></div>
-      <div class="row-fluid">
-
-        <div class="span4 channel-thumb">
-          <div class="txt-wrap">
-            <h4><a href="/c/bronies-bw">BroniesBW</a></h4>
-            <p>Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat.<br>
-            <small class="muted">Viewers: 127 | Favourites: 981</small></p>
-          </div>
-          <div class="img-wrap">
-            <a href="#"><img src="https://img.youtube.com/vi/Sob1t-iUCmE/mqdefault.jpg" alt=""></a>
-            <div class="img-overlay">
-              <p><small class="muted">Now on:</small><br>Epic Wub Time: Musicians of Ponyville</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="span4 channel-thumb">
-          <div class="txt-wrap">
-            <h4><a href="#">IndustrialUnited</a></h4>
-            <p>From A like Agonoize to W like Wumpscut, we play everything Industrial! Enjoy brand new Tracks and also classics. Lorem Ipsum Dolor Sit Amet<br>
-            <small class="muted">Viewers: 127 | Favourites: 981</small></p>
-          </div>
-          <div class="img-wrap">
-            <a href="#"><img src="https://i4.ytimg.com/vi/cNAdtkSjSps/mqdefault.jpg" alt=""></a>
-            <div class="img-overlay">
-              <p><small class="muted">Now on:</small><br>Eisenfunk - Pong</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="span4 channel-thumb">
-          <div class="txt-wrap">
-            <h4><a href="#">ChadVaderTV</a></h4>
-            <p>We play Chad Vader - Staff Manager all the Time and never get bored! Find us on Facebook!<br>
-            <small class="muted">Viewers: 127 | Favourites: 981</small></p>
-          </div>
-          <div class="img-wrap">
-            <a href="#"><img src="https://i4.ytimg.com/vi/Stz3VHSQg44/mqdefault.jpg" alt=""></a>
-            <div class="img-overlay">
-              <p><small class="muted">Now on:</small><br>Epic Wub Time: Musicians of Ponyville</p>
-            </div>
-          </div>
-        </div>
-        
-      </div>
+	  <ul class="channel-previews unstyled">
+	  
+	    <li class="preview">
+		  <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/WgAqoXT-2kM/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
+		  <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
+		  <a href="/c/bronies-bw"><h3>Bronies BW</h3></a>
+		  <p class="description">Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia</p>
+		</li>
+	  
+	    <li class="preview">
+		  <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/PhiSgXz_l20/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
+		  <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
+		  <a href="/c/b-"><h3>PowerMetal</h3></a>
+		  <p class="description">In the Name of Metal! Beware of Hard Beats and fast rhythms on this Channel. We're brothers of Metal and if you dare to enter you are welcome.</p>
+		</li>
+	  
+	    <li class="preview">
+		  <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/ogIqayRDr4w/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
+		  <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
+		  <a href="/c/b-"><h3>BlameSociety</h3></a>
+		  <p class="description">Blame Society Films: if being funny was a disease, we'd be dead. Blame Society Films is best known for their Star Wars Darth Vader parody Chad Vader Day Shift Manage which as awarded "Best Fan Film" in 2007 by George Lucas. They are also known for their geek gaming show Beer and Board Games. Check out our Facebook and twitter links below to get updates and more info. Thanks for watching! Some or their popular characters are Hal Thompson Baby Cookie.</p>
+		</li>
+	  
+	    <li class="preview">
+		  <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/DM52HxaLK-Y/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
+		  <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
+		  <a href="/c/b-"><h3>GronkhDE</h3></a>
+		  <p class="description">Zart im Schmelz und s&uuml;ffig im Abgang. Ungebremster Spieltrieb seit 1896.</p>
+		</li>
+		
+		
+	  </ul>
     </div>
     <div class="footer-pusher"></div>
   </div>
@@ -97,5 +83,7 @@
 
   <script src="/assets/js/jquery.min.js"></script>
   <script src="/assets/js/bootstrap.min.js"></script>
+  <script src="/assets/js/jquery.ddd.min.js"></script>
+  <script>$('.preview').each(function(_){$(this).dotdotdot({watch:true});});$('._tt').tooltip({placement:'bottom'});</script>
 </body>
 </html>

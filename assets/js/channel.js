@@ -11,6 +11,7 @@ $(function(){
 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       	}
 	});
+	$('.channel-cover-text').dotdotdot({watch:true});
 });
 var app = angular.module('channel',[]);
 var socket = io.connect('http://' + window.location.host + ':8080');

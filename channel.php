@@ -8,10 +8,9 @@
 <!DOCTYPE html>
 <html ng-app="channel" ng-controller="channel_controller">
 <head>
-  <title>SynergyTube | Channel: <?php print($channel->name); ?></title>
+  <title>SynergyTube | Channel: <?php if($channel != null && ($channel->_c > 0)) print($channel->name); ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.1/cyborg/bootstrap.min.css" rel="stylesheet">
-  <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link href="/assets/css/custom.css" rel="stylesheet">
   <link href="/assets/css/style.css" rel="stylesheet">
@@ -19,26 +18,7 @@
 </head>
 <body>
 
-  <div id="addItem" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addItem-label" aria-hidden="true">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h3 id="addItem-label">Add new Media-Item</h3>
-    </div>
-    <div class="modal-body">
-      <form name="addItem-form">
-        <input class="input-block-level media-url" name="url" type="url" ng-model="new_item.url" placeholder="Paste Media-URL here..." required>
-        <span ng-show="addItem-form.url.$error.required" class="help-inline">Required</span>
-        <span ng-show="addItem-form.url.$error.url" class="help-inline">Not a URL</span>
-        <p>Provider: YouTube, Duration: {{getLength(addItem.duration)}}, Caption: {{addItem.caption}}, URL: {{addItem.url}}</p>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button class="btn" data-dismiss="modal">Close</button>
-      <a href="" class="btn btn-primary btn-submit" ng-click="addItem()">Add Item</a>
-    </div>
-  </div>
-
-  <div class="navbar navbar-fixed-top navbar-inverse">
+  <div class="navbar">
     <div class="navbar-inner">
       <div class="container">
         <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -61,13 +41,15 @@
   </div>
 
   <div class="content-wrap">
-    <div class="container content">
       <div class="channel-cover">
         <div class="channel-cover-text">
-          <h1><?php if($channel->_c > 0) print($channel->name); else print("Error - Channel not found!");?></h1>
-          <p><?php print($channel->description); ?></p>
-        </div>
+		  <div class="container">
+            <h1><?php if($channel != null && ($channel->_c > 0)) print($channel->name); else print("Error - Channel not found!");?></h1>
+            <p><?php if($channel != null && ($channel->_c > 0)) print($channel->description); ?></p>
+          </div>
+		</div>
       </div>
+    <div class="container content">
       <div class="alert-stack">
         <div ng-repeat="alert in alert_stack" class="alert alert-info" style="margin:0">
           <a href="" class="close" ng-click="dismiss_alert(alert)">&times;</a>
@@ -89,7 +71,7 @@
 							<th>Video</th>
 							<th>Length</th>
 							<th>User</th>
-							<th><a href="#addItem" role="button" data-toggle="modal"><i class="icon-plus-sign"></i></a></th>
+							<th><a href="#addItem"><i class="icon-plus-sign"></i></a></th>
 						</tr>
 					</thead>
 					<tbody dnd-list="playlist">
@@ -98,7 +80,7 @@
 							<td><a href="{{item.url}}">{{item.caption}}</a></td>
 							<td>{{getLength(item.duration)}}</td>
 							<td><a href="/user/{{item.login_name}}">{{item.display_name}}</a></td>
-							<td><a href="" ng-click="playItem(item._id)"><i class="icon-play icon-white"></i></a></td>
+							<td><a href="" ng-click="playItem(item._id)"><i class="icon-play"></i></a></td>
 						</tr>
 					<tbody>
 				</table>
@@ -151,6 +133,7 @@
   <script>$.fn.modal || document.write('<script type="text/javascript" src="/assets/js/bootstrap.min.js"><\/script>')</script>
   <script>document.write('<script type="text/javascript" src="//' + document.location.host + ':8080/socket.io/socket.io.js"><\/script>');</script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+  <script src="/assets/js/jquery.ddd.min.js"></script>
   <script src="/assets/js/channel.js"></script>
 </body>
 </html>
