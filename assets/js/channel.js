@@ -1,6 +1,7 @@
 $(function(){
 	// I hate the chromeless player, i'll never build my own controls. Take this dummy!
-	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "425", "356", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" });
+	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "100%", "380", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" });
+	$('._tt').tooltip({placement:'bottom'});
 	$('.media-url').keyup(function(){
 		var reg = /(v=|\/)([\w-]+)(&.+)?$/;
 		reg.exec($('.media-url').val());
@@ -14,7 +15,7 @@ $(function(){
 	$('.channel-cover-text').dotdotdot({watch:true});
 });
 var app = angular.module('channel',[]);
-var socket = io.connect('http://' + window.location.host + ':8080');
+var socket = io.connect('//' + window.location.host + ':8080');
 var player;
 
 function gdataCallbackProxy(data){angular.element('html').scope().gdataCallback(data);}
@@ -60,8 +61,10 @@ function channel_controller($scope){
 		var start_seconds = (new Date().getTime() - new Date(data.content.start_time).getTime()) / 1000;
 		var item;
 		for (var i = 0; i < $scope.playlist.length; i++) {
-			if($scope.playlist[i]._id === data.content._id)
+			if($scope.playlist[i]._id === data.content._id){
 				item = $scope.playlist[i];
+				break;
+			}
 		};
 		player.loadVideoById(item.url, start_seconds);
 		$scope.active_item = item._id;
@@ -87,11 +90,13 @@ function channel_controller($scope){
 		$scope.$apply();
 	});
 	socket.on('channel.user_leave', function(data){
-		alert(JSON.stringify($scope.online));
 		for (var i = 0; i < $scope.online.length; i++) {
-			if($scope.online[i].user_id === data.content._id)
+			if($scope.online[i].user_id === data.content._id){
 				$scope.online.splice(i, 1);
+				break;
+			}
 		};
+		$scope.$apply();
 	});
 	socket.socket.on('error', function(data){
 		$scope.alert_stack.push({ status: "-1", content: {code: "Unable to connect to Synergy-Server"}});

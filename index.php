@@ -39,33 +39,41 @@
       <div class="page-header"><h1>Browse all Channels</h1></div>
 	  <ul class="channel-previews unstyled">
 	  
-	    <li class="preview">
-		  <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/WgAqoXT-2kM/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
-		  <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
-		  <a href="/c/bronies-bw"><h3>Bronies BW</h3></a>
-		  <p class="description">Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia</p>
-		</li>
+	    <li>
+        <div class="preview">
+		      <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/WgAqoXT-2kM/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
+		      <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
+		      <a href="/c/bronies-bw"><h3>Bronies BW</h3></a>
+		      <p class="description">Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia</p>
+		    </div>
+      </li>
 	  
-	    <li class="preview">
-		  <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/PhiSgXz_l20/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
-		  <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
-		  <a href="/c/b-"><h3>PowerMetal</h3></a>
-		  <p class="description">In the Name of Metal! Beware of Hard Beats and fast rhythms on this Channel. We're brothers of Metal and if you dare to enter you are welcome.</p>
-		</li>
+	    <li>
+        <div class="preview">
+		      <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/PhiSgXz_l20/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
+		      <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
+		      <a href="/c/b-"><h3>PowerMetal</h3></a>
+		      <p class="description">In the Name of Metal! Beware of Hard Beats and fast rhythms on this Channel. We're brothers of Metal and if you dare to enter you are welcome.</p>
+		    </div>
+      </li>
 	  
-	    <li class="preview">
-		  <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/ogIqayRDr4w/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
-		  <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
-		  <a href="/c/b-"><h3>BlameSociety</h3></a>
-		  <p class="description">Blame Society Films: if being funny was a disease, we'd be dead. Blame Society Films is best known for their Star Wars Darth Vader parody Chad Vader Day Shift Manage which as awarded "Best Fan Film" in 2007 by George Lucas. They are also known for their geek gaming show Beer and Board Games. Check out our Facebook and twitter links below to get updates and more info. Thanks for watching! Some or their popular characters are Hal Thompson Baby Cookie.</p>
-		</li>
+      <li>
+        <div class="preview">
+		      <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/ogIqayRDr4w/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
+		      <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
+		      <a href="/c/b-"><h3>BlameSociety</h3></a>
+		      <p class="description">Blame Society Films: if being funny was a disease, we'd be dead. Blame Society Films is best known for their Star Wars Darth Vader parody Chad Vader Day Shift Manage which as awarded "Best Fan Film" in 2007 by George Lucas. They are also known for their geek gaming show Beer and Board Games. Check out our Facebook and twitter links below to get updates and more info. Thanks for watching! Some or their popular characters are Hal Thompson Baby Cookie.</p>
+		    </div>
+      </li>
 	  
-	    <li class="preview">
-		  <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/DM52HxaLK-Y/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
-		  <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
-		  <a href="/c/b-"><h3>GronkhDE</h3></a>
-		  <p class="description">Zart im Schmelz und s&uuml;ffig im Abgang. Ungebremster Spieltrieb seit 1896.</p>
-		</li>
+      <li>
+        <div class="preview">
+		      <a href="#"><div class="caption-wrapper"><img src="//img.youtube.com/vi/DM52HxaLK-Y/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
+		      <p class="info-bar"><span class="_tt" data-toggle="tooltip" title="20 Favourites"><i class="icon-star"></i> 20 </span>|<span class="_tt" data-toggle="tooltip" title="1570 Viewers"> <i class="icon-globe"></i> 1570 </span>|<span class="_tt" data-toggle="tooltip" title="5 Items in Playlist"> <i class="icon-th-list"></i> 5</span></p>
+		      <a href="/c/b-"><h3>GronkhDE</h3></a>
+		      <p class="description">Zart im Schmelz und s&uuml;ffig im Abgang. Ungebremster Spieltrieb seit 1896.</p>
+		    </div>
+      </li>
 		
 		
 	  </ul>

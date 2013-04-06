@@ -5,27 +5,17 @@ html,body {height:100%;background-image:url(/assets/img/groovepaper.png);}
 .footer {background-color:#444;}
 
 @media (max-width: 979px) {
-  .sp1{width:100% !important;}
-  .sp2{width:100% !important;}
-  .chat-submit > div{width:90%!important}
   .channel-second{height:100% !important;}
-  .footer{margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px;}
-  .channel-previews .preview{margin:15px 21px !important;}
 }
 @media (max-width: 1199px) {
-  .channel-previews .preview{
-    margin:15px 75px;
-  }
+  html, body{margin:0 !important;padding:0 !important;}
+  .container{width:100%!important;}
+  .channel-previews li{width:50%;}
 }
 @media (max-width: 767px){
-  html, body{
-    margin:0 !important;
-	padding:0 !important;
-  }
-  .channel-previews .preview{
-    width:40% !important;
-    margin:15px 5% !important;
-  }
+  .sp1{width:100% !important;}
+  .sp2{width:100% !important;}
+  .channel-previews li{width:100%;}
 }
 
 .navbar-inner{
@@ -46,10 +36,15 @@ html,body {height:100%;background-image:url(/assets/img/groovepaper.png);}
   height:380px;
   margin:0;
   padding:0;
+  margin-bottom:-5px;
 }
-.youtube-player > .playlist {
+.playlist{
+  height:200px;
+}
+.playlist > .playlist-table {
   overflow: auto;
-  height:216px;
+  display:block;
+  height:100%;
 }
 .channel-second > .channel-sidebar {
   background:#222;
@@ -58,12 +53,9 @@ html,body {height:100%;background-image:url(/assets/img/groovepaper.png);}
 }
 .channel-chat{
   height:100%;
-  background: #333;
-  -webkit-border-radius: 0px 0px 4px 4px;
-          border-radius: 0px 0px 4px 4px;
 }
 .channel-chat ul{
-  height:510px;
+  height:520px;
   overflow:auto;
 }
 .sp2{
@@ -75,11 +67,4 @@ html,body {height:100%;background-image:url(/assets/img/groovepaper.png);}
   width:15%;
   float:left;
   height:100%;
-}
-.chat-submit > div{
-  width:80%;
-}
-.chat-submit{
-  width:100%;
-  margin:auto;
 }
