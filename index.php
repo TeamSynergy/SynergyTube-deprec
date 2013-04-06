@@ -27,7 +27,7 @@
             <li><a href="/categories">Categories</a></li>
           </ul>
           <ul class="nav pull-right">
-            <li><a href="#">Log In</a></li>
+            <li><a href="#">Login</a></li>
           </ul>
         </div>
       </div>

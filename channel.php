@@ -36,7 +36,20 @@
             <li><a href="/categories">Categories</a></li>
           </ul>
           <ul class="nav pull-right">
-            <li><a href="#">Log In</a></li>
+            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
+              <div class="dropdown-menu login-dropdown">
+                <form method="post" action="login" accept-charset="UTF-8">
+                  <input type="text" placeholder="Username" name="username" required>
+                  <input type="password" placeholder="Password" name="password" required>
+                  <label class="checkbox"><input type="checkbox" name="remember"> Remember me</label>
+                  <input class="btn btn-primary btn-block" type="submit" value="Login">
+                  <p class="text-center">or</p>
+                  <a href="" class="btn btn-block">Login with Facebook</a>
+                  <a href="" class="btn btn-block">Login with Twitter</a>
+                  <a href="" class="btn btn-block">Login with Google</a>
+                </form>
+              </div>
+            </li>
           </ul>
         </div>
       </div>
@@ -104,7 +117,7 @@
           </ul>
 
           <form class="chat-submit" ng-submit="sendMessage()">
-            <input type="text" ng-model="message" placeholder="write something..." class="input-block-level">
+            <input type="text" ng-model="message" placeholder="Chat" class="input-block-level">
           </form>
         </div>
       

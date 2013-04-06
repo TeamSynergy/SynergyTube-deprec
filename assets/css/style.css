@@ -76,7 +76,11 @@
   color:#666;
 }
 
-
+/* === Login-Dropdown === */
+.login-dropdown {
+  padding:15px;
+  padding-bottom:0;
+}
 
 /* === Channel-Cover === */
 .channel-cover{
