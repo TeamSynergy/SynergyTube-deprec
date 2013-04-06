@@ -73,7 +73,7 @@ io.sockets.on('connection', function (socket) {
 								if(socket.is_owner)
 									socket.is_admin = true;
 
-								socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: { display_name: user_data.display_name, login_name: user_data.login_name, is_admin: socket.is_admin, user_id: user_data._id }});
+								socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id }});
 								socket.emit('channel.init', { status: 0, content: { users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: current_item_data[0] }});
 							});
 						});
@@ -83,7 +83,7 @@ io.sockets.on('connection', function (socket) {
 		});
 	});
 	socket.on('disconnect', function(){
-		socket.broadcast.to(socket.channel_id).emit('channel.user_leave', { status: 0, display_name: socket.user_name });
+		socket.broadcast.to(socket.channel_id).emit('channel.user_leave', { status: 0, content: { _id: socket.user_id }});
 		socket.leave(socket.channel_id);
 	});
 	
@@ -126,33 +126,17 @@ io.sockets.on('connection', function (socket) {
 			socket.broadcast.to(socket.channel_id).emit('playlist.play_item', { status: 0, content: data });
 		}
 	});
-	socket.on('playlist.check_playing', function(){
-		// IF (now() > start_time + duration) THEN play_next() ELSE play_current()
-		r_query("SELECT start_time, _id, duration, position FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(data){
-			if((new Date().getTime() - new Date(data[0].start_time).getTime()) / 1000 > data[0].duration) {
-				r_query("SELECT COUNT(*) AS '_c', position, _id, start_time, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " AND position = " + (sql.escape(data[0].position) + 1), socket, function(next_data){
-					if(next_data[0]._c > 0){
-						i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(next_data[0]._id), socket, 'playlist.check_playing');
-					} else {
-						i_query("UPDATE tblMedia SET start_time = NOW() WHERE position = 1 AND channel_id = " + sql.escape(socket.channel_id), socket, 'playlist.check_playing')
-					}
-				});
-				
-				io.sockets.in(socket.channel_id).emit('playlist.play_next');
-			} else {
-				socket.emit('playlist.play_item', { status: 0, content: data[0]});
-			}
-		});
-	});
 	socket.on('playlist.item_changed', function(data){
-		// To prevent multiple Executions
-		console.log("media_item ended; from: " + socket.login_name + "/" + io.sockets.clients(socket.channel_id)[0].login_name);
-		r_query("SELECT start_time, _id, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(data){
-			if((new Date().getTime() - new Date(data[0].start_time).getTime()) / 1000 > data[0].duration) {
-				if(socket.login_name === io.sockets.clients(socket.channel_id)[0].login_name)
-					i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data._id), socket, 'playlist.item_changed');
-			} else
-				socket.emit('playlist.play_item', { status: 0, content: { _id: data[0]._id, start_time: data[0].start_time }});
+		// Check if it really ended
+		console.log("item changed - claim from: " + socket.login_name);
+		r_query("SELECT start_time, _id, duration, caption FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(last_data){
+			if((new Date().getTime() - new Date(last_data[0].start_time).getTime()) / 1000 > last_data[0].duration) {
+				console.log("old item " + last_data[0].caption + " outdated, new item is " + data.caption)
+				i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data._id), socket, 'playlist.item_changed');
+			} else {
+				console.log("send him back!");
+				socket.emit('playlist.play_item', { status: 0, content: { _id: last_data[0]._id, start_time: last_data[0].start_time }});
+			}
 		});
 	});
 });

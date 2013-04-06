@@ -76,14 +76,9 @@
 .channel-cover{
   margin:0 !important;
   padding:0 !important;
-  background: url(/assets/img/2.png) no-repeat center center;
   height:380px;
   width:100%;
   color:#fff;
-  -webkit-background-size: cover;
-     -moz-background-size: cover;
-       -o-background-size: cover;
-          background-size: cover;
 }
 .channel-cover-text{
   background:rgba(0, 0, 0, 0.8);

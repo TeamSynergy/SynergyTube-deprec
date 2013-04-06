@@ -2,7 +2,9 @@
   $con = new mysqli("localhost", "root", "root", "synergy");
   if($con->connect_errno)
     print("<h1>Error: DB-Fuckup</h1>");
-  $channel = mysqli_fetch_object($con->query("SELECT count(*) AS '_c', _id, name, cover_id, description, views FROM tblChannels WHERE custom_url = '".$con->real_escape_string($_GET['c'])."'"));
+  $channel = mysqli_fetch_object($con->query("SELECT COUNT(*) AS '_c', _id, name, cover_id, cover_repeat, cover_pos_x, cover_pos_y, description, views FROM tblChannels WHERE custom_url = '".$con->real_escape_string($_GET['c'])."'"));
+  if(!$channel)
+    print("<h1>".$con->error."</h1>")
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +16,8 @@
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link href="/assets/css/custom.css" rel="stylesheet">
   <link href="/assets/css/style.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold">
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet">
+  <style type="text/css">.channel-cover{background:<?php print("url(/assets/img/".$channel->cover_id.") ".$channel->cover_repeat." ".$channel->cover_pos_x." ".$channel->cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
 </head>
 <body>
 

@@ -9,7 +9,7 @@ $(function(){
 			tag.src = "https://gdata.youtube.com/feeds/api/videos/" + RegExp.$2 + "?alt=json-in-script&v=2&callback=gdataCallbackProxy";
 			var firstScriptTag = document.getElementsByTagName('script')[0];
 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-      	}
+		}
 	});
 	$('.channel-cover-text').dotdotdot({watch:true});
 });
@@ -20,9 +20,9 @@ var player;
 function gdataCallbackProxy(data){angular.element('html').scope().gdataCallback(data);}
 function stateChangeProxy(state){angular.element('html').scope().playerStateChange(state);}
 function onYouTubePlayerReady(playerId) {
-    player = document.getElementById("myytplayer");
-    player.addEventListener("onStateChange", "stateChangeProxy");
-    socket.emit('channel.init', { channel_id: channel_id, login_name: 'screeny05' });
+	player = document.getElementById("myytplayer");
+	player.addEventListener("onStateChange", "stateChangeProxy");
+	socket.emit('channel.init', { channel_id: channel_id, login_name: 'screeny05' });
 }
 
 function channel_controller($scope){
@@ -46,13 +46,11 @@ function channel_controller($scope){
 		$scope.addItem = {};
 		
 		var start_seconds = (new Date().getTime() - new Date(data.content.now_playing.start_time).getTime()) / 1000;
-		if(start_seconds > data.content.now_playing.duration){
-			socket.emit('playlist.check_playing');
-		} else
-			player.loadVideoById(data.content.now_playing.url, start_seconds);
+		
+		player.loadVideoById(data.content.now_playing.url, start_seconds);
+		
 		$scope.$apply();
 		$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
-		
 	});
 	socket.on('playlist.append_item', function(data){
 		$scope.playlist.push(data.content);
@@ -79,9 +77,6 @@ function channel_controller($scope){
 		};
 		$scope.$apply();
 	});
-	socket.on('playlist.play_next', function() {
-		$scope.playNext(false);
-	});
 	socket.on('chat.incoming', function(data){
 		$scope.chat.push(data.content);
 		$scope.$apply();
@@ -90,6 +85,13 @@ function channel_controller($scope){
 	socket.on('channel.user_join', function(data){
 		$scope.online.push(data.content);
 		$scope.$apply();
+	});
+	socket.on('channel.user_leave', function(data){
+		alert(JSON.stringify($scope.online));
+		for (var i = 0; i < $scope.online.length; i++) {
+			if($scope.online[i].user_id === data.content._id)
+				$scope.online.splice(i, 1);
+		};
 	});
 	socket.socket.on('error', function(data){
 		$scope.alert_stack.push({ status: "-1", content: {code: "Unable to connect to Synergy-Server"}});
@@ -160,7 +162,7 @@ function channel_controller($scope){
 		$scope.$apply();
 		player.loadVideoById(next_item.url);
 		if(emit)
-			socket.emit('playlist.item_changed', { _id: $scope.active_item });
+			socket.emit('playlist.item_changed', { _id: $scope.active_item, caption: next_item.caption });
 	};
 	$scope.playItem = function(item_id){
 		var item;
