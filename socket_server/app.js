@@ -168,15 +168,5 @@ function init_online(channel_id){
 	io.sockets.clients(channel_id).forEach(function(socket){
 		arr.push({display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id });
 	});
-	arr.push({display_name:"Blankblade",login_name:"Blankblade"});
-	arr.push({display_name:"Little Crow",login_name:"little_crow"});
-	arr.push({display_name:"Button Mash",login_name:"buttonMash"});
-	arr.push({display_name:"Wolfprint",login_name:"Wolfprint"});
-	arr.push({display_name:"Brushwipe",login_name:"Brushwipe"});
-	arr.push({display_name:"Rune",login_name:"Rune"});
-	arr.push({display_name:"Masky",login_name:"Masky"});
-	arr.push({display_name:"Tigerstripe",login_name:"Tigerstripe"});
-	arr.push({display_name:"Sunflare",login_name:"Sunflare"});
-	arr.push({display_name:"Rira Timeturner",login_name:"rira"});
 	return arr;
 }
