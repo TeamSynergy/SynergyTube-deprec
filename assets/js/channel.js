@@ -51,7 +51,7 @@ function channel_controller($scope){
 		$scope.views = data.content.views;
 		$scope.active_item = data.content.now_playing._id;
 		$scope.logged_in = true;
-		
+
 		$scope.is_admin = data.content.user_data.is_admin;
 		$scope.login_name = data.content.user_data.login_name;
 		$scope.display_name = data.content.user_data.display_name;
@@ -134,6 +134,12 @@ function channel_controller($scope){
 	}
 	$scope.logout = function(){
 		socket.emit('user.logout');
+	}
+	$scope.create_account = function() {
+		socket.emit('user.create_account', { login_name: $scope.create_login_name, email: $scope.email, password: $scope.create_password });
+		$scope.create_login_name = "";
+		$scope.email = "";
+		$scope.create_password = "";
 	}
 	$scope.sendMessage = function(){
 		if($scope.message)
@@ -261,13 +267,15 @@ app.directive('dndList', function(){
 				scope.reordered = true;
 			},
 			stop: function(event, ui){
-				console.log("Item: " + toUpdate[startIndex]._id + "; Old Position: " + toUpdate[startIndex].position + "; New Position: " + ($(ui.item).index() + 1));
-				var newIndex = ($(ui.item).index());
-				var toMove = toUpdate[startIndex];
-				toUpdate.splice(startIndex, 1);
-				toUpdate.splice(newIndex,0,toMove);
-				for(var i = 0; i < scope.playlist.length; i++){
-					scope.playlist[i].position = i + 1;
+				if(socket.is_admin) {
+					console.log("Item: " + toUpdate[startIndex]._id + "; Old Position: " + toUpdate[startIndex].position + "; New Position: " + ($(ui.item).index() + 1));
+					var newIndex = ($(ui.item).index());
+					var toMove = toUpdate[startIndex];
+					toUpdate.splice(startIndex, 1);
+					toUpdate.splice(newIndex,0,toMove);
+					for(var i = 0; i < scope.playlist.length; i++){
+						scope.playlist[i].position = i + 1;
+					}
 				}
 				scope.$apply(scope.playlist);
 			},

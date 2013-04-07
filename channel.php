@@ -50,6 +50,16 @@
                 </form>
               </div>
             </li>
+            <li class="dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Create an Account<b class="caret"></b></a>
+              <div class="dropdown-menu login-dropdown">
+                <form ng-submit="create_account()">
+                  <input type="text" placeholder="Username" name="username" ng-model="create_login_name" required>
+                  <input type="email" placeholder="Email" name="email" ng-model="email" required>
+                  <input type="password" placeholder="Password" name="password" ng-model="create_password" required>
+                  <input class="btn btn-primary btn-block" type="submit" value="Create Account">
+                </form>
+              </div>
+            </li>
             <li class="dropdown" ng-show="logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{display_name}}<b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu">
                 <li><a href=""><i class="icon-user"></i> Profile</a></li>
@@ -90,16 +100,16 @@
           <div class="playlist">
             <div class="info-bar">
               <div class="pull-left">
-                <a href="" class="_tt" data-toggle="tooltip" title="{{favs}} Favourites"><i class="icon-heart"></i> {{favs}}</a> |
-                <span class="_tt" data-toggle="tooltip" title="{{views}} Views"><i class="icon-globe"></i> {{views}}</span> |
-                <span class="_tt" data-toggle="tooltip" title="{{online.length}} Online"><i class="icon-eye-open"></i> {{online.length}}</span> |
-                <span class="_tt" data-toggle="tooltip" title="{{playlist.length}} Items in Playlist"><i class="icon-th-list"></i> {{playlist.length}}</span>
+                <a href="" class="_tt" data-toggle="tooltip" title="Favourites"><i class="icon-heart"></i> {{favs}}</a> |
+                <span class="_tt" data-toggle="tooltip" title="Overall Views"><i class="icon-globe"></i> {{views}}</span> |
+                <span class="_tt" data-toggle="tooltip" title="Online Users"><i class="icon-eye-open"></i> {{online.length}}</span> |
+                <span class="_tt" data-toggle="tooltip" title="Items in Playlist"><i class="icon-th-list"></i> {{playlist.length}}</span>
               </div>
               <div class="pull-right">
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play last"><i class="icon-backward"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Pause"> <i class="icon-pause"></i></a>
-                <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play next"><i class="icon-forward"></i></a> |
-                <a href="" class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Add new Item" ng-click="showAdd=!showAdd"><i class="icon-plus"></i></a> |
+                <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play next"><i class="icon-forward"></i></a><span ng-show="is_admin"> |</span>
+                <a href="" class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Add new Item" ng-click="showAdd=!showAdd"><i class="icon-plus"></i></a><span ng-show="is_admin"> |</span>
                 <a href="" class="_tt" data-toggle="tooltip" title="Search Item"><i class="icon-search"></i></a>
               </div>
             </div>
@@ -157,7 +167,7 @@
 
   <div class="footer">
     <div class="container footer-container">
-      <p>&copy; SynergyTube by Screeny05; Fork me on <a href="https://github.com/screeny05/synergyTube">GitHub</a></p>
+      <p>&copy; SynergyTube by Screeny05 (It's so alpha you shouldn't use it); Fork me on <a href="https://github.com/screeny05/synergyTube">GitHub</a></p>
     </div>
   </div>
 

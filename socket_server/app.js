@@ -74,6 +74,8 @@ io.sockets.on('connection', function (socket) {
 		socket.leave(socket.channel_id);
 	});
 	
+	/* --User Related--*/
+
 	socket.on('user.login', function(data){
 		r_query("SELECT COUNT(*) AS '_c', hash FROM tblUser WHERE login_name = " + sql.escape(data.login_name), socket, function(user_data){
 			if(user_data[0]._c > 0)
@@ -87,10 +89,12 @@ io.sockets.on('connection', function (socket) {
 				socket.emit("error", { status: 4, content: { code: "Incorrect _Username or Password." }});
 		});
 	});
-
 	socket.on('user.logout', function(){
 		i_query("UPDATE tblUser SET session_id = '' WHERE login_name = " + sql.escape(socket.login_name), socket, "user.logout");
 		socket.emit("user.destroy_session");
+	});
+	socket.on('user.create_account', function(data){
+		i_query("INSERT INTO tblUser (login_name, display_name, email, strategy, hash) VALUES (" + sql.escape(data.login_name) + ", " + sql.escape(data.login_name) + ", " + sql.escape(data.email) + ", 'local', " + sql.escape(hasher.generate(data.password)) + ")", socket, "user.create_account");
 	});
 	
 	/*--Chat Related--*/

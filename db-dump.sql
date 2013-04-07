@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 31. März 2013 um 00:46
+-- Erstellungszeit: 07. April 2013 um 20:44
 -- Server Version: 5.5.9
 -- PHP-Version: 5.2.17
 
@@ -65,6 +65,9 @@ CREATE TABLE IF NOT EXISTS `tblchannels` (
   `_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `cover_id` varchar(45) NOT NULL,
+  `cover_repeat` varchar(10) NOT NULL,
+  `cover_pos_x` varchar(10) NOT NULL,
+  `cover_pos_y` varchar(10) NOT NULL,
   `custom_url` varchar(45) DEFAULT NULL,
   `owner_id` int(11) NOT NULL,
   `description` varchar(400) NOT NULL,
@@ -73,14 +76,15 @@ CREATE TABLE IF NOT EXISTS `tblchannels` (
   PRIMARY KEY (`_id`),
   UNIQUE KEY `name_UNIQUE` (`name`),
   UNIQUE KEY `custom_url_UNIQUE` (`custom_url`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Daten für Tabelle `tblchannels`
 --
 
-INSERT INTO `tblchannels` (`_id`, `name`, `cover_id`, `custom_url`, `owner_id`, `description`, `description_short`, `views`) VALUES
-(1, 'Bronies BW', '', 'bronies-bw', 1, 'Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia', 'Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat.', 0);
+INSERT INTO `tblchannels` (`_id`, `name`, `cover_id`, `cover_repeat`, `cover_pos_x`, `cover_pos_y`, `custom_url`, `owner_id`, `description`, `description_short`, `views`) VALUES
+(1, 'Bronies BW', '2.png', 'no-repeat', 'center', 'center', 'bronies-bw', 1, 'Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia', 'Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat.', 0),
+(2, 'Powermetal is best Metal!', '0.png', 'no-repeat', 'center', 'center', 'powermetal', 1, 'In the name of Metal! Beware of hard beats and fast rhythms on this channel.', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -99,18 +103,21 @@ CREATE TABLE IF NOT EXISTS `tblmedia` (
   `start_time` datetime NOT NULL,
   `media_type` varchar(15) NOT NULL DEFAULT 'youtube',
   PRIMARY KEY (`_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=22 ;
 
 --
 -- Daten für Tabelle `tblmedia`
 --
 
 INSERT INTO `tblmedia` (`_id`, `caption`, `url`, `position`, `channel_id`, `user_id`, `duration`, `start_time`, `media_type`) VALUES
-(1, 'TuXe - Epic Wub Time MoP Wub Remix', 'WgAqoXT-2kM', 2, 1, 1, 241, '0000-00-00 00:00:00', 'youtube'),
-(2, 'Eurobeat Brony - Discord (The Living Tombstone''s Remix)', 'xPfMb50dsOk', 3, 1, 1, 194, '0000-00-00 00:00:00', 'youtube'),
-(3, 'Raise This Barn - MBAlpha (Remix)', '9FmzLk7jkSA', 5, 1, 1, 242, '0000-00-00 00:00:00', 'youtube'),
-(4, '[PMV] Rainbow Factory Music Video', '4PjIhs72l0A', 4, 1, 1, 210, '0000-00-00 00:00:00', 'youtube'),
-(5, '[PMV] Awoken', 'KwW9slmrKXo', 1, 1, 1, 283, '0000-00-00 00:00:00', 'youtube');
+(1, 'TuXe - Epic Wub Time MoP Wub Remix', 'WgAqoXT-2kM', 2, 1, 1, 241, '2013-04-07 20:27:15', 'youtube'),
+(2, 'Eurobeat Brony - Discord (The Living Tombstone''s Remix)', 'xPfMb50dsOk', 5, 1, 1, 194, '2013-04-07 20:39:43', 'youtube'),
+(3, 'Raise This Barn - MBAlpha (Remix)', '9FmzLk7jkSA', 6, 1, 1, 242, '2013-04-07 20:43:03', 'youtube'),
+(4, '[PMV] Rainbow Factory Music Video', '4PjIhs72l0A', 3, 1, 1, 210, '2013-04-07 20:31:19', 'youtube'),
+(5, '[PMV] Awoken', 'KwW9slmrKXo', 4, 1, 1, 283, '2013-04-07 20:34:55', 'youtube'),
+(6, 'Replacer - Song for an Earth Pony', 'rpRJfKcip1A', 7, 1, 1, 391, '2013-04-07 20:00:17', 'youtube'),
+(7, 'MLP-FiM: Smile Song (Rock Cover)', '1xDzKkjwD7g', 1, 1, 1, 203, '2013-04-07 20:23:46', 'youtube'),
+(20, 'Loyalty - original MLP music by AcousticBrony & MandoPony', 'voj9MhBUaTI', 8, 1, 1, 375, '2013-04-07 20:07:02', 'youtube');
 
 -- --------------------------------------------------------
 
@@ -125,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `tblmessages` (
   `user_id` int(11) NOT NULL,
   `channel_id` int(11) NOT NULL,
   PRIMARY KEY (`_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=48 ;
 
 --
 -- Daten für Tabelle `tblmessages`
@@ -175,7 +182,9 @@ INSERT INTO `tblmessages` (`_id`, `timestamp`, `content`, `user_id`, `channel_id
 (42, '2013-03-30 18:08:50', 'irgendeine policy.. im firefox, ie und safari funktioniert das tadellos aber mit chrome nicht :DD', 1, 1),
 (43, '2013-03-30 18:11:54', 'hmkay', 1, 1),
 (44, '2013-03-30 18:14:59', 'aber ist nicht so schlimm^^', 1, 1),
-(45, '2013-03-30 18:19:07', 'http://94.218.64.58/db-uml.png', 1, 1);
+(45, '2013-03-30 18:19:07', 'http://94.218.64.58/db-uml.png', 1, 1),
+(46, '2013-04-06 19:40:32', 'I''m back!', 1, 1),
+(47, '2013-04-07 16:11:09', 'FooBar', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -189,15 +198,19 @@ CREATE TABLE IF NOT EXISTS `tbluser` (
   `display_name` varchar(45) DEFAULT NULL,
   `email` varchar(90) NOT NULL,
   `avatar_id` varchar(45) DEFAULT NULL,
+  `strategy` varchar(10) NOT NULL,
+  `hash` varchar(200) NOT NULL,
+  `session_id` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`_id`),
   UNIQUE KEY `login_name_UNIQUE` (`login_name`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `display_name_UNIQUE` (`display_name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `tbluser`
 --
 
-INSERT INTO `tbluser` (`_id`, `login_name`, `display_name`, `email`, `avatar_id`) VALUES
-(1, 'screeny05', 'Graycode', 'screeny05@gmail.com', NULL);
+INSERT INTO `tbluser` (`_id`, `login_name`, `display_name`, `email`, `avatar_id`, `strategy`, `hash`, `session_id`) VALUES
+(1, 'screeny05', 'Graycode', 'screeny05@gmail.com', NULL, 'local', 'sha1$ddab66da$1$2a0a55b9dd86976bb508368716a8f6707056e625', ''),
+(3, 'root', 'root', 'webmaster@localcraft.de', NULL, 'local', '-', '-');
