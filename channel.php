@@ -115,8 +115,8 @@
                   <td><a href="{{item.url}}">{{item.caption}}</a></td>
                   <td>{{getLength(item.duration)}}</td>
                   <td><a href="/user/{{item.login_name}}">{{item.display_name}}</a></td>
-                  <td><a class="_tt" href="" ng-click="play_item(item._id)"><i class="icon-play"></i></a></td>
-                  <td><a class="_tt" href="" ng-click="remove_item(item._id)"><i class="icon-trash"></i></a></td>
+                  <td><a class="_tt" data-toggle="tooltip" title="Play this" href="" ng-click="play_item(item._id)"><i class="icon-play"></i></a></td>
+                  <td><a class="_tt" data-toggle="tooltip" title="Remove this" href="" ng-click="remove_item(item._id)"><i class="icon-trash"></i></a></td>
                 </tr>
               </tbody>
             </table>

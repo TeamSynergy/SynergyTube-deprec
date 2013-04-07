@@ -17,7 +17,7 @@ $(function(){
 	$('.channel-cover-text').dotdotdot({watch:true});
 });
 var app = angular.module('channel',[]);
-var socket = io.connect('//' + window.location.host + ':8080');
+var socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=01&channel_id=" + channel_id });
 var player;
 
 function gdataCallbackProxy(data){angular.element('html').scope().gdataCallback(data);}
@@ -25,7 +25,6 @@ function stateChangeProxy(state){angular.element('html').scope().playerStateChan
 function onYouTubePlayerReady(playerId) {
 	player = document.getElementById("myytplayer");
 	player.addEventListener("onStateChange", "stateChangeProxy");
-	socket.emit('channel.init', { channel_id: channel_id, login_name: 'screeny05' });
 }
 
 function channel_controller($scope){
@@ -141,11 +140,11 @@ function channel_controller($scope){
 	
 	$scope.playerStateChange = function(state){
 		if(state === 0){
-			$scope.playNext(true);
 			console.log("Media_Item ended");
+			$scope.playNext();
 		}
 	};
-	$scope.playNext = function(emit) {
+	$scope.playNext = function() {
 		var pos = -1;
 		var next_item = null;
 		// This'll be a torture!
@@ -165,12 +164,11 @@ function channel_controller($scope){
 				if($scope.playlist[i].position === 1)
 					next_item = $scope.playlist[i];
 
-		console.log("Old pos: " + pos + " New pos: " + next_item.pos);
+		console.log("Old pos: " + pos + " New pos: " + next_item.position);
 		$scope.active_item = next_item._id;
 		$scope.$apply();
 		player.loadVideoById(next_item.url);
-		if(emit)
-			socket.emit('playlist.item_changed', { _id: $scope.active_item, caption: next_item.caption });
+		socket.emit('playlist.item_changed', { _id: $scope.active_item, caption: next_item.caption });
 	};
 	$scope.play_item = function(item_id){
 		var item;
