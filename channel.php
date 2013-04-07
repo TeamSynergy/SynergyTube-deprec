@@ -96,10 +96,10 @@
                 <span class="_tt" data-toggle="tooltip" title="{{playlist.length}} Items in Playlist"><i class="icon-th-list"></i> {{playlist.length}}</span>
               </div>
               <div class="pull-right">
-                <a class="_tt" href="" data-toggle="tooltip" title="Play last"><i class="icon-backward"></i></a>
-                <a class="_tt" href="" data-toggle="tooltip" title="Pause"> <i class="icon-pause"></i></a>
-                <a class="_tt" href="" data-toggle="tooltip" title="Play next"><i class="icon-forward"></i></a> |
-                <a href="" class="_tt" data-toggle="tooltip" title="Add new Item" ng-click="showAdd=!showAdd"><i class="icon-plus"></i></a> |
+                <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play last"><i class="icon-backward"></i></a>
+                <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Pause"> <i class="icon-pause"></i></a>
+                <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play next"><i class="icon-forward"></i></a> |
+                <a href="" class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Add new Item" ng-click="showAdd=!showAdd"><i class="icon-plus"></i></a> |
                 <a href="" class="_tt" data-toggle="tooltip" title="Search Item"><i class="icon-search"></i></a>
               </div>
             </div>
@@ -123,8 +123,8 @@
                   <td><a href="{{item.url}}">{{item.caption}}</a></td>
                   <td>{{getLength(item.duration)}}</td>
                   <td><a href="/user/{{item.login_name}}">{{item.display_name}}</a></td>
-                  <td><a class="_tt" data-toggle="tooltip" title="Play this" href="" ng-click="play_item(item._id)"><i class="icon-play"></i></a></td>
-                  <td><a class="_tt" data-toggle="tooltip" title="Remove this" href="" ng-click="remove_item(item._id)"><i class="icon-trash"></i></a></td>
+                  <td><a class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Play this" href="" ng-click="play_item(item._id)"><i class="icon-play"></i></a></td>
+                  <td><a class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Remove this" href="" ng-click="remove_item(item._id)"><i class="icon-trash"></i></a></td>
                 </tr>
               </tbody>
             </table>

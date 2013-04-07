@@ -51,7 +51,8 @@ function channel_controller($scope){
 		$scope.views = data.content.views;
 		$scope.active_item = data.content.now_playing._id;
 		$scope.logged_in = true;
-
+		
+		$scope.is_admin = data.content.user_data.is_admin;
 		$scope.login_name = data.content.user_data.login_name;
 		$scope.display_name = data.content.user_data.display_name;
 

@@ -38,7 +38,7 @@ function emitUserData(socket) {
 		if(socket.is_owner)
 			socket.is_admin = true;
 		socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id }});
-		socket.emit('channel.init', { status: 0, content: { user_data: { login_name: user_data[0].login_name, display_name: user_data[0].display_name }, users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: current_item_data[0] }});
+		socket.emit('channel.init', { status: 0, content: { user_data: { login_name: user_data[0].login_name, display_name: user_data[0].display_name, is_admin: socket.is_admin }, users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: current_item_data[0] }});
 	});});});});});});
 }
 
@@ -96,8 +96,10 @@ io.sockets.on('connection', function (socket) {
 	/*--Chat Related--*/
 	
 	socket.on('chat.send', function(data){
-		i_query("INSERT INTO tblMessages (user_id, timestamp, channel_id, content) VALUES (" + sql.escape(socket.user_id) + ", NOW(), " + sql.escape(socket.channel_id) + ", " + sql.escape(data.content) + ")", socket, "chat.send");
-		io.sockets.in(socket.channel_id).emit('chat.incoming', { status: 0, content: { display_name: socket.display_name, content: data.content, timestamp: new Date() }});
+		if(socket.logged_in) {
+			i_query("INSERT INTO tblMessages (user_id, timestamp, channel_id, content) VALUES (" + sql.escape(socket.user_id) + ", NOW(), " + sql.escape(socket.channel_id) + ", " + sql.escape(data.content) + ")", socket, "chat.send");
+			io.sockets.in(socket.channel_id).emit('chat.incoming', { status: 0, content: { display_name: socket.display_name, content: data.content, timestamp: new Date() }});
+		}
 	});
 	
 	
@@ -134,7 +136,6 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 	socket.on('playlist.remove_item', function(data){
-		console.log("remove " + data._id)
 		if(socket.is_admin)
 			i_query("DELETE FROM tblMedia WHERE _id = " + sql.escape(data._id));
 	});
