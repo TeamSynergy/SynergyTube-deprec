@@ -96,7 +96,7 @@
               </div>
             </div>
 
-            <form class="form-append form-horizontal" name="appendForm" ng-submit="add_item(); showAdd=false;" ng-show="showAdd">
+            <form class="form-append form-horizontal" name="appendForm" ng-submit="add_item()" ng-show="showAdd">
               <label class="control-label" for="itemURL">Item-URL</label>
               <div class="controls">
                 <input type="url" class="input-block-level pull-left" placeholder="Item-URL" id="itemURL" ng-model="itemURL" required>
@@ -115,7 +115,8 @@
                   <td><a href="{{item.url}}">{{item.caption}}</a></td>
                   <td>{{getLength(item.duration)}}</td>
                   <td><a href="/user/{{item.login_name}}">{{item.display_name}}</a></td>
-                  <td><a href="" ng-click="playItem(item._id)"><i class="icon-play"></i></a></td>
+                  <td><a class="_tt" href="" ng-click="play_item(item._id)"><i class="icon-play"></i></a></td>
+                  <td><a class="_tt" href="" ng-click="remove_item(item._id)"><i class="icon-trash"></i></a></td>
                 </tr>
               </tbody>
             </table>

@@ -112,10 +112,13 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	socket.on('playlist.reorder', function(data){
-		for(var i = 0; i < data.length; i++){
-			i_query("UPDATE tblMedia SET position=" + sql.escape(data[i].position) + " WHERE _id = " + sql.escape(data[i]._id), socket, "playlist.reorder");
+		if(socket.is_admin){
+			console.log("align items to their position");
+			for(var i = 0; i < data.length; i++){
+				i_query("UPDATE tblMedia SET position=" + sql.escape(data[i].position) + " WHERE _id = " + sql.escape(data[i]._id), socket, "playlist.reorder");
+			}
+			socket.broadcast.to(socket.channel_id).emit('playlist.reorder', { status:0, content: data});
 		}
-		socket.broadcast.to(socket.channel_id).emit('playlist.reorder', { status:0, content: data});
 	});
 	
 	socket.on('playlist.play_item', function(data){
@@ -123,6 +126,11 @@ io.sockets.on('connection', function (socket) {
 			i_query("UPDATE tblMedia SET start_time = NOW() WHERE _id = " + sql.escape(data._id), socket, 'playlist.play_item');
 			socket.broadcast.to(socket.channel_id).emit('playlist.play_item', { status: 0, content: data });
 		}
+	});
+	socket.on('playlist.remove_item', function(data){
+		console.log("remove " + data._id)
+		if(socket.is_admin)
+			i_query("DELETE FROM tblMedia WHERE _id = " + sql.escape(data._id));
 	});
 	socket.on('playlist.item_changed', function(data){
 		// Check if it really ended

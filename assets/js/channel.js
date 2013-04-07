@@ -39,6 +39,7 @@ function channel_controller($scope){
 	// The currently active media-item-_id
 	$scope.active_item = 1;
 	$scope.reordered = false;
+	$scope.removed = false;
 	
 	socket.on('channel.init', function(data){
 		$scope.playlist = data.content.playlist;
@@ -171,7 +172,7 @@ function channel_controller($scope){
 		if(emit)
 			socket.emit('playlist.item_changed', { _id: $scope.active_item, caption: next_item.caption });
 	};
-	$scope.playItem = function(item_id){
+	$scope.play_item = function(item_id){
 		var item;
 		for (var i = 0; i < $scope.playlist.length; i++) {
 			if($scope.playlist[i]._id === item_id)
@@ -182,8 +183,24 @@ function channel_controller($scope){
 		socket.emit('playlist.play_item', { _id: item_id, start_time: new Date() });
 	};
 	$scope.add_item = function(){
+		$scope.show_add = false;
+		$scope.add_item = { valid:false };
+		$scope.itemURL = "";
 		socket.emit('playlist.append_item', { url:$scope.add_item.url, duration:$scope.add_item.duration, caption:$scope.add_item.caption, media_type: $scope.add_item.media_type});
 	};
+	$scope.remove_item = function(item_id){
+		for (var i = 0; i < $scope.playlist.length; i++) {
+			if($scope.playlist[i]._id === item_id){
+				$scope.playlist.splice(i, 1);
+				break;
+			}
+		};
+		$scope.removed = true;
+		for(var i = 0; i < $scope.playlist.length; i++){
+			$scope.playlist[i].position = i + 1;
+		}
+		socket.emit('playlist.remove_item', { _id: item_id });
+	}
 	$scope.gdataCallback = function(data){
 		if(data.entry) {
 			$scope.add_item.url = data.entry.media$group.yt$videoid.$t;
@@ -197,7 +214,7 @@ function channel_controller($scope){
 	};
 	
 	$scope.$watch("playlist", function(value){
-		if($scope.reordered){
+		if($scope.reordered || $scope.removed){
 			var r = value.map(function(e){ return { _id: e._id, position: e.position }; });
 			socket.emit('playlist.reorder', r);
 		}
