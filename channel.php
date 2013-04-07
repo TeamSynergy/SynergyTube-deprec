@@ -109,12 +109,12 @@
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play last"><i class="icon-backward"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Pause"> <i class="icon-pause"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play next"><i class="icon-forward"></i></a><span ng-show="is_admin"> |</span>
-                <a href="" class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Add new Item" ng-click="showAdd=!showAdd"><i class="icon-plus"></i></a><span ng-show="is_admin"> |</span>
+                <a href="" class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Add new Item" ng-click="show_add=!show_add"><i class="icon-plus"></i></a><span ng-show="is_admin"> |</span>
                 <a href="" class="_tt" data-toggle="tooltip" title="Search Item"><i class="icon-search"></i></a>
               </div>
             </div>
 
-            <form class="form-append form-horizontal" name="appendForm" ng-submit="add_new_item()" ng-show="showAdd">
+            <form class="form-append form-horizontal" name="appendForm" ng-submit="add_new_item()" ng-show="show_add">
               <label class="control-label" for="itemURL">Item-URL</label>
               <div class="controls">
                 <input type="url" class="input-block-level pull-left" placeholder="Item-URL" id="itemURL" ng-model="itemURL" required>
