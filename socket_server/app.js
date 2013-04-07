@@ -102,13 +102,11 @@ io.sockets.on('connection', function (socket) {
 		
 	socket.on('playlist.append_item', function(data){
 		// Check Privileges
-		console.log("received");
 		r_query("SELECT position FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position DESC LIMIT 0,1", socket, function(rows){
-			console.log(rows[0].position);
+			console.log("append new item at " + (rows[0].position + 1));
 			i_query("INSERT INTO tblMedia (user_id, channel_id, url, position, duration, caption, media_type) VALUES (" + sql.escape(socket.user_id) + ", " + sql.escape(socket.channel_id) + ", " + sql.escape(data.url) + ", " + (rows[0].position + 1) + ", " + sql.escape(data.duration) + ", " + sql.escape(data.caption) + ", " + sql.escape(data.media_type) + ")", socket, "playlist.append_item");
 			r_query("SELECT MAX(_id) AS 'm' FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(idd){
-				io.sockets.in(socket.channel_id).emit('playlist.append_item', { _id: idd[0].m, position: (rows[0].position + 1), url: data.url, caption: data.caption, duration: data.duration, display_name: socket.display_name, login_Name: socket.login_name, media_type: data.media_type });
-				console.log(idd[0].m);
+				io.sockets.in(socket.channel_id).emit('playlist.append_item', { status:0, content: {_id: idd[0].m, position: (rows[0].position + 1), url: data.url, caption: data.caption, duration: data.duration, display_name: socket.display_name, login_Name: socket.login_name, media_type: data.media_type }});
 			});
 		});
 	});

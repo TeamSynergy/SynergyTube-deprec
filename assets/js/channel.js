@@ -2,14 +2,16 @@ $(function(){
 	// I hate the chromeless player, i'll never build my own controls. Take this dummy!
 	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "100%", "380", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" });
 	$('._tt').tooltip({placement:'bottom'});
-	$('.media-url').keyup(function(){
-		var reg = /(v=|\/)([\w-]+)(&.+)?$/;
-		reg.exec($('.media-url').val());
-		if(RegExp.$2){
+	$('#itemURL').keyup(function(){
+		var reg = $('#itemURL').val().match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
+		if(reg){
 			var tag = document.createElement('script');
-			tag.src = "https://gdata.youtube.com/feeds/api/videos/" + RegExp.$2 + "?alt=json-in-script&v=2&callback=gdataCallbackProxy";
+			tag.src = "https://gdata.youtube.com/feeds/api/videos/" + reg[1] + "?alt=json-in-script&v=2&callback=gdataCallbackProxy";
 			var firstScriptTag = document.getElementsByTagName('script')[0];
 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+		} else {
+			angular.element('html').scope().add_item.valid = false;
+			angular.element('html').scope().$apply();
 		}
 	});
 	$('.channel-cover-text').dotdotdot({watch:true});
@@ -31,6 +33,7 @@ function channel_controller($scope){
 	$scope.chat = [];
 	$scope.online = [];
 	$scope.alert_stack = [];
+	$scope.add_item = { valid: false };
 	$scope.views = 0;
 	$scope.favs = 0;
 	// The currently active media-item-_id
@@ -44,12 +47,11 @@ function channel_controller($scope){
 		$scope.favs = data.content.favourites;
 		$scope.views = data.content.views;
 		$scope.active_item = data.content.now_playing._id;
-		$scope.addItem = {};
+
+		$scope.show_add = false;
 		
 		var start_seconds = (new Date().getTime() - new Date(data.content.now_playing.start_time).getTime()) / 1000;
-		
 		player.loadVideoById(data.content.now_playing.url, start_seconds);
-		
 		$scope.$apply();
 		$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
 	});
@@ -106,7 +108,7 @@ function channel_controller($scope){
 		$scope.alert_stack.push(data);
 		$scope.$apply();
 	});
-	
+
 	$scope.sendMessage = function(){
 		if($scope.message)
 			socket.emit('chat.send', { content: $scope.message });
@@ -177,19 +179,20 @@ function channel_controller($scope){
 		};
 		player.loadVideoById(item.url);
 		$scope.active_item = item._id;
-		$scope.$apply();
 		socket.emit('playlist.play_item', { _id: item_id, start_time: new Date() });
 	};
-	$scope.addItem = function(){
-		alert("add");
-		socket.emit('playlist.append_item', { url:$scope.addItem.url, duration:$scope.addItem.duration, caption:$scope.addItem.caption, media_type: $scope.addItem.media_type});
+	$scope.add_item = function(){
+		socket.emit('playlist.append_item', { url:$scope.add_item.url, duration:$scope.add_item.duration, caption:$scope.add_item.caption, media_type: $scope.add_item.media_type});
 	};
 	$scope.gdataCallback = function(data){
-		$scope.addItem.url = data.entry.media$group.yt$videoid.$t;
-		$scope.addItem.duration = data.entry.media$group.media$content[0].duration;
-		$scope.addItem.caption = data.entry.title.$t;
-		$scope.addItem.media_type = "youtube";
-		socket.emit('playlist.append_item', { url:$scope.addItem.url, duration:$scope.addItem.duration, caption:$scope.addItem.caption, media_type: $scope.addItem.media_type});
+		if(data.entry) {
+			$scope.add_item.url = data.entry.media$group.yt$videoid.$t;
+			$scope.add_item.duration = data.entry.media$group.media$content[0].duration;
+			$scope.add_item.caption = data.entry.title.$t;
+			$scope.add_item.media_type = "youtube";
+			$scope.add_item.valid = true;
+		} else
+			$scope.add_item.valid = false;
 		$scope.$apply();
 	};
 	

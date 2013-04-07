@@ -148,3 +148,14 @@ h3{margin:0}
   margin:0;
   color: #222;
 }
+.form-append {
+  background-color:#f6f6f6;
+  -webkit-transition: all 250ms ease;
+     -moz-transition: all 250ms ease;
+      -ms-transition: all 250ms ease;
+       -o-transition: all 250ms ease;
+          transition: all 250ms ease;
+}
+.form_append_hide {
+  display:none;
+}

@@ -68,3 +68,16 @@ html,body {height:100%;background-image:url(/assets/img/groovepaper.png);}
   float:left;
   height:100%;
 }
+.form-append .controls {
+  margin-left:70px;
+}
+.form-append .control-label {
+  width:60px;
+}
+.form-append {
+  margin:0;
+  padding:10px;
+}
+.form-append .controls input {
+  margin-right:-81px; /* urgh, how ugly.. */
+}

@@ -91,10 +91,22 @@
                 <a class="_tt" href="" data-toggle="tooltip" title="Play last"><i class="icon-backward"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" title="Pause"> <i class="icon-pause"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" title="Play next"><i class="icon-forward"></i></a> |
-                <a href="" class="_tt" data-toggle="tooltip" title="Add new Item"><i class="icon-plus"></i></a> |
+                <a href="" class="_tt" data-toggle="tooltip" title="Add new Item" ng-click="showAdd=!showAdd"><i class="icon-plus"></i></a> |
                 <a href="" class="_tt" data-toggle="tooltip" title="Search Item"><i class="icon-search"></i></a>
               </div>
             </div>
+
+            <form class="form-append form-horizontal" name="appendForm" ng-submit="add_item(); showAdd=false;" ng-show="showAdd">
+              <label class="control-label" for="itemURL">Item-URL</label>
+              <div class="controls">
+                <input type="url" class="input-block-level pull-left" placeholder="Item-URL" id="itemURL" ng-model="itemURL" required>
+                <div class="input-append">
+                  <button type="submit" class="btn btn-primary pull-right" ng-disabled="!add_item.valid">Add Item</button>
+                </div>
+                <span class="help-block" ng-show="add_item.valid">Caption: {{add_item.caption}}, Duration: {{getLength(add_item.duration)}}</span>
+              </div>
+              
+            </form>
 
             <table class="table table-striped table-condensed playlist-table">
               <tbody dnd-list="playlist">
