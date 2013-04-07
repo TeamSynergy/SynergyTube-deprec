@@ -2,6 +2,7 @@ var io  = require('socket.io').listen(8080);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var hasher = require('password-hash');
+var crypto = require('crypto');
 var mysql = require('mysql');
 var sql = mysql.createConnection({
 	user: 'root',
@@ -37,7 +38,7 @@ function emitUserData(socket) {
 		if(socket.is_owner)
 			socket.is_admin = true;
 		socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id }});
-		socket.emit('channel.init', { status: 0, content: { users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: current_item_data[0] }});
+		socket.emit('channel.init', { status: 0, content: { user_data: { login_name: user_data[0].login_name, display_name: user_data[0].display_name }, users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: current_item_data[0] }});
 	});});});});});});
 }
 
@@ -52,25 +53,45 @@ io.sockets.on('connection', function (socket) {
 
 	if(socket.handshake.query.session_id){
 		findBySessionID(socket.handshake.query.session_id, socket, function(err, user){
-			if(!user) {
+			if(!user)
 				socket.emit("error", { status: 3, content: { code: "Incorrect SessionID." }});
-				/* emitGuestData() */
-			}
 			else {
 				socket.logged_in = true;
 				socket.login_name = user.login_name;
-				emitUserData(socket);
 			}
 		});
-	} /* else
-		emitGuestData(); */
+	}
+
+	socket.on("channel.init",function(){
+		if(socket.logged_in)
+			emitUserData(socket);
+		/* else
+			emitGuestData(); */
+	});
 
 	socket.on('disconnect', function(){
 		socket.broadcast.to(socket.channel_id).emit('channel.user_leave', { status: 0, content: { _id: socket.user_id }});
 		socket.leave(socket.channel_id);
 	});
 	
-	
+	socket.on('user.login', function(data){
+		r_query("SELECT COUNT(*) AS '_c', hash FROM tblUser WHERE login_name = " + sql.escape(data.login_name), socket, function(user_data){
+			if(user_data[0]._c > 0)
+				if(hasher.verify(data.password, user_data[0].hash)){
+					var session_id = hasher.generate(data.login + user_data[0].hash);
+					socket.emit("user.session_id", { status: 0, content: { session_id: session_id }});
+					i_query("UPDATE tblUser SET session_id = " + sql.escape(session_id) + " WHERE login_Name = " + sql.escape(data.login_name), socket, "user.login");
+				} else
+					socket.emit("error", { status: 4, content: { code: "Incorrect Username or _Password." }});
+			else
+				socket.emit("error", { status: 4, content: { code: "Incorrect _Username or Password." }});
+		});
+	});
+
+	socket.on('user.logout', function(){
+		i_query("UPDATE tblUser SET session_id = '' WHERE login_name = " + sql.escape(socket.login_name), socket, "user.logout");
+		socket.emit("user.destroy_session");
+	});
 	
 	/*--Chat Related--*/
 	

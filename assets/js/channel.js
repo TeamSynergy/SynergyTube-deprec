@@ -17,7 +17,7 @@ $(function(){
 	$('.channel-cover-text').dotdotdot({watch:true});
 });
 var app = angular.module('channel',[]);
-var socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=01&channel_id=" + channel_id });
+var socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "&channel_id=" + channel_id });
 var player;
 
 function gdataCallbackProxy(data){angular.element('html').scope().gdataCallback(data);}
@@ -25,6 +25,7 @@ function stateChangeProxy(state){angular.element('html').scope().playerStateChan
 function onYouTubePlayerReady(playerId) {
 	player = document.getElementById("myytplayer");
 	player.addEventListener("onStateChange", "stateChangeProxy");
+	socket.emit('channel.init');
 }
 
 function channel_controller($scope){
@@ -33,6 +34,8 @@ function channel_controller($scope){
 	$scope.online = [];
 	$scope.alert_stack = [];
 	$scope.add_item = { valid: false };
+	$scope.login_name = "";
+	$scope.display_name = "";
 	$scope.views = 0;
 	$scope.favs = 0;
 	// The currently active media-item-_id
@@ -47,6 +50,10 @@ function channel_controller($scope){
 		$scope.favs = data.content.favourites;
 		$scope.views = data.content.views;
 		$scope.active_item = data.content.now_playing._id;
+		$scope.logged_in = true;
+
+		$scope.login_name = data.content.user_data.login_name;
+		$scope.display_name = data.content.user_data.display_name;
 
 		$scope.show_add = false;
 		
@@ -108,7 +115,25 @@ function channel_controller($scope){
 		$scope.alert_stack.push(data);
 		$scope.$apply();
 	});
+	socket.on('user.session_id', function(data){
+		createCookie("session_id", data.content.session_id);
+		window.location.reload();
+		//socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + data.content.session_id + "&channel_id=" + channel_id });
+	});
+	socket.on('user.destroy_session', function(){
+		eraseCookie("session_id");
+		window.location.reload();
+		//socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=0&channel_id=" + channel_id });
+	});
 
+	$scope.login = function(){
+		socket.emit('user.login', { login_name: $scope.login_name, password: $scope.password  });
+		$scope.password = "";
+		$scope.login_name = "";
+	}
+	$scope.logout = function(){
+		socket.emit('user.logout');
+	}
 	$scope.sendMessage = function(){
 		if($scope.message)
 			socket.emit('chat.send', { content: $scope.message });
@@ -249,3 +274,27 @@ app.directive('dndList', function(){
 		});
 	};
 });
+function createCookie(name,value,days) {
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "; expires="+date.toGMTString();
+	}
+	else var expires = "";
+	document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+function eraseCookie(name) {
+	createCookie(name,"",-1);
+}

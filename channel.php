@@ -36,11 +36,11 @@
             <li><a href="/categories">Categories</a></li>
           </ul>
           <ul class="nav pull-right">
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
+            <li class="dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
               <div class="dropdown-menu login-dropdown">
-                <form method="post" action="login" accept-charset="UTF-8">
-                  <input type="text" placeholder="Username" name="username" required>
-                  <input type="password" placeholder="Password" name="password" required>
+                <form ng-submit="login()">
+                  <input type="text" placeholder="Username" name="username" ng-model="login_name" required>
+                  <input type="password" placeholder="Password" name="password" ng-model="password" required>
                   <label class="checkbox"><input type="checkbox" name="remember"> Remember me</label>
                   <input class="btn btn-primary btn-block" type="submit" value="Login">
                   <p class="text-center">or</p>
@@ -49,6 +49,14 @@
                   <a href="" class="btn btn-block">Login with Google</a>
                 </form>
               </div>
+            </li>
+            <li class="dropdown" ng-show="logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{display_name}}<b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href=""><i class="icon-user"></i> Profile</a></li>
+                <li><a href=""><i class="icon-heart"></i> Favourites</a></li>
+                <li class="divider"></li>
+                <li><a href="" ng-click="logout()"><i class="icon-off"></i> Log Out</a></li>
+              </ul>
             </li>
           </ul>
         </div>
