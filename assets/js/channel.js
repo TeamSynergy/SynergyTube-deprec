@@ -213,10 +213,10 @@ function channel_controller($scope){
 		socket.emit('playlist.play_item', { _id: item_id, start_time: new Date() });
 	};
 	$scope.add_item = function(){
+		socket.emit('playlist.append_item', { url:$scope.add_item.url, duration:$scope.add_item.duration, caption:$scope.add_item.caption, media_type: $scope.add_item.media_type});
 		$scope.show_add = false;
 		$scope.add_item = { valid:false };
 		$scope.itemURL = "";
-		socket.emit('playlist.append_item', { url:$scope.add_item.url, duration:$scope.add_item.duration, caption:$scope.add_item.caption, media_type: $scope.add_item.media_type});
 	};
 	$scope.remove_item = function(item_id){
 		for (var i = 0; i < $scope.playlist.length; i++) {
