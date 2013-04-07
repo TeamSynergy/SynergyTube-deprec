@@ -114,7 +114,7 @@
               </div>
             </div>
 
-            <form class="form-append form-horizontal" name="appendForm" ng-submit="add_item()" ng-show="showAdd">
+            <form class="form-append form-horizontal" name="appendForm" ng-submit="add_new_item()" ng-show="showAdd">
               <label class="control-label" for="itemURL">Item-URL</label>
               <div class="controls">
                 <input type="url" class="input-block-level pull-left" placeholder="Item-URL" id="itemURL" ng-model="itemURL" required>

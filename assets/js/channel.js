@@ -212,7 +212,7 @@ function channel_controller($scope){
 		$scope.active_item = item._id;
 		socket.emit('playlist.play_item', { _id: item_id, start_time: new Date() });
 	};
-	$scope.add_item = function(){
+	$scope.add_new_item = function(){
 		socket.emit('playlist.append_item', { url:$scope.add_item.url, duration:$scope.add_item.duration, caption:$scope.add_item.caption, media_type: $scope.add_item.media_type});
 		$scope.show_add = false;
 		$scope.add_item = { valid:false };
