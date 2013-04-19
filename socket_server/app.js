@@ -4,14 +4,23 @@ var LocalStrategy = require('passport-local').Strategy;
 var hasher = require('password-hash');
 var crypto = require('crypto');
 var mysql = require('mysql');
-var sql = mysql.createConnection({
-	user: 'root',
-	password: 'root',
-	database: 'synergy'
-});
+var conf = require('./config.json');
+var sql = mysql.createConnection(conf);
 
 sql.connect(function(err){
-	if(err) throw err;
+	if(err){
+		console.log("Error connecting to DB: " + err);
+		throw err;
+	}
+});
+sql.on("close", function(err){
+	console.log("DBMS closed connections, reconnecting..");
+	sql.connect(function(err){
+		if(err)
+			console.log("Unable to reconnect: " + err);
+		else
+			console.log("Successfull reconnect!");
+	});
 });
 
 function findBySessionID(session_id, socket, fn) {
@@ -38,8 +47,15 @@ function emitUserData(socket) {
 		if(socket.is_owner)
 			socket.is_admin = true;
 		socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id }});
-		socket.emit('channel.init', { status: 0, content: { user_data: { login_name: user_data[0].login_name, display_name: user_data[0].display_name, is_admin: socket.is_admin }, users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: current_item_data[0] }});
+		socket.emit('channel.init', { status: 0, content: { user_data: { login_name: user_data[0].login_name, display_name: user_data[0].display_name, is_admin: socket.is_admin }, users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: current_item_data[0], logged_in: true }});
 	});});});});});});
+}
+function emitGuestData(socket){
+	r_query("SELECT tblMedia._id, position, url, caption, duration, display_name, login_name, media_type FROM tblMedia RIGHT JOIN tblUser ON tblUser._id = tblMedia.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position ASC", socket, function(playlist_data){
+	r_query("SELECT _id, start_time, url, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(current_item_data){
+	r_query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY timestamp DESC LIMIT 0, 15", socket, function(message_data){
+		socket.emit('channel.init', { status: 0, content: { users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: current_item_data[0], logged_in: false }});
+	});});});
 }
 
 /*io.set('authorization', function (handshakeData, cb) {
@@ -53,21 +69,18 @@ io.sockets.on('connection', function (socket) {
 
 	if(socket.handshake.query.session_id){
 		findBySessionID(socket.handshake.query.session_id, socket, function(err, user){
-			if(!user)
-				socket.emit("error", { status: 3, content: { code: "Incorrect SessionID." }});
-			else {
+			if(!user){
+				socket.emit("error.session_id");
+				emitGuestData(socket);
+			} else {
 				socket.logged_in = true;
 				socket.login_name = user.login_name;
+				emitUserData(socket);
 			}
 		});
+	} else {
+		emitGuestData(socket);
 	}
-
-	socket.on("channel.init",function(){
-		if(socket.logged_in)
-			emitUserData(socket);
-		/* else
-			emitGuestData(); */
-	});
 
 	socket.on('disconnect', function(){
 		socket.broadcast.to(socket.channel_id).emit('channel.user_leave', { status: 0, content: { _id: socket.user_id }});

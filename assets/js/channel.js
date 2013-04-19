@@ -25,7 +25,6 @@ function stateChangeProxy(state){angular.element('html').scope().playerStateChan
 function onYouTubePlayerReady(playerId) {
 	player = document.getElementById("myytplayer");
 	player.addEventListener("onStateChange", "stateChangeProxy");
-	socket.emit('channel.init');
 }
 
 function channel_controller($scope){
@@ -40,6 +39,7 @@ function channel_controller($scope){
 	$scope.favs = 0;
 	// The currently active media-item-_id
 	$scope.active_item = 1;
+	$scope.start_time = null;
 	$scope.reordered = false;
 	$scope.removed = false;
 	
@@ -50,15 +50,20 @@ function channel_controller($scope){
 		$scope.favs = data.content.favourites;
 		$scope.views = data.content.views;
 		$scope.active_item = data.content.now_playing._id;
-		$scope.logged_in = true;
+		$scope.start_time = data.content.now_playing.start_time;
+		$scope.logged_in = data.content.logged_in;
 
-		$scope.is_admin = data.content.user_data.is_admin;
-		$scope.login_name = data.content.user_data.login_name;
-		$scope.display_name = data.content.user_data.display_name;
+		if(data.content.logged_in){
+			$scope.is_admin = data.content.user_data.is_admin;
+			$scope.login_name = data.content.user_data.login_name;
+			$scope.display_name = data.content.user_data.display_name;
+		} else {
+			$scope.is_admin = false;
+			$scope.login_name = "guest";
+			$scope.display_name = "Guest";
+		}
 
-		$scope.show_add = false;
-		
-		var start_seconds = (new Date().getTime() - new Date(data.content.now_playing.start_time).getTime()) / 1000;
+		var start_seconds = (new Date().getTime() - new Date($scope.start_time).getTime()) / 1000;
 		player.loadVideoById(data.content.now_playing.url, start_seconds);
 		$scope.$apply();
 		$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
@@ -170,7 +175,7 @@ function channel_controller($scope){
 	};
 
 	
-	$scope.playerStateChange = function(state){
+	$scope.playerStateChange = function(state) {
 		if(state === 0){
 			console.log("Media_Item ended");
 			$scope.playNext();

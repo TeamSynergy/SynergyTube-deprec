@@ -156,7 +156,7 @@
           <div class="channel-user">
             <h3>Online:</h3>
             <ul class="unstyled user-list">
-              <li ng-repeat="user in online | orderBy:'display_name'">{{user.display_name}}</li>
+              <li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">{{user.display_name}}</li>
             </ul>
           </div>
         </div>
