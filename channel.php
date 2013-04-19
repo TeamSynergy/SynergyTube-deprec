@@ -36,6 +36,7 @@
             <li><a href="/categories">Categories</a></li>
           </ul>
           <ul class="nav pull-right">
+            <li ng-show="logged_in"><a href="/create_channel">Create Channel</a></li>
             <li class="dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
               <div class="dropdown-menu login-dropdown">
                 <form ng-submit="login()">
@@ -87,7 +88,7 @@
       <div class="alert-stack">
         <div ng-repeat="alert in alert_stack" class="alert alert-info" style="margin:0">
           <a href="" class="close" ng-click="dismiss_alert(alert)">&times;</a>
-          <strong>Error {{alert.status}}:</strong> {{alert.content.code}}
+          <strong ng-show="alert.strong">{{alert.strong}}:</strong> {{alert.text}}
         </div>
       </div>
       <div class="channel-second">
@@ -100,9 +101,9 @@
           <div class="playlist">
             <div class="info-bar">
               <div class="pull-left">
-                <a href="" class="_tt" data-toggle="tooltip" title="Favourites"><i class="icon-heart"></i> {{favs}}</a> |
+                <a href="" class="_tt" data-toggle="tooltip" title="Favourites" ng-click="fav_this()"><i class="icon-heart"></i> {{favs}}</a> |
                 <span class="_tt" data-toggle="tooltip" title="Overall Views"><i class="icon-globe"></i> {{views}}</span> |
-                <span class="_tt" data-toggle="tooltip" title="Online Users"><i class="icon-eye-open"></i> {{online.length}}</span> |
+                <span class="_tt" data-toggle="tooltip" title="Online Users"><i class="icon-eye-open"></i> {{online.length + guests}}</span> |
                 <span class="_tt" data-toggle="tooltip" title="Items in Playlist"><i class="icon-th-list"></i> {{playlist.length}}</span>
               </div>
               <div class="pull-right">
@@ -147,7 +148,7 @@
               {{message.content}}</p></li>
           </ul>
 
-          <form class="chat-submit" ng-submit="sendMessage()">
+          <form class="chat-submit" ng-submit="sendMessage()" ng-show="logged_in">
             <input type="text" ng-model="message" placeholder="Chat" class="input-block-level">
           </form>
         </div>

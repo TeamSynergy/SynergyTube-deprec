@@ -37,6 +37,7 @@ function channel_controller($scope){
 	$scope.display_name = "";
 	$scope.views = 0;
 	$scope.favs = 0;
+	$scope.guests = 0;
 	// The currently active media-item-_id
 	$scope.active_item = 1;
 	$scope.start_time = null;
@@ -63,8 +64,14 @@ function channel_controller($scope){
 			$scope.display_name = "Guest";
 		}
 
-		var start_seconds = (new Date().getTime() - new Date($scope.start_time).getTime()) / 1000;
-		player.loadVideoById(data.content.now_playing.url, start_seconds);
+		var intv = setInterval(function(){
+			console.log("waiting for player to finish initializing...");
+			if(player){
+				var start_seconds = (new Date().getTime() - new Date($scope.start_time).getTime()) / 1000;
+				player.loadVideoById(data.content.now_playing.url, start_seconds);
+				clearInterval(intv);
+			}
+		}, 1000);
 		$scope.$apply();
 		$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
 	});
@@ -113,23 +120,38 @@ function channel_controller($scope){
 		};
 		$scope.$apply();
 	});
+	socket.on('channel.guest_join', function(){
+		$scope.guests++;
+		$scope.$apply();
+	});
+	socket.on('channel.guest_leave', function(){
+		$scope.guests--;
+		$scope.$apply();
+	});
+	socket.on('channel.faved', function(){
+		$scope.favs++;
+		$scope.apply();
+	})
 	socket.socket.on('error', function(data){
-		$scope.alert_stack.push({ status: "-1", content: {code: "Unable to connect to Synergy-Server"}});
+		$scope.alert_stack.push({ status: "Server-Error", text: "Unable to connect to Synergy-Server"});
 		$scope.$apply();
 	});
 	socket.on('error', function(data){
-		$scope.alert_stack.push(data);
+		$scope.alert_stack.push({ strong: "Error " + data.status, text: data.content.code });
 		$scope.$apply();
+	});
+	socket.on('error.session_id', function(data){
+		$scope.alert_stack.push({ text: "You don't seem to be logged in. If you use SynergyTube without registration you are not able to Chat." });
 	});
 	socket.on('user.session_id', function(data){
 		createCookie("session_id", data.content.session_id);
 		window.location.reload();
-		//socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + data.content.session_id + "&channel_id=" + channel_id });
+		//socket.socket.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "channel_id=" + channel_id});
 	});
 	socket.on('user.destroy_session', function(){
 		eraseCookie("session_id");
 		window.location.reload();
-		//socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=0&channel_id=" + channel_id });
+		//socket.socket.connect('//' + window.location.host + ':8080', { query:"session_id=0channel_id=" + channel_id});
 	});
 
 	$scope.login = function(){
@@ -174,7 +196,6 @@ function channel_controller($scope){
 			return '';
 	};
 
-	
 	$scope.playerStateChange = function(state) {
 		if(state === 0){
 			console.log("Media_Item ended");
@@ -246,6 +267,9 @@ function channel_controller($scope){
 		} else
 			$scope.add_item.valid = false;
 		$scope.$apply();
+	};
+	$scope.fav_this = function(){
+		socket.emit('channel.faved');
 	};
 	
 	$scope.$watch("playlist", function(value){

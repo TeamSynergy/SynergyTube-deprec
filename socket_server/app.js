@@ -55,6 +55,7 @@ function emitGuestData(socket){
 	r_query("SELECT _id, start_time, url, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(current_item_data){
 	r_query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY timestamp DESC LIMIT 0, 15", socket, function(message_data){
 		socket.emit('channel.init', { status: 0, content: { users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, favourites: 12, views: 1357, now_playing: current_item_data[0], logged_in: false }});
+		socket.broadcast.to(socket.channel_id).emit('channel.guest_join');
 	});});});
 }
 
@@ -82,9 +83,19 @@ io.sockets.on('connection', function (socket) {
 		emitGuestData(socket);
 	}
 
+	/* --Channel Related-- */
+
 	socket.on('disconnect', function(){
-		socket.broadcast.to(socket.channel_id).emit('channel.user_leave', { status: 0, content: { _id: socket.user_id }});
+		if(socket.logged_in){
+			socket.broadcast.to(socket.channel_id).emit('channel.user_leave', { status: 0, content: { _id: socket.user_id }});
+		} else {
+			socket.broadcast.to(socket.channel_id).emit('channel.guest_leave');
+		}
 		socket.leave(socket.channel_id);
+	});
+	socket.on('channel.faved', function(){
+		sql.query("INSERT INTO relFavourites (channel_id, user_id) VALUES (" + sql.escape(socket.channel_id) + ", " + sql.escape(socket.user_id) + ")", function(err){});
+		socket.broadcast.to(socket.channel_id).emit('channel.faved');
 	});
 	
 	/* --User Related--*/
@@ -103,8 +114,10 @@ io.sockets.on('connection', function (socket) {
 		});
 	});
 	socket.on('user.logout', function(){
-		i_query("UPDATE tblUser SET session_id = '' WHERE login_name = " + sql.escape(socket.login_name), socket, "user.logout");
-		socket.emit("user.destroy_session");
+		if(socket.logged_in){
+			i_query("UPDATE tblUser SET session_id = '' WHERE login_name = " + sql.escape(socket.login_name), socket, "user.logout");
+			socket.emit("user.destroy_session");
+		}
 	});
 	socket.on('user.create_account', function(data){
 		i_query("INSERT INTO tblUser (login_name, display_name, email, strategy, hash) VALUES (" + sql.escape(data.login_name) + ", " + sql.escape(data.login_name) + ", " + sql.escape(data.email) + ", 'local', " + sql.escape(hasher.generate(data.password)) + ")", socket, "user.create_account");
