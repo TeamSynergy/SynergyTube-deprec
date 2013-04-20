@@ -16,32 +16,34 @@ sql.connect(function(err){
 		sql_state = true;
 	}
 });
-sql.on("close", function(err){
-	console.log("DBMS closed connections, reconnecting..");
-	sql_state = false;
-	sql.connect(function(err){
-		if(err)
-			console.log("Unable to reconnect: " + err);
-		else {
-			console.log("Successfull reconnect!");
-			sql_state = true;
-		}
-	});
-});
-sql.on("error", function(err_){
+
+var handle_disconnect = function(err){
+	if(err){
+		console.log("Error_: " + JSON.stringify(err.code));
+		if(err.code === "PROTOCOL_CONNECTION_LOST"){sql_state = false;}
+	}
 	if(!sql_state){
-		if(err)
-			console.log("Error: " + err);
-		console.log("SQL-Error, DB-Shutdown.. recover, recover!!!");
-		sql.connect(function(err){
-			if(err)
-				console.log("Unable to reconnect: " + err);
-			else {
-				console.log("Successfull reconnect!");
-				sql_state = true;
-			}
-		}
-});
+		var re = setInterval(function(){
+			sql = mysql.createConnection(conf);
+			sql.connect(function(err){
+				if(err){console.log("Unable to reconnect: " + err);}
+				else {
+					console.log("Successfull reconnect!");
+					sql.on("close", handle_connection_close);
+					sql.on("error", handle_disconnect);
+					sql_state = true;
+					clearInterval(re);
+				}
+			});
+		}, 5000)
+	}
+}
+var handle_connection_close = function(err){
+	console.log("DBMS closed the connection.");
+	sql_state = false;
+}
+sql.on("close", handle_connection_close);
+sql.on("error", handle_disconnect);
 
 function findBySessionID(session_id, socket, fn) {
 	r_query("SELECT COUNT(*) AS '_c', _id, login_name, display_name, email, avatar_id, hash FROM tblUser WHERE session_id = " + sql.escape(session_id), socket, function(user_data){
