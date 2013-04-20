@@ -6,21 +6,41 @@ var crypto = require('crypto');
 var mysql = require('mysql');
 var conf = require('./config.json');
 var sql = mysql.createConnection(conf);
+var sql_state = false;
 
 sql.connect(function(err){
 	if(err){
 		console.log("Error connecting to DB: " + err);
 		throw err;
+	} else {
+		sql_state = true;
 	}
 });
 sql.on("close", function(err){
 	console.log("DBMS closed connections, reconnecting..");
+	sql_state = false;
 	sql.connect(function(err){
 		if(err)
 			console.log("Unable to reconnect: " + err);
-		else
+		else {
 			console.log("Successfull reconnect!");
+			sql_state = true;
+		}
 	});
+});
+sql.on("error", function(err_){
+	if(!sql_state){
+		if(err)
+			console.log("Error: " + err);
+		console.log("SQL-Error, DB-Shutdown.. recover, recover!!!");
+		sql.connect(function(err){
+			if(err)
+				console.log("Unable to reconnect: " + err);
+			else {
+				console.log("Successfull reconnect!");
+				sql_state = true;
+			}
+		}
 });
 
 function findBySessionID(session_id, socket, fn) {
