@@ -1,23 +1,20 @@
 <?php
-  $con = new mysqli("localhost", "root", "root", "synergy");
-  if($con->connect_errno)
-    print("<h1>Error: DB-Fuckup</h1>");
-  $channel = mysqli_fetch_object($con->query("SELECT COUNT(*) AS '_c', _id, name, cover_id, cover_repeat, cover_pos_x, cover_pos_y, description, views FROM tblChannels WHERE custom_url = '".$con->real_escape_string($_GET['c'])."'"));
-  if(!$channel)
-    print("<h1>".$con->error."</h1>")
+  require("require/channel_init.php");
+  if(!$channel_exists || $channel_error)
+    header("Location: /");
 ?>
 
 <!DOCTYPE html>
 <html ng-app="channel" ng-controller="channel_controller">
 <head>
-  <title>SynergyTube | Channel: <?php if($channel != null && ($channel->_c > 0)) print($channel->name); ?></title>
+  <title>SynergyTube | <?php print $channel_title ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link href="/assets/css/custom.css" rel="stylesheet">
   <link href="/assets/css/style.css" rel="stylesheet">
   <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet">
-  <style type="text/css">.channel-cover{background:<?php print("url(/assets/img/".$channel->cover_id.") ".$channel->cover_repeat." ".$channel->cover_pos_x." ".$channel->cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
+  <style type="text/css">.channel-cover{background:<?php print("url(/assets/img/".$channel_cover_id.") ".$channel_cover_repeat." ".$channel_cover_pos_x." ".$channel_cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
 </head>
 <body>
 
@@ -79,8 +76,8 @@
     <div class="channel-cover">
       <div class="channel-cover-text">
         <div class="container">
-          <h1><?php if($channel != null && ($channel->_c > 0)) print($channel->name); else print("Error - Channel not found!");?></h1>
-          <p><?php if($channel != null && ($channel->_c > 0)) print($channel->description); ?></p>
+          <h1><?php print($channel_title);?></h1>
+          <p><?php  print($channel_description); ?></p>
         </div>
       </div>
     </div>
@@ -111,7 +108,7 @@
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Pause"> <i class="icon-pause"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play next"><i class="icon-forward"></i></a><span ng-show="is_admin"> |</span>
                 <a href="" class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Add new Item" ng-click="show_add=!show_add"><i class="icon-plus"></i></a><span ng-show="is_admin"> |</span>
-                <a href="" class="_tt" data-toggle="tooltip" title="Search Item"><i class="icon-search"></i></a>
+                <a href="" class="_tt" data-toggle="tooltip" ng-click="show_search=!show_search;searchTitle=''" title="Search Item"><i class="icon-search"></i></a>
               </div>
             </div>
 
@@ -124,12 +121,15 @@
                 </div>
                 <span class="help-block" ng-show="add_item.valid">Caption: {{add_item.caption}}, Duration: {{getLength(add_item.duration)}}</span>
               </div>
-              
+            </form>
+
+            <form class="form-append form-horizontal" ng-show="show_search">
+              <input type="text" class="input-block-level" placeholder="Search" ng-model="searchTitle">
             </form>
 
             <table class="table table-striped table-condensed playlist-table">
               <tbody dnd-list="playlist">
-                <tr ng-repeat="item in playlist | orderBy:'position'" ng-class="{playc: item._id == active_item}">
+                <tr ng-repeat="item in playlist | filter:searchTitle | orderBy:'position'" ng-class="{playc: item._id == active_item}">
                   <td>{{item.position}}</td>
                   <td><a href="{{item.url}}">{{item.caption}}</a></td>
                   <td>{{getLength(item.duration)}}</td>
@@ -168,13 +168,11 @@
 
   <div class="footer">
     <div class="container footer-container">
-      <p>&copy; SynergyTube by Screeny05 (It's so alpha you shouldn't use it); Fork me on <a href="https://github.com/screeny05/synergyTube">GitHub</a></p>
+      <p>&copy; SynergyTube by Screeny05 (It's so close to beta you shouldn't use it); Fork me on <a href="https://github.com/screeny05/synergyTube">GitHub</a></p>
     </div>
   </div>
 
-  <script><?php 
-    if($channel->_c > 0) print("var channel_id = ".$channel->_id.";");
-  ?></script>
+  <script><?php print("var channel_id = ".$channel_id.";"); ?></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>

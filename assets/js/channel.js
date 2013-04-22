@@ -17,7 +17,7 @@ $(function(){
 	$('.channel-cover-text').dotdotdot({watch:true});
 });
 var app = angular.module('channel',[]);
-var socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "&channel_id=" + channel_id });
+var socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "&channel_id=" + channel_id, secure: location.protocol === "https:" });
 var player;
 
 function gdataCallbackProxy(data){angular.element('html').scope().gdataCallback(data);}
@@ -39,7 +39,7 @@ function channel_controller($scope){
 	$scope.favs = 0;
 	$scope.guests = 0;
 	// The currently active media-item-_id
-	$scope.active_item = 1;
+	$scope.active_item = 0;
 	$scope.start_time = null;
 	$scope.reordered = false;
 	$scope.removed = false;
@@ -91,6 +91,21 @@ function channel_controller($scope){
 		player.loadVideoById(item.url, start_seconds);
 		$scope.active_item = item._id;
 		$scope.$apply();
+	});
+	socket.on('playlist.remove_item', function(data){
+		if($scope.active_item === data._id)
+			$scope.playNext();
+		for (var i = 0; i < $scope.playlist.length; i++) {
+			if($scope.playlist[i]._id === data._id){
+				$scope.playlist.splice(i, 1);
+				break;
+			}
+		};
+		$scope.$apply();
+		$scope.removed = true;
+		for(var i = 0; i < $scope.playlist.length; i++){
+			$scope.playlist[i].position = i + 1;
+		}
 	});
 	socket.on('playlist.reorder', function(data){
 		// may we get this a little more efficient?
@@ -186,15 +201,6 @@ function channel_controller($scope){
 		s = new Date(s * 1000);
 		return (s.getMinutes() < 10 ? '0' : '') + s.getMinutes() + ":" + (s.getSeconds() < 10 ? '0' : '') + s.getSeconds();
 	};
-	$scope.getPermLevel = function(lvl){
-		// some glitter for the admins
-		if(lvl === 1)
-			return '<i class="icon-star icon-white"></i>';
-		if(lvl === 2)
-			return '<i class="icon-star icon-white"></li>';
-		else
-			return '';
-	};
 
 	$scope.playerStateChange = function(state) {
 		if(state === 0){
@@ -245,16 +251,6 @@ function channel_controller($scope){
 		$scope.itemURL = "";
 	};
 	$scope.remove_item = function(item_id){
-		for (var i = 0; i < $scope.playlist.length; i++) {
-			if($scope.playlist[i]._id === item_id){
-				$scope.playlist.splice(i, 1);
-				break;
-			}
-		};
-		$scope.removed = true;
-		for(var i = 0; i < $scope.playlist.length; i++){
-			$scope.playlist[i].position = i + 1;
-		}
 		socket.emit('playlist.remove_item', { _id: item_id });
 	}
 	$scope.gdataCallback = function(data){
@@ -264,6 +260,10 @@ function channel_controller($scope){
 			$scope.add_item.caption = data.entry.title.$t;
 			$scope.add_item.media_type = "youtube";
 			$scope.add_item.valid = true;
+			for (var i = 0; i < $scope.playlist.length; i++) {
+				if($scope.playlist[i].url == $scope.add_item.url)
+					$scope.alert_stack.push({ text: "The Item you are about to add is already in the Medie List. Are you sure about adding this?" });
+			};
 		} else
 			$scope.add_item.valid = false;
 		$scope.$apply();

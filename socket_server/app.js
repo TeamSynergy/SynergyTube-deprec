@@ -163,9 +163,8 @@ io.sockets.on('connection', function (socket) {
 		if(socket.is_admin){
 			r_query("SELECT position FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position DESC LIMIT 0,1", socket, function(rows){
 				console.log("append new item at " + (rows[0].position + 1));
-				i_query("INSERT INTO tblMedia (user_id, channel_id, url, position, duration, caption, media_type) VALUES (" + sql.escape(socket.user_id) + ", " + sql.escape(socket.channel_id) + ", " + sql.escape(data.url) + ", " + (rows[0].position + 1) + ", " + sql.escape(data.duration) + ", " + sql.escape(data.caption) + ", " + sql.escape(data.media_type) + ")", socket, "playlist.append_item");
-				r_query("SELECT MAX(_id) AS 'm' FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(idd){
-					io.sockets.in(socket.channel_id).emit('playlist.append_item', { status:0, content: {_id: idd[0].m, position: (rows[0].position + 1), url: data.url, caption: data.caption, duration: data.duration, display_name: socket.display_name, login_Name: socket.login_name, media_type: data.media_type }});
+				sql.query("INSERT INTO tblMedia (user_id, channel_id, url, position, duration, caption, media_type) VALUES (" + sql.escape(socket.user_id) + ", " + sql.escape(socket.channel_id) + ", " + sql.escape(data.url) + ", " + (rows[0].position + 1) + ", " + sql.escape(data.duration) + ", " + sql.escape(data.caption) + ", " + sql.escape(data.media_type) + ")", function(err, res){
+					io.sockets.in(socket.channel_id).emit('playlist.append_item', { status: 0, content: { _id: res.insertId, position: (rows[0].position + 1), url: data.url, caption: data.caption, duration: data.duration, display_name: socket.display_name, login_name: socket.login_name, media_type: data.media_type }});
 				});
 			});
 		}
@@ -188,8 +187,10 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 	socket.on('playlist.remove_item', function(data){
-		if(socket.is_admin)
+		if(socket.is_admin){
 			i_query("DELETE FROM tblMedia WHERE _id = " + sql.escape(data._id));
+			io.sockets.in(socket.channel_id).emit('playlist.remove_item', { _id: data._id });
+		}
 	});
 	socket.on('playlist.item_changed', function(data){
 		// Check if it really ended
@@ -234,4 +235,20 @@ function init_online(channel_id){
 		arr.push({display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id });
 	});
 	return arr;
+}
+function playlist_next(channel_id, done){
+	sql.query("SELECT MAX(start_time), position FROM tblMedia WHERE channel_id = " + sql.escape(channel_id), function(err, start_data){
+		if(err)
+			console.log(err);
+		sql.query("SELECT COUNT(*) AS '_c', _id FROM tblMedia WHERE channel_id = " + sql.escape(channel_id) + " AND position = " + (start_data[0].position + 1), function(err, next_data){
+			if(err)
+				console.log(err);
+			if(next_data[0]._c > 0)
+				done(next_data[0]._id);
+			else
+				sql.query("SELECT MIN(position), _id FROM tblMedia WHERE channel_id = " + sql.escape(channel_id), function(err, first_data){
+					done(first_data[0]._id);
+				});
+		});
+	});
 }
