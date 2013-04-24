@@ -31,7 +31,15 @@ I'm planning on adding more soon after the system has reached the final version 
 2. **_Don't_** leave the socket_server folder accessible from the web. Copy it to a seperate folder.
 3. Edit the Database Parameters in [socket_server/config.json](https://github.com/screeny05/synergyTube/blob/master/socket_server/config.json) and [require/config.inc.php](https://github.com/screeny05/synergyTube/blob/master/require/config.inc.php) to your needs.  
    (I'm currently thinking about a better handling of this)
-4. Start the node.js server (app.js)
+4. Install the node.js server  
+   ```bash
+   cd -wherever you put your /socket_server-
+   npm install
+   ```
+5. Run it!
+   ```bash
+   node app.js
+   ```
 
 ## Development & Future Plans
 ### Backend

@@ -48,11 +48,12 @@ function channel_controller($scope){
 		$scope.playlist = data.content.playlist;
 		$scope.chat = data.content.last_chat;
 		$scope.online = data.content.users_online;
-		$scope.favs = data.content.favourites;
+		$scope.favs = data.content.favs;
 		$scope.views = data.content.views;
 		$scope.active_item = data.content.now_playing._id;
 		$scope.start_time = data.content.now_playing.start_time;
 		$scope.logged_in = data.content.logged_in;
+		$scope.already_faved = data.content.already_faved;
 
 		if(data.content.logged_in){
 			$scope.is_admin = data.content.user_data.is_admin;
@@ -60,8 +61,6 @@ function channel_controller($scope){
 			$scope.display_name = data.content.user_data.display_name;
 		} else {
 			$scope.is_admin = false;
-			$scope.login_name = "guest";
-			$scope.display_name = "Guest";
 		}
 
 		var intv = setInterval(function(){
@@ -144,6 +143,7 @@ function channel_controller($scope){
 		$scope.$apply();
 	});
 	socket.on('channel.faved', function(){
+		console.log("received a fav!");
 		$scope.favs++;
 		$scope.apply();
 	})
@@ -170,9 +170,9 @@ function channel_controller($scope){
 	});
 
 	$scope.login = function(){
-		socket.emit('user.login', { login_name: $scope.login_name, password: $scope.password  });
+		socket.emit('user.login', { login_name: $scope.txtlogin_name, password: $scope.password  });
 		$scope.password = "";
-		$scope.login_name = "";
+		$scope.txtlogin_name = "";
 	}
 	$scope.logout = function(){
 		socket.emit('user.logout');
@@ -270,6 +270,21 @@ function channel_controller($scope){
 	};
 	$scope.fav_this = function(){
 		socket.emit('channel.faved');
+	};
+	$scope.show_pl_bars = function(show_add, show_search){
+		if(($scope.show_add && show_add) || !show_add)
+			$scope.show_add = false;
+		else
+			$scope.show_add = show_add;
+		if(($scope.show_search && show_search) || !show_search)
+			$scope.show_search = false
+		else
+			$scope.show_search = show_search;
+
+		$scope.add_item = { valid: false };
+		$scope.searchTitle = "";
+
+		$scope.$apply();
 	};
 	
 	$scope.$watch("playlist", function(value){

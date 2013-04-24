@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 07. April 2013 um 20:44
+-- Erstellungszeit: 24. April 2013 um 22:57
 -- Server Version: 5.5.9
 -- PHP-Version: 5.2.17
 
@@ -53,7 +53,8 @@ CREATE TABLE IF NOT EXISTS `relfavourites` (
 --
 
 INSERT INTO `relfavourites` (`channel_id`, `user_id`) VALUES
-(1, 1);
+(1, 1),
+(1, 2);
 
 -- --------------------------------------------------------
 
@@ -73,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `tblchannels` (
   `description` varchar(400) NOT NULL,
   `description_short` varchar(120) DEFAULT NULL,
   `views` int(10) unsigned NOT NULL,
+  `user_limit` int(11) NOT NULL,
   PRIMARY KEY (`_id`),
   UNIQUE KEY `name_UNIQUE` (`name`),
   UNIQUE KEY `custom_url_UNIQUE` (`custom_url`)
@@ -82,9 +84,9 @@ CREATE TABLE IF NOT EXISTS `tblchannels` (
 -- Daten für Tabelle `tblchannels`
 --
 
-INSERT INTO `tblchannels` (`_id`, `name`, `cover_id`, `cover_repeat`, `cover_pos_x`, `cover_pos_y`, `custom_url`, `owner_id`, `description`, `description_short`, `views`) VALUES
-(1, 'Bronies BW', '2.png', 'no-repeat', 'center', 'center', 'bronies-bw', 1, 'Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia', 'Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat.', 0),
-(2, 'Powermetal is best Metal!', '0.png', 'no-repeat', 'center', 'center', 'powermetal', 1, 'In the name of Metal! Beware of hard beats and fast rhythms on this channel.', NULL, 0);
+INSERT INTO `tblchannels` (`_id`, `name`, `cover_id`, `cover_repeat`, `cover_pos_x`, `cover_pos_y`, `custom_url`, `owner_id`, `description`, `description_short`, `views`, `user_limit`) VALUES
+(1, 'Bronies BW', '2.png', 'no-repeat', 'center', 'center', 'bronies-bw', 1, 'Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia', 'Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat.', 0, 0),
+(2, 'Powermetal is best Metal!', '0.png', 'no-repeat', 'center', 'center', 'powermetal', 1, 'In the name of Metal! Beware of hard beats and fast rhythms on this channel.', NULL, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -110,14 +112,15 @@ CREATE TABLE IF NOT EXISTS `tblmedia` (
 --
 
 INSERT INTO `tblmedia` (`_id`, `caption`, `url`, `position`, `channel_id`, `user_id`, `duration`, `start_time`, `media_type`) VALUES
-(1, 'TuXe - Epic Wub Time MoP Wub Remix', 'WgAqoXT-2kM', 2, 1, 1, 241, '2013-04-07 20:27:15', 'youtube'),
-(2, 'Eurobeat Brony - Discord (The Living Tombstone''s Remix)', 'xPfMb50dsOk', 5, 1, 1, 194, '2013-04-07 20:39:43', 'youtube'),
-(3, 'Raise This Barn - MBAlpha (Remix)', '9FmzLk7jkSA', 6, 1, 1, 242, '2013-04-07 20:43:03', 'youtube'),
-(4, '[PMV] Rainbow Factory Music Video', '4PjIhs72l0A', 3, 1, 1, 210, '2013-04-07 20:31:19', 'youtube'),
-(5, '[PMV] Awoken', 'KwW9slmrKXo', 4, 1, 1, 283, '2013-04-07 20:34:55', 'youtube'),
-(6, 'Replacer - Song for an Earth Pony', 'rpRJfKcip1A', 7, 1, 1, 391, '2013-04-07 20:00:17', 'youtube'),
-(7, 'MLP-FiM: Smile Song (Rock Cover)', '1xDzKkjwD7g', 1, 1, 1, 203, '2013-04-07 20:23:46', 'youtube'),
-(20, 'Loyalty - original MLP music by AcousticBrony & MandoPony', 'voj9MhBUaTI', 8, 1, 1, 375, '2013-04-07 20:07:02', 'youtube');
+(1, 'TuXe - Epic Wub Time MoP Wub Remix', 'WgAqoXT-2kM', 2, 1, 1, 241, '2013-04-24 22:51:24', 'youtube'),
+(2, 'Eurobeat Brony - Discord (The Living Tombstone''s Remix)', 'xPfMb50dsOk', 5, 1, 1, 194, '2013-04-24 22:19:18', 'youtube'),
+(3, 'Raise This Barn - MBAlpha (Remix)', '9FmzLk7jkSA', 6, 1, 1, 242, '2013-04-24 22:27:06', 'youtube'),
+(4, '[PMV] Rainbow Factory Music Video', '4PjIhs72l0A', 3, 1, 1, 210, '2013-04-24 22:55:41', 'youtube'),
+(5, '[PMV] Awoken', 'KwW9slmrKXo', 4, 1, 1, 283, '2013-04-24 22:14:15', 'youtube'),
+(6, 'Replacer - Song for an Earth Pony', 'rpRJfKcip1A', 7, 1, 1, 391, '2013-04-24 22:31:10', 'youtube'),
+(7, 'MLP-FiM: Smile Song (Rock Cover)', '1xDzKkjwD7g', 1, 1, 1, 203, '2013-04-24 22:47:16', 'youtube'),
+(20, 'Loyalty - original MLP music by AcousticBrony & MandoPony', 'voj9MhBUaTI', 8, 1, 1, 375, '2013-04-24 22:37:52', 'youtube'),
+(21, 'Picture Perfect Pony Official Music Video Animation', 'sDdL4z5qfr4', 9, 1, 1, 185, '2013-04-24 22:44:08', 'youtube');
 
 -- --------------------------------------------------------
 
@@ -212,5 +215,5 @@ CREATE TABLE IF NOT EXISTS `tbluser` (
 --
 
 INSERT INTO `tbluser` (`_id`, `login_name`, `display_name`, `email`, `avatar_id`, `strategy`, `hash`, `session_id`) VALUES
-(1, 'screeny05', 'Graycode', 'screeny05@gmail.com', NULL, 'local', 'sha1$ddab66da$1$2a0a55b9dd86976bb508368716a8f6707056e625', ''),
+(1, 'screeny05', 'Graycode', 'screeny05@gmail.com', NULL, 'local', 'sha1$ddab66da$1$2a0a55b9dd86976bb508368716a8f6707056e625', 'sha1$e3e7623c$1$654a483277019949cb72e07614e5b2493e87b5ec'),
 (3, 'root', 'root', 'webmaster@localcraft.de', NULL, 'local', '-', '-');

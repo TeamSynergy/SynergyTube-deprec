@@ -9,6 +9,7 @@
 <head>
   <title>SynergyTube | <?php print $channel_title ?></title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link href="/assets/css/custom.css" rel="stylesheet">
@@ -37,7 +38,7 @@
             <li class="dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
               <div class="dropdown-menu login-dropdown">
                 <form ng-submit="login()">
-                  <input type="text" placeholder="Username" name="username" ng-model="login_name" required>
+                  <input type="text" placeholder="Username" name="username" ng-model="txtlogin_name" required>
                   <input type="password" placeholder="Password" name="password" ng-model="password" required>
                   <label class="checkbox"><input type="checkbox" name="remember"> Remember me</label>
                   <input class="btn btn-primary btn-block" type="submit" value="Login">
@@ -98,7 +99,8 @@
           <div class="playlist">
             <div class="info-bar">
               <div class="pull-left">
-                <a href="" class="_tt" data-toggle="tooltip" title="Favourites" ng-click="fav_this()"><i class="icon-heart"></i> {{favs}}</a> |
+                <a href="" class="_tt" data-toggle="tooltip" title="Favourites - Fav this" ng-click="fav_this()" ng-show="!already_faved"><i class="icon-heart"></i> {{favs}}</a>
+                <span class="_tt" data-toggle="tooltip" title="Favourites" ng-show="already_faved"><i class="icon-heart"></i> {{favs}}</span> |
                 <span class="_tt" data-toggle="tooltip" title="Overall Views"><i class="icon-globe"></i> {{views}}</span> |
                 <span class="_tt" data-toggle="tooltip" title="Online Users"><i class="icon-eye-open"></i> {{online.length + guests}}</span> |
                 <span class="_tt" data-toggle="tooltip" title="Items in Playlist"><i class="icon-th-list"></i> {{playlist.length}}</span>
@@ -107,8 +109,8 @@
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play last"><i class="icon-backward"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Pause"> <i class="icon-pause"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play next"><i class="icon-forward"></i></a><span ng-show="is_admin"> |</span>
-                <a href="" class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Add new Item" ng-click="show_add=!show_add"><i class="icon-plus"></i></a><span ng-show="is_admin"> |</span>
-                <a href="" class="_tt" data-toggle="tooltip" ng-click="show_search=!show_search;searchTitle=''" title="Search Item"><i class="icon-search"></i></a>
+                <a href="" class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Add new Item" ng-click="show_pl_bars(true,false)"><i class="icon-plus"></i></a><span ng-show="is_admin"> |</span>
+                <a href="" class="_tt" data-toggle="tooltip" ng-click="show_pl_bars(false,true)" title="Search Item"><i class="icon-search"></i></a>
               </div>
             </div>
 
