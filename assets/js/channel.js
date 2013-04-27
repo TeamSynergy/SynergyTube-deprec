@@ -2,25 +2,12 @@ $(function(){
 	// I hate the chromeless player, i'll never build my own controls. Take this dummy!
 	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "100%", "380", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" });
 	$('._tt').tooltip({placement:'bottom'});
-	$('#itemURL').live('input', function(){
-		var reg = $('#itemURL').val().match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
-		if(reg){
-			var tag = document.createElement('script');
-			tag.src = "https://gdata.youtube.com/feeds/api/videos/" + reg[1] + "?alt=json-in-script&v=2&callback=gdataCallbackProxy";
-			var firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-		} else {
-			angular.element('html').scope().add_item.valid = false;
-			angular.element('html').scope().$apply();
-		}
-	});
 	$('.channel-cover-text').dotdotdot({watch:true});
 });
-var app = angular.module('channel',[]);
+var app = angular.module('channel', []);
 var socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "&channel_id=" + channel_id, secure: location.protocol === "https:" });
 var player;
 
-function gdataCallbackProxy(data){angular.element('html').scope().gdataCallback(data);}
 function stateChangeProxy(state){angular.element('html').scope().playerStateChange(state);}
 function onYouTubePlayerReady(playerId) {
 	player = document.getElementById("myytplayer");
@@ -92,8 +79,6 @@ function channel_controller($scope){
 		$scope.$apply();
 	});
 	socket.on('playlist.remove_item', function(data){
-		if($scope.active_item === data._id)
-			$scope.playNext();
 		for (var i = 0; i < $scope.playlist.length; i++) {
 			if($scope.playlist[i]._id === data._id){
 				$scope.playlist.splice(i, 1);
@@ -121,6 +106,11 @@ function channel_controller($scope){
 		$scope.$apply();
 		$('.channel-chat > ul').animate({ scrollTop: $('.channel-chat > ul')[0].scrollHeight},800);
 	});
+	socket.on('chat.load_more', function(data){
+		$scope.chat = $scope.chat.concat(data);
+		$scope.$apply();
+		$('.channel-chat > ul').scrollTop($scope.scroll_to_item.offset().top - $('.channel-chat > ul').offset().top + $('.channel-chat > ul').scrollTop());
+	});
 	socket.on('channel.user_join', function(data){
 		$scope.online.push(data.content);
 		$scope.$apply();
@@ -142,17 +132,24 @@ function channel_controller($scope){
 		$scope.guests--;
 		$scope.$apply();
 	});
-	socket.on('channel.faved', function(){
-		console.log("received a fav!");
+	socket.on('channel.faved', function(data){
 		$scope.favs++;
-		$scope.apply();
-	})
+		if(data.login_name === $scope.login_name)
+			$scope.already_faved = true;
+		$scope.$apply();
+	});
+	socket.on('channel.unfaved', function(data){
+		$scope.favs--;
+		if(data.login_name === $scope.login_name)
+			$scope.already_faved = false;
+		$scope.$apply();
+	});
 	socket.socket.on('error', function(data){
 		$scope.alert_stack.push({ status: "Server-Error", text: "Unable to connect to Synergy-Server"});
 		$scope.$apply();
 	});
 	socket.on('error', function(data){
-		$scope.alert_stack.push({ strong: "Error " + data.status, text: data.content.code });
+		$scope.alert_stack.push({ strong: "Error " + data.status, text: data.content });
 		$scope.$apply();
 	});
 	socket.on('error.session_id', function(data){
@@ -161,14 +158,14 @@ function channel_controller($scope){
 	socket.on('user.session_id', function(data){
 		createCookie("session_id", data.content.session_id);
 		window.location.reload();
-		//socket.socket.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "channel_id=" + channel_id});
 	});
 	socket.on('user.destroy_session', function(){
 		eraseCookie("session_id");
 		window.location.reload();
-		//socket.socket.connect('//' + window.location.host + ':8080', { query:"session_id=0channel_id=" + channel_id});
 	});
-
+	$scope.debug = function(){
+		alert("Debug-Message");
+	}
 	$scope.login = function(){
 		socket.emit('user.login', { login_name: $scope.txtlogin_name, password: $scope.password  });
 		$scope.password = "";
@@ -232,7 +229,7 @@ function channel_controller($scope){
 		$scope.active_item = next_item._id;
 		$scope.$apply();
 		player.loadVideoById(next_item.url);
-		socket.emit('playlist.item_changed', { _id: $scope.active_item, caption: next_item.caption });
+		socket.emit('playlist.item_changed', { caption: next_item.caption });
 	};
 	$scope.play_item = function(item_id){
 		var item;
@@ -253,21 +250,6 @@ function channel_controller($scope){
 	$scope.remove_item = function(item_id){
 		socket.emit('playlist.remove_item', { _id: item_id });
 	}
-	$scope.gdataCallback = function(data){
-		if(data.entry) {
-			$scope.add_item.url = data.entry.media$group.yt$videoid.$t;
-			$scope.add_item.duration = data.entry.media$group.media$content[0].duration;
-			$scope.add_item.caption = data.entry.title.$t;
-			$scope.add_item.media_type = "youtube";
-			$scope.add_item.valid = true;
-			for (var i = 0; i < $scope.playlist.length; i++) {
-				if($scope.playlist[i].url == $scope.add_item.url)
-					$scope.alert_stack.push({ text: "The Item you are about to add is already in the Medie List. Are you sure about adding this?" });
-			};
-		} else
-			$scope.add_item.valid = false;
-		$scope.$apply();
-	};
 	$scope.fav_this = function(){
 		socket.emit('channel.faved');
 	};
@@ -283,8 +265,36 @@ function channel_controller($scope){
 
 		$scope.add_item = { valid: false };
 		$scope.searchTitle = "";
+		$scope.itemURL = "";
 
 		$scope.$apply();
+	};
+	$scope.itemUrlCallback = function(){
+		var reg = $('#itemURL').val().match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
+		if(reg){
+			$.getJSON("https://gdata.youtube.com/feeds/api/videos/" + reg[1] + "?alt=json-in-script&v=2&callback=?", function(data){
+				if(data.entry) {
+					$scope.add_item.url = data.entry.media$group.yt$videoid.$t;
+					$scope.add_item.duration = data.entry.media$group.media$content[0].duration;
+					$scope.add_item.caption = data.entry.title.$t;
+					$scope.add_item.media_type = "youtube";
+					$scope.add_item.valid = true;
+					for (var i = 0; i < $scope.playlist.length; i++) {
+						if($scope.playlist[i].url == $scope.add_item.url)
+							$scope.alert_stack.push({ text: "The Item you are about to add is already in the Media List. Are you sure about adding this?" });
+					};
+				} else
+					$scope.add_item.valid = false;
+				$scope.$apply();
+			});
+		} else {
+			angular.element('html').scope().add_item.valid = false;
+			angular.element('html').scope().$apply();
+		}
+	};
+	$scope.load_messages = function(){
+		$scope.scroll_to_item = $('.channel-chat > ul > li:first-child');
+		socket.emit('chat.load_more', { append_at: $scope.chat[$scope.chat.length - 1].timestamp });
 	};
 	
 	$scope.$watch("playlist", function(value){
@@ -303,30 +313,51 @@ app.directive('dndList', function(){
 		scope.$watch(attrs.dndList, function(value){
 			toUpdate = value;
 		},true);
-		
-		$(element[0]).sortable({
-			items:'tr',
-			start: function(event, ui){
-				startIndex = ($(ui.item).index());
-				scope.reordered = true;
-			},
-			stop: function(event, ui){
-				if(socket.is_admin) {
-					console.log("Item: " + toUpdate[startIndex]._id + "; Old Position: " + toUpdate[startIndex].position + "; New Position: " + ($(ui.item).index() + 1));
-					var newIndex = ($(ui.item).index());
-					var toMove = toUpdate[startIndex];
-					toUpdate.splice(startIndex, 1);
-					toUpdate.splice(newIndex,0,toMove);
-					for(var i = 0; i < scope.playlist.length; i++){
-						scope.playlist[i].position = i + 1;
-					}
-				}
-				scope.$apply(scope.playlist);
-			},
-			axis: 'y'
+
+		var intv = setInterval(function(){
+			console.log("waiting for socket.io to finish initializing...");
+			if(typeof scope.is_admin !== "undefined"){
+				if(scope.is_admin)
+					$(element[0]).sortable({
+						items:'tr',
+						start: function(event, ui){
+							startIndex = ($(ui.item).index());
+							scope.reordered = true;
+						},
+						stop: function(event, ui){
+							console.log("Item: " + toUpdate[startIndex]._id + "; Old Position: " + toUpdate[startIndex].position + "; New Position: " + ($(ui.item).index() + 1));
+							var newIndex = ($(ui.item).index());
+							var toMove = toUpdate[startIndex];
+							toUpdate.splice(startIndex, 1);
+							toUpdate.splice(newIndex,0,toMove);
+							for(var i = 0; i < scope.playlist.length; i++){
+								scope.playlist[i].position = i + 1;
+							}
+							scope.$apply(scope.playlist);
+						},
+						axis: 'y'
+					});
+				clearInterval(intv);
+			}
+		}, 1000);
+	};
+});
+app.directive('onChange', function(){
+	return function(scope, element, attrs){
+		$(element[0]).live('input', function(){
+			scope.$apply(attrs.onChange);
 		});
 	};
 });
+app.directive('onScroll', function(){
+	return function(scope, elm, attr){
+		var raw = elm[0];
+		elm.bind('scroll', function(){
+			if(raw.scrollTop <= 0)
+				scope.$apply(attr.onScroll);
+		});
+	}
+})
 function createCookie(name,value,days) {
 	if (days) {
 		var date = new Date();

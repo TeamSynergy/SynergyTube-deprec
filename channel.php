@@ -99,8 +99,7 @@
           <div class="playlist">
             <div class="info-bar">
               <div class="pull-left">
-                <a href="" class="_tt" data-toggle="tooltip" title="Favourites - Fav this" ng-click="fav_this()" ng-show="!already_faved"><i class="icon-heart"></i> {{favs}}</a>
-                <span class="_tt" data-toggle="tooltip" title="Favourites" ng-show="already_faved"><i class="icon-heart"></i> {{favs}}</span> |
+                <a href="" class="_tt" data-toggle="tooltip" title="Favourites" ng-click="fav_this()"><i class="icon-heart"></i> {{favs}}</a> |
                 <span class="_tt" data-toggle="tooltip" title="Overall Views"><i class="icon-globe"></i> {{views}}</span> |
                 <span class="_tt" data-toggle="tooltip" title="Online Users"><i class="icon-eye-open"></i> {{online.length + guests}}</span> |
                 <span class="_tt" data-toggle="tooltip" title="Items in Playlist"><i class="icon-th-list"></i> {{playlist.length}}</span>
@@ -117,7 +116,7 @@
             <form class="form-append form-horizontal" name="appendForm" ng-submit="add_new_item()" ng-show="show_add">
               <label class="control-label" for="itemURL">Item-URL</label>
               <div class="controls">
-                <input type="url" class="input-block-level pull-left" placeholder="Item-URL" id="itemURL" ng-model="itemURL" required>
+                <input type="url" class="input-block-level pull-left" on-change="itemUrlCallback()" placeholder="Item-URL" id="itemURL" ng-model="itemURL" required>
                 <div class="input-append">
                   <button type="submit" class="btn btn-primary pull-right" ng-disabled="!add_item.valid">Add Item</button>
                 </div>
@@ -131,7 +130,7 @@
 
             <table class="table table-striped table-condensed playlist-table">
               <tbody dnd-list="playlist">
-                <tr ng-repeat="item in playlist | filter:searchTitle | orderBy:'position'" ng-class="{playc: item._id == active_item}">
+                <tr ng-repeat="item in playlist | filter:searchTitle | orderBy:'position'" ng-class="{playc: item._id === active_item}">
                   <td>{{item.position}}</td>
                   <td><a href="{{item.url}}">{{item.caption}}</a></td>
                   <td>{{getLength(item.duration)}}</td>
@@ -145,7 +144,7 @@
         </div>
         <div class="sp2 channel-chat">
           <h3>Chat:</h3>
-          <ul class="unstyled">
+          <ul class="unstyled" on-scroll="load_messages()">
             <li ng-repeat="message in chat | orderBy:'timestamp'"><p><strong>{{message.display_name}}</strong> <small class="muted">{{getTime(message.timestamp)}}</small><br>
               {{message.content}}</p></li>
           </ul>
