@@ -75,6 +75,7 @@ function emitUserData(socket) {
 		if(socket.is_owner)
 			socket.is_admin = true;
 		var _online = init_online(socket.channel_id);
+		_online.push({display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id });
 		console.log("Users: " + _online.length + " from " + channel_data[0].user_limit);
 		if(_online.length < channel_data[0].user_limit || socket.is_admin){
 			socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id }});
