@@ -37,8 +37,10 @@ function channel_controller($scope){
 		$scope.online = data.content.users_online;
 		$scope.favs = data.content.favs;
 		$scope.views = data.content.views;
-		$scope.active_item = data.content.now_playing._id;
-		$scope.start_time = data.content.now_playing.start_time;
+		if(data.content.now_playing){
+			$scope.active_item = data.content.now_playing._id;
+			$scope.start_time = data.content.now_playing.start_time;
+		}
 		$scope.logged_in = data.content.logged_in;
 		$scope.already_faved = data.content.already_faved;
 
@@ -59,6 +61,7 @@ function channel_controller($scope){
 			}
 		}, 1000);
 		$scope.$apply();
+		$('.playlist-table').lionbars();
 		$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
 	});
 	socket.on('playlist.append_item', function(data){
@@ -152,9 +155,17 @@ function channel_controller($scope){
 		$scope.alert_stack.push({ strong: "Error " + data.status, text: data.content });
 		$scope.$apply();
 	});
-	socket.on('error.session_id', function(data){
+	socket.on('error.session_id', function(){
+		console.log("not logged in");
 		$scope.alert_stack.push({ text: "You don't seem to be logged in. If you use SynergyTube without registration you are not able to Chat." });
+		$scope.$apply();
 	});
+	socket.on('error.channel_full', function(){
+		console.log("channel full");
+		$scope.alert_stack.push({ text: "We're sorry, but this Channel has reached it's User-Limit. Please Come again later." });
+		$scope.$apply();
+	});
+
 	socket.on('user.session_id', function(data){
 		createCookie("session_id", data.content.session_id);
 		window.location.reload();
@@ -162,6 +173,11 @@ function channel_controller($scope){
 	socket.on('user.destroy_session', function(){
 		eraseCookie("session_id");
 		window.location.reload();
+	});
+	socket.on("user.create_account", function(){
+		$('.create-an-account-dropdown').dropdown('toggle');
+		$scope.alert_stack.push({ text: "Huray! We've created your account! Go check your Emails for the confirmation link in order to activate your Account." });
+		$scope.$apply();
 	});
 	$scope.debug = function(){
 		alert("Debug-Message");

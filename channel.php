@@ -14,6 +14,7 @@
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
   <link href="/assets/css/custom.css" rel="stylesheet">
   <link href="/assets/css/style.css" rel="stylesheet">
+  <link href="/assets/css/lionbars.css" rel="stylesheet">
   <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet">
   <style type="text/css">.channel-cover{background:<?php print("url(/assets/img/".$channel_cover_id.") ".$channel_cover_repeat." ".$channel_cover_pos_x." ".$channel_cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
 </head>
@@ -49,7 +50,7 @@
                 </form>
               </div>
             </li>
-            <li class="dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Create an Account<b class="caret"></b></a>
+            <li class="dropdown create-an-account-dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Create an Account<b class="caret"></b></a>
               <div class="dropdown-menu login-dropdown">
                 <form ng-submit="create_account()">
                   <input type="text" placeholder="Username" name="username" ng-model="create_login_name" required>
@@ -100,7 +101,7 @@
             <div class="info-bar">
               <div class="pull-left">
                 <a href="" class="_tt" data-toggle="tooltip" title="Favourites" ng-click="fav_this()"><i class="icon-heart"></i> {{favs}}</a> |
-                <span class="_tt" data-toggle="tooltip" title="Overall Views"><i class="icon-globe"></i> {{views}}</span> |
+                <span class="_tt" data-toggle="tooltip" title="Unique Visitors"><i class="icon-globe"></i> {{views}}</span> |
                 <span class="_tt" data-toggle="tooltip" title="Online Users"><i class="icon-eye-open"></i> {{online.length + guests}}</span> |
                 <span class="_tt" data-toggle="tooltip" title="Items in Playlist"><i class="icon-th-list"></i> {{playlist.length}}</span>
               </div>
@@ -130,7 +131,7 @@
 
             <table class="table table-striped table-condensed playlist-table">
               <tbody dnd-list="playlist">
-                <tr ng-repeat="item in playlist | filter:searchTitle | orderBy:'position'" ng-class="{playc: item._id === active_item}">
+                <tr ng-repeat="item in playlist | filter:searchTitle | orderBy:'position'" ng-class="{playc: item._id == active_item}">
                   <td>{{item.position}}</td>
                   <td><a href="{{item.url}}">{{item.caption}}</a></td>
                   <td>{{getLength(item.duration)}}</td>
@@ -142,21 +143,23 @@
             </table>
           </div>
         </div>
-        <div class="sp2 channel-chat">
-          <h3>Chat:</h3>
-          <ul class="unstyled" on-scroll="load_messages()">
-            <li ng-repeat="message in chat | orderBy:'timestamp'"><p><strong>{{message.display_name}}</strong> <small class="muted">{{getTime(message.timestamp)}}</small><br>
-              {{message.content}}</p></li>
-          </ul>
 
-          <form class="chat-submit" ng-submit="sendMessage()" ng-show="logged_in">
-            <input type="text" ng-model="message" placeholder="Chat" class="input-block-level">
-          </form>
-        </div>
-      
-        <div class="sp1">
+        <div class="sp2">
+          <div class="channel-chat">
+            <h4>Chat:</h4>
+            <ul class="unstyled" on-scroll="load_messages()">
+              <li ng-repeat="message in chat | orderBy:'timestamp'">
+                <!--<div class="avatar"><img src="https://secure.gravatar.com/avatar/f9879d71855b5ff21e4963273a886bfc?d=identicon"></div>-->
+                <div class="chat-content"><hr><p><strong>{{message.display_name}}</strong> <small class="muted _tt" data-toggle="tooltip" title="{{getTime(message.timestamp)}}">{{getTime(message.timestamp)}}</small><br>
+                {{message.content}}</p></div>
+              </li>
+            </ul>
+            <form class="chat-submit" ng-submit="sendMessage()" ng-show="logged_in">
+              <input type="text" ng-model="message" placeholder="Chat" class="input-block-level">
+            </form>
+          </div>
           <div class="channel-user">
-            <h3>Online:</h3>
+            <h4>Who's Here?</h4>
             <ul class="unstyled user-list">
               <li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">{{user.display_name}}</li>
             </ul>
@@ -183,6 +186,7 @@
   <script>document.write('<script type="text/javascript" src="//' + document.location.host + ':8080/socket.io/socket.io.js"><\/script>');</script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
   <script src="/assets/js/jquery.ddd.min.js"></script>
+  <script src="/assets/js/jquery.lionbars.min.js"></script>
   <script src="/assets/js/channel.js"></script>
 </body>
 </html>

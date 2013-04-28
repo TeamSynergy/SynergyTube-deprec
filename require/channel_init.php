@@ -1,4 +1,5 @@
 <?php
+	// http://ipinfodb.com/ip_location_api.php for tracking to geolocation?
 	require("config.inc.php");
 
 	$channel_exists = false;
@@ -22,5 +23,18 @@
 		$channel_cover_repeat = htmlentities($_channel->cover_repeat);
 		$channel_cover_pos_x = htmlentities($_channel->cover_pos_x);
 		$channel_cover_pos_y = htmlentities($_channel->cover_pos_y);
+		$ip_hash = hash('sha256', $_SERVER['REMOTE_ADDR']);
+		if(!is_bot())
+			$con->query("INSERT INTO tblTracking (ip_hash, channel_id, timestamp) VALUES ('".$ip_hash."', '".$channel_id."', NOW())");
 	}
+
+	function is_bot()
+	{
+		$botlist = array("Teoma", "alexa", "froogle", "Gigabot", "inktomi", "looksmart", "URL_Spider_SQL", "Firefly", "NationalDirectory", "Ask Jeeves", "TECNOSEEK", "InfoSeek", "WebFindBot", "girafabot", "crawler", "www.galaxy.com", "Googlebot", "Scooter", "Slurp", "msnbot", "appie", "FAST", "WebBug", "Spade", "ZyBorg", "rabaz", "Baiduspider", "Feedfetcher-Google", "TechnoratiSnoop", "Rankivabot", "Mediapartners-Google", "Sogou web spider", "WebAlta Crawler","TweetmemeBot", "Butterfly","Twitturls","Me.dium","Twiceler");
+		foreach($botlist as $bot)
+			if(strpos($_SERVER['HTTP_USER_AGENT'], $bot) !== false)
+				return true;
+		return false;
+	}
+
 ?>

@@ -1,11 +1,10 @@
 var io  = require('socket.io').listen(8080);
-var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 var hasher = require('password-hash');
 var crypto = require('crypto');
 var mysql = require('mysql');
-var conf = require('./config.json');
-var sql = mysql.createConnection(conf);
+var nodemailer = require('nodemailer');
+var configuration = require('./config.json');
+var sql = mysql.createConnection(configuration.database);
 var sql_state = false;
 
 io.setMaxListeners(0);
@@ -21,12 +20,12 @@ sql.connect(function(err){
 
 var handle_disconnect = function(err){
 	if(err){
-		console.log("Error_: " + JSON.stringify(err.code));
+		console.log("Error while executing local disconnect-handler: " + err);
 		if(err.code === "PROTOCOL_CONNECTION_LOST"){sql_state = false;}
 	}
 	if(!sql_state){
 		var re = setInterval(function(){
-			sql = mysql.createConnection(conf);
+			sql = mysql.createConnection(configuration.database);
 			sql.connect(function(err){
 				if(err){console.log("Unable to reconnect: " + err);}
 				else {
@@ -37,13 +36,13 @@ var handle_disconnect = function(err){
 					clearInterval(re);
 				}
 			});
-		}, 5000)
+		}, 5000);
 	}
-}
+};
 var handle_connection_close = function(err){
 	console.log("DBMS closed the connection.");
 	sql_state = false;
-}
+};
 sql.on("close", handle_connection_close);
 sql.on("error", handle_disconnect);
 
@@ -63,7 +62,8 @@ function emitUserData(socket) {
 	r_query("SELECT tblMedia._id, position, url, caption, duration, display_name, login_name, media_type FROM tblMedia RIGHT JOIN tblUser ON tblUser._id = tblMedia.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position ASC", socket, function(playlist_data){
 	r_query("SELECT _id, start_time, url, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(current_item_data){
 	r_query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY timestamp DESC LIMIT 0, 15", socket, function(message_data){
-	r_query("SELECT views, user_limit FROM tblChannels WHERE _id = " + sql.escape(socket.channel_id), socket, function(channel_data){
+	r_query("SELECT user_limit FROM tblChannels WHERE _id = " + sql.escape(socket.channel_id), socket, function(channel_data){
+	r_query("SELECT COUNT(DISTINCT ip_hash) AS '_c' FROM tblTracking WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(view_data){
 	r_query("SELECT COUNT(*) AS '_c' FROM relFavourites WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(fav_data){
 	socket.user_id = user_data[0]._id;
 	r_query("SELECT COUNT(*) AS '_c' FROM relFavourites WHERE channel_id = " + sql.escape(socket.channel_id) + " AND user_id = " + sql.escape(socket.user_id), socket, function(already_faved_data){
@@ -74,25 +74,42 @@ function emitUserData(socket) {
 		socket.is_owner = owner_data[0]._c > 0;
 		if(socket.is_owner)
 			socket.is_admin = true;
-		socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id }});
-		socket.emit('channel.init', { status: 0, content: { user_data: { login_name: user_data[0].login_name, display_name: user_data[0].display_name, is_admin: socket.is_admin }, users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, already_faved: socket.already_faved, views: channel_data[0].views, favs: fav_data[0]._c, now_playing: current_item_data[0], logged_in: true }});
-	});});});});});});});});});
+		var _online = init_online(socket.channel_id);
+		console.log("Users: " + _online.length + " from " + channel_data[0].user_limit);
+		if(_online.length < channel_data[0].user_limit || socket.is_admin){
+			socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id }});
+			socket.emit('channel.init', { status: 0, content: { user_data: { login_name: user_data[0].login_name, display_name: user_data[0].display_name, is_admin: socket.is_admin }, users_online: _online, last_chat: message_data, playlist: playlist_data, already_faved: socket.already_faved, views: view_data[0]._c, favs: fav_data[0]._c, now_playing: current_item_data[0], logged_in: true }});
+			socket.join(socket.channel_id);
+			return true;
+		} else {
+			socket.emit('error.channel_full');
+			return false;
+		}
+	});});});});});});});});});});
 }
 function emitGuestData(socket){
 	r_query("SELECT tblMedia._id, position, url, caption, duration, display_name, login_name, media_type FROM tblMedia RIGHT JOIN tblUser ON tblUser._id = tblMedia.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position ASC", socket, function(playlist_data){
 	r_query("SELECT _id, start_time, url, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(current_item_data){
 	r_query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY timestamp DESC LIMIT 0, 15", socket, function(message_data){
-	r_query("SELECT views, user_limit FROM tblChannels WHERE _id = " + sql.escape(socket.channel_id), socket, function(channel_data){
+	r_query("SELECT user_limit FROM tblChannels WHERE _id = " + sql.escape(socket.channel_id), socket, function(channel_data){
+	r_query("SELECT COUNT(DISTINCT ip_hash) AS '_c' FROM tblTracking WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(view_data){
 	r_query("SELECT COUNT(*) AS '_c' FROM relFavourites WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(fav_data){
-		socket.emit('channel.init', { status: 0, content: { users_online: init_online(socket.channel_id), last_chat: message_data, playlist: playlist_data, already_faved: true, views: channel_data[0].views, favs: fav_data[0]._c, now_playing: current_item_data[0], logged_in: false }});
-		socket.broadcast.to(socket.channel_id).emit('channel.guest_join');
-	});});});});});
+		var _online = init_online(socket.channel_id);
+		if(_online.length < channel_data[0].user_limit){
+			socket.broadcast.to(socket.channel_id).emit('channel.guest_join');
+			socket.emit('channel.init', { status: 0, content: { users_online: _online, last_chat: message_data, playlist: playlist_data, already_faved: true, views: view_data[0]._c, favs: fav_data[0]._c, now_playing: current_item_data[0], logged_in: false }});
+			socket.join(socket.channel_id);
+			return true;
+		} else {
+			socket.emit('error.channel_full');
+			return false;
+		}
+	});});});});});});
 }
 
 io.sockets.on('connection', function (socket) {
 	socket.logged_in = false;
 	socket.channel_id = socket.handshake.query.channel_id;
-	socket.join(socket.channel_id);
 
 	if(socket.handshake.query.session_id){
 		findBySessionID(socket.handshake.query.session_id, socket, function(err, user){
@@ -123,7 +140,7 @@ io.sockets.on('connection', function (socket) {
 		if(socket.logged_in){
 			if(!socket.already_faved)
 				r_query("INSERT INTO relFavourites (channel_id, user_id) VALUES (" + sql.escape(socket.channel_id) + ", " + sql.escape(socket.user_id) + ")", socket, function(data){
-					io.sockets.in(socket.channel_id).emit('channel.faved', { user_id: socket.user_id });
+					io.sockets.in(socket.channel_id).emit('channel.faved', { login_name: socket.login_name });
 					socket.already_faved = true;
 				});
 			else
@@ -137,26 +154,65 @@ io.sockets.on('connection', function (socket) {
 	/* --User Related--*/
 
 	socket.on('user.login', function(data){
-		r_query("SELECT COUNT(*) AS '_c', hash FROM tblUser WHERE login_name = " + sql.escape(data.login_name), socket, function(user_data){
-			if(user_data[0]._c > 0)
-				if(hasher.verify(data.password, user_data[0].hash)){
-					var session_id = hasher.generate(data.login + user_data[0].hash);
-					socket.emit("user.session_id", { status: 0, content: { session_id: session_id }});
-					i_query("UPDATE tblUser SET session_id = " + sql.escape(session_id) + " WHERE login_Name = " + sql.escape(data.login_name), socket, "user.login");
-				} else
-					socket.emit("error", { status: 4, content: { code: "Incorrect Username or _Password." }});
-			else
-				socket.emit("error", { status: 4, content: { code: "Incorrect _Username or Password." }});
+		r_query("SELECT COUNT(*) AS '_c', hash, is_valid FROM tblUser WHERE login_name = " + sql.escape(data.login_name), socket, function(user_data){
+			if(user_data[0]._c > 0){
+				if(user_data[0].is_valid === 1){
+					if(hasher.verify(data.password, user_data[0].hash)){
+						var session_id = hasher.generate(data.login_name + user_data[0].hash);
+						socket.emit("user.session_id", { status: 0, content: { session_id: session_id }});
+						i_query("UPDATE tblUser SET session_id = " + sql.escape(session_id) + " WHERE login_Name = " + sql.escape(data.login_name.toLowerCase()), socket, "user.login");
+					} else {
+						socket.emit("error", { status: 4, content: { code: "Incorrect Username or Password." }});
+					}
+				} else {
+					socket.emit("error", { status: 4, content: { code: "Your Account is not ready yet. Please Check your mail for the Activation-Link" }});
+				}
+			} else {
+				socket.emit("error", { status: 4, content: { code: "Incorrect Username or Password." }});
+			}
 		});
 	});
 	socket.on('user.logout', function(){
 		if(socket.logged_in){
-			i_query("UPDATE tblUser SET session_id = '' WHERE login_name = " + sql.escape(socket.login_name), socket, "user.logout");
+			i_query("UPDATE tblUser SET session_id = '' WHERE login_name = " + sql.escape(socket.login_name.toLowerCase()), socket, "user.logout");
 			socket.emit("user.destroy_session");
 		}
 	});
 	socket.on('user.create_account', function(data){
-		i_query("INSERT INTO tblUser (login_name, display_name, email, strategy, hash) VALUES (" + sql.escape(data.login_name) + ", " + sql.escape(data.login_name) + ", " + sql.escape(data.email) + ", 'local', " + sql.escape(hasher.generate(data.password)) + ")", socket, "user.create_account");
+		r_query("SELECT COUNT(*) AS '_c' FROM tblUser WHERE login_name = " + sql.escape(data.login_name.toLowerCase()), socket, function(query_data){
+			if(query_data[0]._c === 0){
+				if(data.login_name.length > 4){
+					if(data.password.length > 6){
+						var validate_hash = crypto.createHash('sha256').update(new Date() + data.login_name + data.password).digest("hex");
+						var mail = {
+							from: "SynergyTube Accountservice <synergytube.slave@gmail.com>",
+							to: data.email,
+							subject: "Activate your SynergyTube Account",
+							text: "To activate your account go to this address: http://localhost/validate/" + validate_hash,
+							html: "<b>Welcome to SynergyTube, " + data.login_name + "!</b><br><hr><p>To Activate your new SynergyTube Account simply go to: <a href=\"http://localhost/validate/" + validate_hash + "\">http://localhost/validate/" + validate_hash + "</a></p>Thank you!"
+						};
+						r_query("INSERT INTO tblUser (login_name, display_name, email, strategy, hash, is_valid, validate_hash) VALUES (" + sql.escape(data.login_name.toLowerCase()) + ", " + sql.escape(data.login_name) + ", " + sql.escape(data.email.toLowerCase()) + ", 'local', " + sql.escape(hasher.generate(data.password)) + ", 0, " + sql.escape(validate_hash) + ")", socket, function(data){
+							var smtpTransport = nodemailer.createTransport("SMTP", configuration.mail);
+							smtpTransport.sendMail(mail, function(err, response){
+								if(err){
+									console.log(err);
+									socket.emit("error", { status: 5, content: { code: "We were Unable to send the activation-link to your mail-address. Please contact the admin." }});
+								} else {
+									socket.emit("user.create_account", response);
+								}
+								console.log(response);
+							});
+						});
+					} else {
+						socket.emit("error", { status: 6, content: { code: "Sorry, your Password is too short. It has to be at least 6 chars long." }});
+					}
+				} else {
+					socket.emit("error", { status: 7, content: { code: "Sorry, your Username is too short. It has to be at least 4 chars long." }});
+				}
+			} else {
+				socket.emit("error", { status: 8, content: { code: "This Username has already been taken." }});
+			}
+		});
 	});
 	
 	/*--Chat Related--*/
@@ -181,9 +237,13 @@ io.sockets.on('connection', function (socket) {
 		// Check Privileges
 		if(socket.is_admin){
 			r_query("SELECT position FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position DESC LIMIT 0,1", socket, function(rows){
-				console.log("append new item at " + (rows[0].position + 1));
-				sql.query("INSERT INTO tblMedia (user_id, channel_id, url, position, duration, caption, media_type) VALUES (" + sql.escape(socket.user_id) + ", " + sql.escape(socket.channel_id) + ", " + sql.escape(data.url) + ", " + (rows[0].position + 1) + ", " + sql.escape(data.duration) + ", " + sql.escape(data.caption) + ", " + sql.escape(data.media_type) + ")", function(err, res){
-					io.sockets.in(socket.channel_id).emit('playlist.append_item', { status: 0, content: { _id: res.insertId, position: (rows[0].position + 1), url: data.url, caption: data.caption, duration: data.duration, display_name: socket.display_name, login_name: socket.login_name, media_type: data.media_type }});
+				var pos = 0;
+				if(rows[0]){
+					pos = rows[0].position;
+				}
+				console.log("append new item at " + (pos + 1));
+				sql.query("INSERT INTO tblMedia (user_id, channel_id, url, position, duration, caption, media_type) VALUES (" + sql.escape(socket.user_id) + ", " + sql.escape(socket.channel_id) + ", " + sql.escape(data.url) + ", " + (pos + 1) + ", " + sql.escape(data.duration) + ", " + sql.escape(data.caption) + ", " + sql.escape(data.media_type) + ")", function(err, res){
+					io.sockets.in(socket.channel_id).emit('playlist.append_item', { status: 0, content: { _id: res.insertId, position: (pos + 1), url: data.url, caption: data.caption, duration: data.duration, display_name: socket.display_name, login_name: socket.login_name, media_type: data.media_type }});
 				});
 			});
 		}
@@ -240,7 +300,7 @@ io.sockets.on('connection', function (socket) {
 
 
 function r_query(statement, socket, callback) {
-	sql.query(statement, function(err, rows, fields){
+	sql.query(statement, function(err, rows){
 		if(err){
 			console.log(err);
 			socket.emit("error", { status: 2, content: err.code });
@@ -260,7 +320,7 @@ function i_query(statement, socket, func_name){
 }
 
 function init_online(channel_id){
-	var arr = new Array();
+	var arr = [];
 	io.sockets.clients(channel_id).forEach(function(socket){
 		arr.push({display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id });
 	});

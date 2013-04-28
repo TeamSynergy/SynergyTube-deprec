@@ -46,11 +46,6 @@ html,body {height:100%;background-image:url(/assets/img/groovepaper.png);}
   display:block;
   height:100%;
 }
-.channel-second > .channel-sidebar {
-  background:#222;
-  padding-bottom:32000px;
-  margin-bottom:-32000px;
-}
 .channel-chat{
   height:100%;
 }
@@ -59,12 +54,7 @@ html,body {height:100%;background-image:url(/assets/img/groovepaper.png);}
   overflow:auto;
 }
 .sp2{
-  width:42.5%;
-  float:left;
-  height:100%;
-}
-.sp1{
-  width:15%;
+  width:50%;
   float:left;
   height:100%;
 }
