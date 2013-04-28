@@ -1,5 +1,14 @@
 {
-	"user": "root",
-	"password": "root",
-	"database": "synergy"
+	"database": {
+		"user": "root",
+		"password": "root",
+		"database": "synergy"
+	},
+	"mail": {
+		"service": "Gmail",
+		"auth": {
+			"user": "go-create-your-own@gmail.com",
+			"pass": "woah, dude.."
+		}
+	}
 }
