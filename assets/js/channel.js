@@ -120,7 +120,7 @@ function channel_controller($scope){
 	});
 	socket.on('channel.user_leave', function(data){
 		for (var i = 0; i < $scope.online.length; i++) {
-			if($scope.online[i].user_id === data._id){
+			if($scope.online[i].user_id === data.content._id){
 				$scope.online.splice(i, 1);
 				break;
 			}
@@ -168,8 +168,6 @@ function channel_controller($scope){
 
 	socket.on('user.session_id', function(data){
 		createCookie("session_id", data.content.session_id);
-		$scope.password = "";
-		$scope.txtlogin_name = "";
 		window.location.reload();
 	});
 	socket.on('user.destroy_session', function(){
@@ -186,6 +184,8 @@ function channel_controller($scope){
 	}
 	$scope.login = function(){
 		socket.emit('user.login', { login_name: $scope.txtlogin_name, password: $scope.password  });
+		$scope.password = "";
+		$scope.txtlogin_name = "";
 	}
 	$scope.logout = function(){
 		socket.emit('user.logout');
