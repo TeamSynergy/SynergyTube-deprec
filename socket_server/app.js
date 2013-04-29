@@ -31,7 +31,10 @@ function emitUserData(socket) {
 		online_user.push(own_user);
 		console.log("in channel: " + online_user.length + " from " + current_channel.user_limit);
 		if(online_user.length <= current_channel.user_limit || socket.is_admin){
-			socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: own_user });
+			if(!already_online(socket.channel_id, socket.login_name)){
+				console.log("user not online, sending broadcast");
+				socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: own_user });
+			}
 			socket.emit('channel.init', {
 				user_data: own_user,
 				users_online: online_user,
@@ -43,7 +46,7 @@ function emitUserData(socket) {
 				now_playing: current_item,
 				logged_in: true,
 				is_admin: socket.is_admin,
-				is_owner: socket.is_owner
+				is_owner: socket.is_owner,
 			});
 			socket.join(socket.channel_id);
 			return true;
@@ -104,10 +107,12 @@ io.sockets.on('connection', function (socket) {
 	/* --Channel Related-- */
 
 	socket.on('disconnect', function(){
-		if(socket.logged_in)
-			socket.broadcast.to(socket.channel_id).emit('channel.user_leave', { status: 0, content: { _id: socket.user_id }});
-		else
-			socket.broadcast.to(socket.channel_id).emit('channel.guest_leave');
+		socket.leave(socket.channel_id);
+		if(!already_online)
+			if(socket.logged_in)
+				socket.broadcast.to(socket.channel_id).emit('channel.user_leave', { _id: socket.user_id });
+			else
+				socket.broadcast.to(socket.channel_id).emit('channel.guest_leave');
 
 		socket.leave(socket.channel_id);
 	});
@@ -272,8 +277,23 @@ io.sockets.on('connection', function (socket) {
 
 function init_online(channel_id){
 	var arr = [];
+	var usernames = [];
 	io.sockets.clients(channel_id).forEach(function(socket){
-		arr.push({ display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id });
+		if(socket.display_name) {
+			if(usernames.indexOf(socket.login_name) !== -1){
+				console.log("indexOf: " + usernames.indexOf(socket.login_name));
+				arr.push({ display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id });
+				usernames.push(socket.login_name);
+			}
+		}
 	});
 	return arr;
+}
+function already_online(channel_id, login_name){
+	io.sockets.clients(channel_id).forEach(function(socket){
+		if(socket.login_name === login_name){
+			return false;
+		}
+	});
+	return true;
 }

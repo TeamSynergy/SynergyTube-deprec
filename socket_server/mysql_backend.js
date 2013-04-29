@@ -94,7 +94,8 @@ exports.user.session.destroy = function(login_name, session_id, fn){
 		if(err)
 			exports.onQueryError(err);
 		else
-			return fn();
+			if(typeof fn !== "undefined")
+				return fn();
 	});
 };
 
@@ -245,7 +246,7 @@ exports.channel.playlist.findByPosition = function(channel_id, position, fn){
 			if(rows.length > 0)
 				return fn(rows[0]);
 			else
-				return fn();
+				return fn(null);
 	});
 };
 
@@ -255,7 +256,7 @@ exports.channel.playlist.findNext = function(channel_id, fn){
 			if(next)
 				return fn(next);
 			else
-				exports.channel.playlist.findByPosition(channel_id, 0, function(first){
+				exports.channel.playlist.findByPosition(channel_id, 1, function(first){
 					return fn(first);
 				});
 		});
