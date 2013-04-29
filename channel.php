@@ -41,6 +41,7 @@
                 <form ng-submit="login()">
                   <input type="text" placeholder="Username" name="username" ng-model="txtlogin_name" required>
                   <input type="password" placeholder="Password" name="password" ng-model="password" required>
+                  <label class="checkbox"><input type="checkbox" name="remember"> Remember me</label>
                   <input class="btn btn-primary btn-block" type="submit" value="Login">
                   <p class="text-center">or</p>
                   <a href="" class="btn btn-block">Login with Facebook</a>
@@ -161,8 +162,6 @@
             <h4>Who's Here?</h4>
             <ul class="unstyled user-list">
               <li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">{{user.display_name}}</li>
-              <li ng-show="guests == 1">1 Guest</li>
-              <li ng-show="guests > 1">{{guests}} Guests</li>
             </ul>
           </div>
         </div>
