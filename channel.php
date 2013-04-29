@@ -173,7 +173,7 @@
 
   <div class="footer">
     <div class="container footer-container">
-      <p>&copy; SynergyTube by Screeny05 (It's so close to beta you shouldn't use it); Fork me on <a href="https://github.com/screeny05/synergyTube">GitHub</a></p>
+      <p>&copy; SynergyTube by Screeny05 (It's v0.2); Fork me on <a href="https://github.com/screeny05/synergyTube">GitHub</a></p>
     </div>
   </div>
 
