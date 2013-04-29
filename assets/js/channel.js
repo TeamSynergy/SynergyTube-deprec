@@ -32,22 +32,22 @@ function channel_controller($scope){
 	$scope.removed = false;
 	
 	socket.on('channel.init', function(data){
-		$scope.playlist = data.content.playlist;
-		$scope.chat = data.content.last_chat;
-		$scope.online = data.content.users_online;
-		$scope.favs = data.content.favs;
-		$scope.views = data.content.views;
-		if(data.content.now_playing){
-			$scope.active_item = data.content.now_playing._id;
-			$scope.start_time = data.content.now_playing.start_time;
+		$scope.playlist = data.playlist;
+		$scope.chat = data.last_chat;
+		$scope.online = data.users_online;
+		$scope.favs = data.favs;
+		$scope.views = data.views;
+		if(data.now_playing){
+			$scope.active_item = data.now_playing._id;
+			$scope.start_time = data.now_playing.start_time;
 		}
-		$scope.logged_in = data.content.logged_in;
-		$scope.already_faved = data.content.already_faved;
+		$scope.logged_in = data.logged_in;
+		$scope.already_faved = data.already_faved;
 
-		if(data.content.logged_in){
-			$scope.is_admin = data.content.user_data.is_admin;
-			$scope.login_name = data.content.user_data.login_name;
-			$scope.display_name = data.content.user_data.display_name;
+		if(data.logged_in){
+			$scope.is_admin = data.user_data.is_admin;
+			$scope.login_name = data.user_data.login_name;
+			$scope.display_name = data.user_data.display_name;
 		} else {
 			$scope.is_admin = false;
 		}
@@ -56,12 +56,12 @@ function channel_controller($scope){
 			console.log("waiting for player to finish initializing...");
 			if(player){
 				var start_seconds = (new Date().getTime() - new Date($scope.start_time).getTime()) / 1000;
-				player.loadVideoById(data.content.now_playing.url, start_seconds);
+				player.loadVideoById(data.now_playing.url, start_seconds);
 				clearInterval(intv);
 			}
 		}, 1000);
 		$scope.$apply();
-		$('.playlist-table').lionbars();
+		// $('.playlist-table').lionbars();
 		$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
 	});
 	socket.on('playlist.append_item', function(data){
@@ -152,7 +152,7 @@ function channel_controller($scope){
 		$scope.$apply();
 	});
 	socket.on('error', function(data){
-		$scope.alert_stack.push({ strong: "Error " + data.status, text: data.content });
+		$scope.alert_stack.push(data);
 		$scope.$apply();
 	});
 	socket.on('error.session_id', function(){

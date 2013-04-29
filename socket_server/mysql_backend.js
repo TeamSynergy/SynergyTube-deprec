@@ -19,7 +19,7 @@ var onError = function(err){
     }
 };
 
-exports.connect = function(db_config){
+exports.connect = function(config){
 	db_config = config;
 	sql = mysql.createConnection(db_config);
 	sql.connect(function(err){
@@ -39,6 +39,11 @@ exports.onQueryError = function(err){
 	console.log(err);
 };
 
+exports.user = {};
+exports.user.session = {};
+exports.channel = {};
+exports.channel.chat = {};
+exports.channel.playlist = {};
 
 /* === User-Functions === */
 
@@ -50,7 +55,7 @@ exports.user.findBySessionID = function(session_id, fn){
 			if(rows.length > 0)
 				return fn(rows[0]);
 			else
-				return fn();
+				return fn(null);
 	});
 };
 
@@ -75,7 +80,7 @@ exports.user.exists = function(login_name, email, fn){
 	});
 };
 
-exports.user.create = function(login_name, email, strategy, password_hash, validate_hash){
+exports.user.create = function(login_name, email, strategy, password_hash, validate_hash, fn){
 	sql.query("INSERT INTO tblUser (login_name, display_name, email, strategy, hash, is_valid, validate_hash) VALUES (" + sql.escape(login_name.toLowerCase()) + ", " + sql.escape(login_name) + ", " + sql.escape(email) + ", " + sql.escape(strategy) + ", " + sql.escape(password_hash) + ", 0, " + sql.escape(validate_hash) + ")", function(err){
 		if(err)
 			exports.onQueryError(err);
@@ -102,7 +107,7 @@ exports.user.session.create = function(login_name, session_id, fn){
 	});
 };
 
-exports.user.isFaved = function(user_id, channel_id, fn){
+exports.user.isFaved = function(channel_id, user_id, fn){
 	sql.query("SELECT COUNT(*) AS '_c' FROM relFavourites WHERE channel_id = " + sql.escape(channel_id) + " AND user_id = " + sql.escape(user_id), function(err, rows){
 		if(err)
 			exports.onQueryError(err);
@@ -245,24 +250,24 @@ exports.channel.playlist.findByPosition = function(channel_id, position, fn){
 };
 
 exports.channel.playlist.findNext = function(channel_id, fn){
-	exports.channel.playlist.findCurrent(channel_id, function(err, current){
-		if(err)
-			exports.onQueryError(err);
-		else
-			exports.channel.playlist.findByPosition(channel_id, (current_position + 1), function(err, next){
-				if(err)
-					exports.onQueryError(err);
-				else
-					if(next)
-						return fn(next);
-					else
-						exports.channel.playlist.findByPosition(channel_id, 0, function(err, first){
-							if(err)
-								exports.onQueryError(err);
-							else
-								return fn(next);
-						});
-			});
+	exports.channel.playlist.findCurrent(channel_id, function(current){
+		exports.channel.playlist.findByPosition(channel_id, (current.position + 1), function(next){
+			if(next)
+				return fn(next);
+			else
+				exports.channel.playlist.findByPosition(channel_id, 0, function(first){
+					return fn(first);
+				});
+		});
+	});
+};
+
+exports.channel.playlist.playNext = function(channel_id, fn){
+	exports.channel.playlist.findNext(channel_id, function(next){
+		console.log("new item is " + next.caption);
+		exports.channel.playlist.playItem(next._id);
+		if(typeof fn !== "undefined")
+			fn();
 	});
 };
 
@@ -293,7 +298,8 @@ exports.channel.playlist.playItem = function(item_id, fn){
 		if(err)
 			exports.onQueryError(err);
 		else
-			return fn();
+			if(typeof fn !== "undefined")
+				return fn();
 	});
 };
 

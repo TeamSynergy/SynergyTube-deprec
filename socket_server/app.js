@@ -4,59 +4,79 @@ var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 
 var configuration = require('./config.json');
-var backend = require('./db-mysql.js');
+var backend = require('./mysql_backend.js');
 io.setMaxListeners(0);
 backend.connect(configuration.database);
 
 
 function emitUserData(socket) {
-	r_query("SELECT count(*) AS '_c' FROM tblUser INNER JOIN relAdmins ON tblUser._id = relAdmins.user_id WHERE tblUser.login_name = " + sql.escape(socket.login_name) + " AND relAdmins.channel_id = " + sql.escape(socket.channel_id), socket, function(admin_data){
-	r_query("SELECT count(*) AS '_c' FROM tblUser INNER JOIN tblChannels ON tblUser._id = tblChannels.owner_id WHERE tblUser.login_name = " + sql.escape(socket.login_name) + " AND tblChannels._id = " + sql.escape(socket.channel_id), socket, function(owner_data){
-	r_query("SELECT _id, display_name, login_name, email FROM tblUser WHERE login_name = " + sql.escape(socket.login_name), socket, function(user_data){
-	r_query("SELECT tblMedia._id, position, url, caption, duration, display_name, login_name, media_type FROM tblMedia RIGHT JOIN tblUser ON tblUser._id = tblMedia.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position ASC", socket, function(playlist_data){
-	r_query("SELECT _id, start_time, url, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(current_item_data){
-	r_query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY timestamp DESC LIMIT 0, 15", socket, function(message_data){
-	r_query("SELECT user_limit FROM tblChannels WHERE _id = " + sql.escape(socket.channel_id), socket, function(channel_data){
-	r_query("SELECT COUNT(DISTINCT ip_hash) AS '_c' FROM tblTracking WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(view_data){
-	r_query("SELECT COUNT(*) AS '_c' FROM relFavourites WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(fav_data){
-	socket.user_id = user_data[0]._id;
-	r_query("SELECT COUNT(*) AS '_c' FROM relFavourites WHERE channel_id = " + sql.escape(socket.channel_id) + " AND user_id = " + sql.escape(socket.user_id), socket, function(already_faved_data){
-		socket.display_name = user_data[0].display_name;
-		socket.email = user_data[0].email;
-		socket.already_faved = already_faved_data[0]._c === 1;
-		socket.is_admin = admin_data[0]._c > 0;
-		socket.is_owner = owner_data[0]._c > 0;
-		if(socket.is_owner)
-			socket.is_admin = true;
-		var _online = init_online(socket.channel_id);
-		_online.push({display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id });
-		console.log("Users: " + _online.length + " from " + channel_data[0].user_limit);
-		if(_online.length < channel_data[0].user_limit || socket.is_admin){
-			socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id }});
-			socket.emit('channel.init', { status: 0, content: { user_data: { login_name: user_data[0].login_name, display_name: user_data[0].display_name, is_admin: socket.is_admin }, users_online: _online, last_chat: message_data, playlist: playlist_data, already_faved: socket.already_faved, views: view_data[0]._c, favs: fav_data[0]._c, now_playing: current_item_data[0], logged_in: true }});
+	backend.user.findByLoginName(socket.login_name, function(current_user){
+	backend.channel.findByChannelID(socket.channel_id, function(current_channel){
+	backend.channel.playlist.getAll(socket.channel_id, function(playlist){
+	backend.channel.playlist.findCurrent(socket.channel_id, function(current_item){
+	backend.channel.chat.getLatest(socket.channel_id, 15, function(messages){
+	backend.channel.getUniqueVisits(socket.channel_id, function(views){
+	backend.channel.getFavourites(socket.channel_id, function(favourites){
+	socket.user_id = current_user._id;
+	backend.user.isFaved(socket.channel_id, socket.user_id, function(isFaved){
+	backend.channel.isOwner(socket.channel_id, socket.user_id, function(isOwner){
+	backend.channel.isAdmin(socket.channel_id, socket.user_id, function(isAdmin){
+		socket.display_name = current_user.display_name;
+		socket.email = current_user.email;
+		socket.already_faved = isFaved;
+		socket.is_owner = isOwner;
+		socket.is_admin = isAdmin || isOwner;
+		var own_user = { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id };
+		var online_user = init_online(socket.channel_id);
+		online_user.push(own_user);
+		console.log("in channel: " + online_user.length + " from " + current_channel.user_limit);
+		if(online_user.length <= current_channel.user_limit || socket.is_admin){
+			socket.broadcast.to(socket.channel_id).emit('channel.user_join', { status: 0, content: own_user });
+			socket.emit('channel.init', {
+				user_data: own_user,
+				users_online: online_user,
+				last_chat: messages,
+				playlist: playlist,
+				already_faved: isFaved,
+				views: views,
+				favs: favourites,
+				now_playing: current_item,
+				logged_in: true,
+				is_admin: socket.is_admin,
+				is_owner: socket.is_owner
+			});
 			socket.join(socket.channel_id);
 			return true;
 		} else {
-			socket.emit('error.channel_full');
+			socket.emit("error.channel_full");
 			return false;
 		}
 	});});});});});});});});});});
 }
 function emitGuestData(socket){
-	r_query("SELECT tblMedia._id, position, url, caption, duration, display_name, login_name, media_type FROM tblMedia RIGHT JOIN tblUser ON tblUser._id = tblMedia.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY position ASC", socket, function(playlist_data){
-	r_query("SELECT _id, start_time, url, duration FROM tblMedia WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY start_time DESC LIMIT 0,1", socket, function(current_item_data){
-	r_query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(socket.channel_id) + " ORDER BY timestamp DESC LIMIT 0, 15", socket, function(message_data){
-	r_query("SELECT user_limit FROM tblChannels WHERE _id = " + sql.escape(socket.channel_id), socket, function(channel_data){
-	r_query("SELECT COUNT(DISTINCT ip_hash) AS '_c' FROM tblTracking WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(view_data){
-	r_query("SELECT COUNT(*) AS '_c' FROM relFavourites WHERE channel_id = " + sql.escape(socket.channel_id), socket, function(fav_data){
-		var _online = init_online(socket.channel_id);
-		if(_online.length < channel_data[0].user_limit){
+	backend.channel.findByChannelID(socket.channel_id, function(current_channel){
+	backend.channel.playlist.getAll(socket.channel_id, function(playlist){
+	backend.channel.playlist.findCurrent(socket.channel_id, function(current_item){
+	backend.channel.chat.getLatest(socket.channel_id, 15, function(messages){
+	backend.channel.getUniqueVisits(socket.channel_id, function(views){
+	backend.channel.getFavourites(socket.channel_id, function(favourites){
+		var online_user = init_online(socket.channel_id);
+		if(online_user.length <= current_channel.user_limit){
 			socket.broadcast.to(socket.channel_id).emit('channel.guest_join');
-			socket.emit('channel.init', { status: 0, content: { users_online: _online, last_chat: message_data, playlist: playlist_data, already_faved: true, views: view_data[0]._c, favs: fav_data[0]._c, now_playing: current_item_data[0], logged_in: false }});
+			socket.emit('channel.init', {
+				users_online: online_user,
+				last_chat: messages,
+				playlist: playlist,
+				views: views,
+				favs: favourites,
+				already_faved: true,
+				now_playing: current_item,
+				logged_in: false
+			});
 			socket.join(socket.channel_id);
 			return true;
 		} else {
-			socket.emit('error.channel_full');
+			socket.emit("error.channel_full");
 			return false;
 		}
 	});});});});});});
@@ -67,18 +87,14 @@ io.sockets.on('connection', function (socket) {
 	socket.channel_id = socket.handshake.query.channel_id;
 
 	if(socket.handshake.query.session_id){
-		backend.user.findBySessionID(socket.handshake.query.session_id, function(err, user){
-			if(err){
-				socket.emit("error", { status: 2, content: err.code });
+		backend.user.findBySessionID(socket.handshake.query.session_id, function(user){
+			if(!user){
+				socket.emit("error.session_id");
+				emitGuestData(socket);
 			} else {
-				if(!user){
-					socket.emit("error.session_id");
-					emitGuestData(socket);
-				} else {
-					socket.logged_in = true;
-					socket.login_name = user.login_name;
-					emitUserData(socket);
-				}
+				socket.logged_in = true;
+				socket.login_name = user.login_name;
+				emitUserData(socket);
 			}
 		});
 	} else {
@@ -118,22 +134,22 @@ io.sockets.on('connection', function (socket) {
 					if(hasher.verify(data.password, user.hash)){
 						var session_id = hasher.generate(data.login_name + user.hash);
 						backend.user.session.create(data.login_name, session_id, function(){
-							socket.emit("user.session_id", { status: 0, content: { session_id: session_id }});
+							socket.emit("user.session_id", { content: { session_id: session_id }});
 						});
 					} else {
-						socket.emit("error", { status: 4, content: { code: "Incorrect Username or Password." }});
+						socket.emit("error", { text: "Incorrect Username or Password." });
 					}
 				} else {
-					socket.emit("error", { status: 4, content: { code: "Your Account is not ready yet. Please Check your mail for the Activation-Link" }});
+					socket.emit("error", { text: "Your Account is not ready yet. Please Check your mail for the Activation-Link" });
 				}
 			} else {
-				socket.emit("error", { status: 4, content: { code: "Incorrect Username or Password." }});
+				socket.emit("error", { text: "Incorrect Username or Password." });
 			}
 		});
 	});
 	socket.on('user.logout', function(){
 		if(socket.logged_in)
-			backend.user.session.destroy(socket.query.session_id, socket.login_name, function(){
+			backend.user.session.destroy(socket.handshake.query.session_id, socket.login_name, function(){
 				socket.emit("user.destroy_session");
 			});
 	});
@@ -155,7 +171,7 @@ io.sockets.on('connection', function (socket) {
 							smtpTransport.sendMail(mail, function(err, response){
 								if(err){
 									console.log(err);
-									socket.emit("error", { status: 5, content: { code: "We were Unable to send the activation-link to your mail-address. Please contact the admin." }});
+									socket.emit("error", { text: "We were Unable to send the activation-link to your mail-address. Please contact the admin." });
 								} else {
 									socket.emit("user.create_account", response);
 									smtpTransport.close();
@@ -164,13 +180,13 @@ io.sockets.on('connection', function (socket) {
 							});
 						});
 					} else {
-						socket.emit("error", { status: 6, content: { code: "Sorry, your Password is too short. It has to be at least 6 chars long." }});
+						socket.emit("error", { text: "Sorry, your Password is too short. It has to be at least 6 chars long." });
 					}
 				} else {
-					socket.emit("error", { status: 7, content: { code: "Sorry, your Username is too short. It has to be at least 4 chars long." }});
+					socket.emit("error", { text: "Sorry, your Username is too short. It has to be at least 4 chars long." });
 				}
 			} else {
-				socket.emit("error", { status: 8, content: { code: "This Username or Email-Address has already been taken." }});
+				socket.emit("error", { text: "This Username or Email-Address has already been taken." });
 			}
 		});
 	});
@@ -244,14 +260,11 @@ io.sockets.on('connection', function (socket) {
 		console.log("item changed - claim from: " + socket.login_name);
 		backend.channel.playlist.findCurrent(socket.channel_id, function(current_item){
 			if((new Date().getTime() - new Date(current_item.start_time).getTime()) / 1000 > current_item.duration){
-				backend.channel.playlist.findNext(socket.channel_id, function(next_item){
-					backend.channel.playlist.playItem(next_item._id, dunction(){
-						console.log("old item " + current_item.caption + " outdated, new item is " + next_item.caption);
-					});
-				});
+				console.log("old item " + current_item.caption + " outdated");
+				backend.channel.playlist.playNext(socket.channel_id);
 			} else {
 				console.log("send him back");
-				socket.emit('playlist.play_item', { status: 0, content: { _id: last_data[0]._id, start_time: last_data[0].start_time }});
+				socket.emit('playlist.play_item', { status: 0, content: { _id: current_item._id, start_time: current_item.start_time }});
 			}
 		});
 	});
@@ -260,7 +273,7 @@ io.sockets.on('connection', function (socket) {
 function init_online(channel_id){
 	var arr = [];
 	io.sockets.clients(channel_id).forEach(function(socket){
-		arr.push({display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id });
+		arr.push({ display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id });
 	});
 	return arr;
 }
