@@ -283,7 +283,13 @@ function channel_controller($scope){
 		$scope.searchTitle = "";
 		$scope.itemURL = "";
 
-		$scope.$apply();
+		// why this hack? dunno, but won't work otherwise
+		setTimeout(function(){
+			if($scope.show_search)
+				$('#searchTextbox').focus();
+			else
+				$('#addTextbox').focus();
+		}, 100);
 	};
 	$scope.itemUrlCallback = function(){
 		var reg = $('#itemURL').val().match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);

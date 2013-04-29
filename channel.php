@@ -117,7 +117,7 @@
             <form class="form-append form-horizontal" name="appendForm" ng-submit="add_new_item()" ng-show="show_add">
               <label class="control-label" for="itemURL">Item-URL</label>
               <div class="controls">
-                <input type="url" class="input-block-level pull-left" on-change="itemUrlCallback()" placeholder="Item-URL" id="itemURL" ng-model="itemURL" required>
+                <input type="url" class="input-block-level pull-left" id="addTextbox" on-change="itemUrlCallback()" placeholder="Item-URL" id="itemURL" ng-model="itemURL" required>
                 <div class="input-append">
                   <button type="submit" class="btn btn-primary pull-right" ng-disabled="!add_item.valid">Add Item</button>
                 </div>
@@ -126,7 +126,7 @@
             </form>
 
             <form class="form-append form-horizontal" ng-show="show_search">
-              <input type="text" class="input-block-level" placeholder="Search" ng-model="searchTitle">
+              <input type="text" class="input-block-level" id="searchTextbox" placeholder="Search" ng-model="searchTitle">
             </form>
 
             <table class="table table-striped table-condensed playlist-table">
