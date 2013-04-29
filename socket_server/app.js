@@ -200,6 +200,7 @@ io.sockets.on('connection', function (socket) {
 									socket.emit("error", { status: 5, content: { code: "We were Unable to send the activation-link to your mail-address. Please contact the admin." }});
 								} else {
 									socket.emit("user.create_account", response);
+									smtpTransport.close();
 								}
 								console.log(response);
 							});
