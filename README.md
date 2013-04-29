@@ -6,7 +6,7 @@
 > SynergyTube aims to be an alternative to SynchTube which has been [shut-down](http://synchtube.com/).
 > First goals have been reached with establishing a channel-system and user profiles. 
 
-Currently we've reached our second milestone (v0.1 pre-beta)
+Currently we've reached our third milestone (v0.2)
 
 ### How it works
 A Channel simply consists of a playlist which is managed by the Channel-Admins.
