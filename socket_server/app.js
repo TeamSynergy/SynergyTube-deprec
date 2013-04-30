@@ -1,3 +1,5 @@
+if(!fs.existsSync('./config.json'))
+	require('./first_start.js').set_up();
 var io  = require('socket.io').listen(8080);
 var hasher = require('password-hash');
 var crypto = require('crypto');
