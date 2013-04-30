@@ -2,10 +2,22 @@
 	"name": "SynergyTubeServer",
 	"version": "0.2",
 	"private": "true",
+	"author": "Screeny <screeny05@gmail.com>",
+	"description": "Server-Side delievery of Socket.IO based Communications to the Client",
+	"scripts": {
+		"start": "node ./app.js",
+		"test": "echo coming soon",
+		"postdeploy": "node ./first_start.js",
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/screeny05/SynergyTube.git"
+	},
 	"dependencies": {
 		"socket.io": "*",
 		"mysql": "*",
 		"nodemailer": "*",
 		"password-hash": "*"
-	}
+	},
+	"license": "MIT"
 }
