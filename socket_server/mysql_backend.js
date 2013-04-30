@@ -34,6 +34,28 @@ exports.connect = function(config){
 	});
 };
 
+exports.createStructure = function(){
+	var c = function(statement){sql.query(statement,function(err){if(err){exports.onQueryError(err);return false;}else{return true;}});};
+	// as of v0.2
+	c("CREATE TABLE IF NOT EXISTS relAdmins (channel_id int(11) NOT NULL, user_id int(11) NOT NULL, PRIMARY KEY(channel_id,user_id))");
+	c("CREATE TABLE IF NOT EXISTS relFavourites (channel_id int(11) NOT NULL, user_id int(11) NOT NULL, PRIMARY KEY(channel_id,user_id))");
+	c("CREATE TABLE IF NOT EXISTS tblChannels (_id int(11) NOT NULL AUTO_INCREMENT, name varchar(45) NOT NULL, " +
+		"cover_id varchar(45) NOT NULL, cover_repeat varchar(10) NOT NULL, cover_pos_x varchar(10) NOT NULL, cover_pos_y varchar(10) NOT NULL, " +
+		"custom_url varchar(45) NOT NULL, owner_id int(11) NOT NULL, description varchar(400) NOT NULL, user_limit int(11) NOT NULL, " +
+		"PRIMARY KEY(_id) UNIQUE KEY name_UNIQUE (name), UNIQUE KEY custom_url_UNIQUE (custom_url)) DEFAULT CHARSET=utf8");
+	c("CREATE TABLE IF NOT EXISTS tblMedia (_id int(10) unsigned NOT NULL AUTO_INCREMENT, caption varchar(200) NOT NULL, " +
+		"url varchar(200) NOT NULL, position int(11) NOT NULL, channel_id int(11) NOT NULL, user_id int(11) NOT NULL, duration int(11) NOT NULL, " +
+		"start_time datetime NOT NULL, media_type varchar(15) NOT NULL, PRIMARY KEY(_id)) DEFAULT CHARSET=utf8");
+	c("CREATE TABLE IF NOT EXISTS tblMessages(_id int(10) unsigned NOT NULL AUTO_INCREMENT, timestamp datetime NOT NULL, content varchar(400) NOT NULL, " +
+		"user_id int(11) NOT NULL, channel_id int(11) NOT NULL, PRIMARY KEY(_id)) DEFAULT CHARSET=utf8");
+	c("CREATE TABLE IF NOT EXISTS tblTracking(_id int(10) unsigned NOT NULL AUTO_INCREMENT, ip_hash char(64) NOT NULL, channel_id int(11) NOT NULL, " +
+		"timestamp datetime NOT NULL, PRIMARY KEY(_id)) DEFAULT CHARSET=utf8");
+	c("CREATE TABLE IF NOT EXISTS tblUser(_id int(11) NOT NULL AUTO_INCREMENT, login_name varchar(45) NOT NULL, display_name varchar(45) NOT NULL, " +
+		"email varchar(90) NOT NULL, avatar_id varchar(45) DEFAULT NULL, strategy varchar(10) NOT NULL, hash varchar(200) NOT NULL, session_id char(64) DEFAULT NULL, " +
+		"is_valid tinyint(1) NOT NULL, validate_hash char(60) NOT NULL, PRIMARY KEY(_id), UNIQUE KEY login_name_UNIQUE (login_name), UNIQUE KEY email_UNIQUE (email), " +
+		"UNIQUE KEY display_name_UNIQUE (display_name)) DEEFAULT CHARSET=utf8");
+};
+
 
 exports.onQueryError = function(err){
 	console.log(err);
