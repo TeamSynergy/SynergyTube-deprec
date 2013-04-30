@@ -34,26 +34,62 @@ exports.connect = function(config){
 	});
 };
 
-exports.createStructure = function(){
-	var c = function(statement){sql.query(statement,function(err){if(err){exports.onQueryError(err);return false;}else{return true;}});};
+var get = function(statement, callback){process.stdout.write(statement);process.stdin.once('data', function(data){callback(data.toString().trim());});};
+exports.getInformation = function(callback){
+	var r = {};
+	get("\t- user: ", function(user){
+	get("\t- password: ", function(password){
+	get("\t- database: ", function(database){
+		r.user = user;
+		r.password = password;
+		r.database = database;
+		callback(r);
+	});});});
+};
+
+exports.createStructure = function(db_config, callback){
+	sql = mysql.createConnection({ user: db_config.user, password: db_config.password });
+	console.log("Connecting to db...");
+	sql.connect(function(err){if(err)exports.onQueryError(err);else{
+	console.log("Successfully connected");
+	var c = function(statement,fn){return sql.query(statement,function(err){if(err){exports.onQueryError(err);return false;}else{return fn();}});};
 	// as of v0.2
-	c("CREATE TABLE IF NOT EXISTS relAdmins (channel_id int(11) NOT NULL, user_id int(11) NOT NULL, PRIMARY KEY(channel_id,user_id))");
-	c("CREATE TABLE IF NOT EXISTS relFavourites (channel_id int(11) NOT NULL, user_id int(11) NOT NULL, PRIMARY KEY(channel_id,user_id))");
+	c("CREATE DATABASE IF NOT EXISTS`" + db_config.database + "` CHARACTER SET utf8 COLLATE utf8_general_ci", function(){
+		console.log("created database");
+	c("USE `" + db_config.database + "`",function(){
+	
+ 	c("CREATE TABLE IF NOT EXISTS relAdmins (channel_id int(11) NOT NULL, user_id int(11) NOT NULL, PRIMARY KEY(channel_id,user_id))",function(){
+		console.log("created table relAdmins");
+	
+	c("CREATE TABLE IF NOT EXISTS relFavourites (channel_id int(11) NOT NULL, user_id int(11) NOT NULL, PRIMARY KEY(channel_id,user_id))",function(){
+		console.log("created table relFavourites");
+	
 	c("CREATE TABLE IF NOT EXISTS tblChannels (_id int(11) NOT NULL AUTO_INCREMENT, name varchar(45) NOT NULL, " +
 		"cover_id varchar(45) NOT NULL, cover_repeat varchar(10) NOT NULL, cover_pos_x varchar(10) NOT NULL, cover_pos_y varchar(10) NOT NULL, " +
 		"custom_url varchar(45) NOT NULL, owner_id int(11) NOT NULL, description varchar(400) NOT NULL, user_limit int(11) NOT NULL, " +
-		"PRIMARY KEY(_id) UNIQUE KEY name_UNIQUE (name), UNIQUE KEY custom_url_UNIQUE (custom_url)) DEFAULT CHARSET=utf8");
+		"PRIMARY KEY(_id), UNIQUE KEY name_UNIQUE (name), UNIQUE KEY custom_url_UNIQUE (custom_url)) DEFAULT CHARSET=utf8",function(){
+		console.log("created table tblChannels");
+	
 	c("CREATE TABLE IF NOT EXISTS tblMedia (_id int(10) unsigned NOT NULL AUTO_INCREMENT, caption varchar(200) NOT NULL, " +
 		"url varchar(200) NOT NULL, position int(11) NOT NULL, channel_id int(11) NOT NULL, user_id int(11) NOT NULL, duration int(11) NOT NULL, " +
-		"start_time datetime NOT NULL, media_type varchar(15) NOT NULL, PRIMARY KEY(_id)) DEFAULT CHARSET=utf8");
+		"start_time datetime NOT NULL, media_type varchar(15) NOT NULL, PRIMARY KEY(_id)) DEFAULT CHARSET=utf8",function(){
+		console.log("created table tblMedia");
+	
 	c("CREATE TABLE IF NOT EXISTS tblMessages(_id int(10) unsigned NOT NULL AUTO_INCREMENT, timestamp datetime NOT NULL, content varchar(400) NOT NULL, " +
-		"user_id int(11) NOT NULL, channel_id int(11) NOT NULL, PRIMARY KEY(_id)) DEFAULT CHARSET=utf8");
+		"user_id int(11) NOT NULL, channel_id int(11) NOT NULL, PRIMARY KEY(_id)) DEFAULT CHARSET=utf8",function(){
+		console.log("created table tblMessages");
+	
 	c("CREATE TABLE IF NOT EXISTS tblTracking(_id int(10) unsigned NOT NULL AUTO_INCREMENT, ip_hash char(64) NOT NULL, channel_id int(11) NOT NULL, " +
-		"timestamp datetime NOT NULL, PRIMARY KEY(_id)) DEFAULT CHARSET=utf8");
+		"timestamp datetime NOT NULL, PRIMARY KEY(_id)) DEFAULT CHARSET=utf8",function(){
+		console.log("created table tblTracking");
+	
 	c("CREATE TABLE IF NOT EXISTS tblUser(_id int(11) NOT NULL AUTO_INCREMENT, login_name varchar(45) NOT NULL, display_name varchar(45) NOT NULL, " +
 		"email varchar(90) NOT NULL, avatar_id varchar(45) DEFAULT NULL, strategy varchar(10) NOT NULL, hash varchar(200) NOT NULL, session_id char(64) DEFAULT NULL, " +
 		"is_valid tinyint(1) NOT NULL, validate_hash char(60) NOT NULL, PRIMARY KEY(_id), UNIQUE KEY login_name_UNIQUE (login_name), UNIQUE KEY email_UNIQUE (email), " +
-		"UNIQUE KEY display_name_UNIQUE (display_name)) DEEFAULT CHARSET=utf8");
+		"UNIQUE KEY display_name_UNIQUE (display_name)) DEFAULT CHARSET=utf8",function(){
+		console.log("created table tblUser");
+	callback(0);
+	});});});});});});});});});}});
 };
 
 
