@@ -1,13 +1,9 @@
-<?php
-  require("require/channel_init.php");
-  if(!$channel_exists || $channel_error)
-    header("Location: /");
-?>
+<?php require("require/channel_init.php"); ?>
 
 <!DOCTYPE html>
 <html ng-app="channel" ng-controller="channel_controller">
 <head>
-  <title>SynergyTube | <?php print $channel_title ?></title>
+  <title>SynergyTube | Loading Channel...</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
@@ -18,7 +14,25 @@
   <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet">
   <style type="text/css">.channel-cover{background:<?php print("url(/assets/img/".$channel_cover_id.") ".$channel_cover_repeat." ".$channel_cover_pos_x." ".$channel_cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
 </head>
-<body>
+<body style="overflow:hidden;">
+
+<div class="wrap-the-load">
+  <div class="loading-border">
+		<div class="loading-image">
+			<img src="/assets/img/cloud_pre.png">
+		</div>
+		<div class="loading-lower">
+			<span class="txt-init">Initializing <i>the</i> Awesome!</span><br>
+			<hr class="upper-hr">
+			<span class="txt-status">Waiting for Server...</span>
+			<div class="progress progress-striped active">
+				<div class="bar"></div>
+			</div>
+			<hr class="lower-hr">
+			<span class="txt-copy">&copy;2013 <a href="mailto:screeny05@gmail.com">Screeny</a>; <a href="https://github.com/screeny05/SynergyTube">Fork me on GitHub</a></span>
+		</div>
+	</div>
+</div>
 
   <div class="navbar">
     <div class="navbar-inner">
@@ -177,7 +191,8 @@
     </div>
   </div>
 
-  <script><?php print("var channel_id = ".$channel_id.";"); ?></script>
+  
+  <script>var channel_error_msg = "<?php print $channel_error_msg."\";\r\n" ?> var channel_id = <?php print $channel_id ?>;</script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
