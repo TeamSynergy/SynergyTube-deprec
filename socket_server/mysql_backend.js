@@ -5,23 +5,24 @@ exports.connected = false;
 
 // on Error automatically tries to reconnect to the mysql-server on Connection-Loss
 var onError = function(err){
-    if(err){
-        console.log(err);
-        if(err.code === "PROTOCOL_CONNECTION_LOST")
-            exports.connected = false;
-    }
-    if(!exports.connected){
-        var re = setInterval(function(){
-            sql = mysql.createConnection(config);
-            if(exports.connect())
-                clearInterval(re);
-        }, 5000);
-    }
+	if(err){
+		console.log(err);
+		if(err.code === "PROTOCOL_CONNECTION_LOST")
+			exports.connected = false;
+	}
+	if(!exports.connected){
+		var re = setInterval(function(){
+			if(exports.connect(config))
+				clearInterval(re);
+			else
+				console.log("re-connect-attempt failed");
+		}, 5000);
+	}
 };
 
-exports.connect = function(config){
-	db_config = config;
-	sql = mysql.createConnection(db_config);
+exports.connect = function(db_config){
+	config = db_config;
+	sql = mysql.createConnection(config);
 	sql.connect(function(err){
 		if(err) {
 			console.log(err);
@@ -34,8 +35,8 @@ exports.connect = function(config){
 	});
 };
 
-var get = function(statement, callback){process.stdout.write(statement);process.stdin.once('data', function(data){callback(data.toString().trim());});};
 exports.getInformation = function(callback){
+	var get = function(statement, callback){process.stdout.write(statement);process.stdin.once('data', function(data){callback(data.toString().trim());});};
 	var r = {};
 	get("\t- user: ", function(user){
 	get("\t- password: ", function(password){
