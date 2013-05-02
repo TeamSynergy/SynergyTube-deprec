@@ -1,6 +1,6 @@
 var states = ["Waiting for Server...", "Crunching Data...", "Waiting for YouTube...", "There you go!"];
 var loading_error = false;
-var change_state = function(new_state){if(!loading_error){current_state = new_state;$('.txt-status').fadeOut(100,function(){$('.txt-status').html(states[current_state]);}).fadeIn(100);$('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');}if(new_state == states.length - 1){$('.wrap-the-load').fadeOut('slow');$('body').css('overflow','auto');}};
+var change_state = function(new_state){if(!loading_error){current_state = new_state;$('.txt-status').fadeOut(100,function(){$('.txt-status').html(states[current_state]);}).fadeIn(100);$('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');if(new_state == states.length - 1){$('.wrap-the-load').fadeOut('slow');$('body').css('overflow','auto');}}};
 var change_error = function(error_msg){	$('.txt-init').html(error_msg);$('.txt-status').stop().hide();$('.upper-hr').hide();$('.progress').hide();loading_error=true;};
 var current_state = 0;
 var app = angular.module('channel', []);
