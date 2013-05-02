@@ -207,10 +207,9 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 	socket.on('chat.load_more', function(data){
-		if(socket.logged_in)
-			backend.channel.chat.getMore(socket.channel_id, 15, new Date(data.append_at), function(message_data){
-				socket.emit('chat.load_more', message_data);
-			});
+		backend.channel.chat.getMore(socket.channel_id, 15, new Date(data.append_at), function(message_data){
+			socket.emit('chat.load_more', message_data);
+		});
 	});
 	
 	
