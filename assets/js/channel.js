@@ -1,15 +1,32 @@
+var states = ["Waiting for Server...", "Crunching Data...", "Waiting for YouTube...", "There you go!"];
+var loading_error = false;
+var change_state = function(new_state){if(!loading_error){current_state = new_state;$('.txt-status').fadeOut(100,function(){$('.txt-status').html(states[current_state]);}).fadeIn(100);$('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');}if(new_state == states.length - 1){$('.wrap-the-load').fadeOut('slow');$('body').css('overflow','auto');}};
+var change_error = function(error_msg){	$('.txt-init').html(error_msg);$('.txt-status').stop().hide();$('.upper-hr').hide();$('.progress').hide();loading_error=true;};
+var current_state = 0;
+var app = angular.module('channel', []);
+var socket = null;
+if(channel_error_msg){
+	change_error(channel_error_msg);
+} else {
+	change_state(1);
+	if(typeof io !== "undefined")
+		socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "&channel_id=" + channel_id, secure: location.protocol === "https:" });
+	else
+		change_error("Seems like our Servers are currently down :(");
+}
+
+var player;
+
 $(function(){
 	// I hate the chromeless player, i'll never build my own controls. Take this dummy!
 	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "100%", "380", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" });
 	$('._tt').tooltip({placement:'bottom'});
 	$('.channel-cover-text').dotdotdot({watch:true});
 });
-var app = angular.module('channel', []);
-var socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "&channel_id=" + channel_id, secure: location.protocol === "https:" });
-var player;
 
 function stateChangeProxy(state){angular.element('html').scope().playerStateChange(state);}
 function onYouTubePlayerReady(playerId) {
+	change_state(3);
 	player = document.getElementById("myytplayer");
 	player.addEventListener("onStateChange", "stateChangeProxy");
 }
@@ -32,6 +49,7 @@ function channel_controller($scope){
 	$scope.removed = false;
 	
 	socket.on('channel.init', function(data){
+		change_state(2);
 		$scope.playlist = data.playlist;
 		$scope.chat = data.last_chat;
 		$scope.online = data.users_online;
@@ -148,6 +166,7 @@ function channel_controller($scope){
 		$scope.$apply();
 	});
 	socket.socket.on('error', function(data){
+		alert(JSON.stringify(data));
 		$scope.alert_stack.push({ status: "Server-Error", text: "Unable to connect to Synergy-Server"});
 		$scope.$apply();
 	});
@@ -165,8 +184,7 @@ function channel_controller($scope){
 	});
 	socket.on('error.channel_full', function(){
 		console.log("channel full");
-		$scope.alert_stack.push({ text: "We're sorry, but this Channel has reached it's User-Limit. Please Come again later." });
-		$scope.$apply();
+		change_error("Sorry, this Channel has reached its User-Limit. Come back soon!");
 	});
 
 	socket.on('user.session_id', function(data){
@@ -341,7 +359,7 @@ app.directive('dndList', function(){
 
 		var intv = setInterval(function(){
 			console.log("waiting for socket.io to finish initializing...");
-			if(typeof scope.is_admin !== "undefined"){
+			if(typeof scope.logged_in !== "undefined"){
 				if(scope.is_admin)
 					$(element[0]).sortable({
 						items:'tr',
