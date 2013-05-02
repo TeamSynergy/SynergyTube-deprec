@@ -1,17 +1,23 @@
 <?php
-	// http://ipinfodb.com/ip_location_api.php for tracking to geolocation?
+	// http://ipinfodb.com/ip_location_api.php for tracking ip to geolocation?
 	require("config.inc.php");
 
 	$channel_exists = false;
 	$channel_error = false;
+	$channel_error_msg = "";
 	$channel_url = $_GET['c'];
-
+	$channel_id = -1;
+	
 	$con = new mysqli($db_host, $db_user, $db_password, $db_table);
-	if(!$con)
+	if(!$con){
 		$channel_error = true;
+		$channel_error_msg = "Error 500 - Database Error :(";
+	}
 	$_set = $con->query("SELECT * FROM tblChannels WHERE custom_url = '".$con->real_escape_string($channel_url)."'");
-	if($con->error)
+	if($con->error){
 		$channel_error = true;
+		$channel_error_msg = "Error 500 - Query Error :(";
+	}
 	elseif ($_set->num_rows == 1)
 	{
 		$_channel = mysqli_fetch_object($_set);
@@ -26,6 +32,9 @@
 		$ip_hash = hash('sha256', $_SERVER['REMOTE_ADDR']);
 		if(!is_bot())
 			$con->query("INSERT INTO tblTracking (ip_hash, channel_id, timestamp) VALUES ('".$ip_hash."', '".$channel_id."', NOW())");
+	} else {
+		$channel_error = true;
+		$channel_error_msg = "Error 404 - Channel not found :(";
 	}
 
 	function is_bot()
