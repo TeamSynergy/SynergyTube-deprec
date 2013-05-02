@@ -157,8 +157,11 @@ function channel_controller($scope){
 	});
 	socket.on('error.session_id', function(){
 		console.log("not logged in");
-		$scope.alert_stack.push({ text: "You don't seem to be logged in. If you use SynergyTube without registration you are not able to Chat." });
-		$scope.$apply();
+		if(readCookie("firstvisit") !== "false"){
+			$scope.alert_stack.push({ text: "You don't seem to be logged in. If you use SynergyTube without registration you are not able to Chat." });
+			$scope.$apply();
+			createCookie("firstvisit", "false");
+		}
 	});
 	socket.on('error.channel_full', function(){
 		console.log("channel full");
