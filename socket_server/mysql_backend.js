@@ -12,15 +12,17 @@ var onError = function(err){
 	}
 	if(!exports.connected){
 		var re = setInterval(function(){
-			if(exports.connect(config))
-				clearInterval(re);
-			else
-				console.log("re-connect-attempt failed");
+			exports.connect(config, function(c){
+				if(c)
+					clearInterval(re);
+				else
+					console.log("re-connect attempt failed");
+			});
 		}, 5000);
 	}
 };
 
-exports.connect = function(db_config){
+exports.connect = function(db_config, callback){
 	config = db_config;
 	sql = mysql.createConnection(config);
 	sql.connect(function(err){
@@ -31,7 +33,8 @@ exports.connect = function(db_config){
 			exports.connected = true;
 			sql.on("error", onError);
 		}
-		return exports.connected;
+		if(typeof callback === "function")
+			callback(exports.connected);
 	});
 };
 
