@@ -8,18 +8,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
-  <link href="/assets/css/custom.css" rel="stylesheet">
-  <link href="/assets/css/style.css" rel="stylesheet">
-  <link href="/assets/css/lionbars.css" rel="stylesheet">
+  <link href="<?php echo $sgtube_root; ?>/assets/css/custom.css" rel="stylesheet">
+  <link href="<?php echo $sgtube_root; ?>/assets/css/style.css" rel="stylesheet">
+  <link href="<?php echo $sgtube_root; ?>/assets/css/lionbars.css" rel="stylesheet">
   <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet">
-  <style type="text/css">.channel-cover{background:<?php print("url(/assets/img/".$channel_cover_id.") ".$channel_cover_repeat." ".$channel_cover_pos_x." ".$channel_cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
+  <style type="text/css">.channel-cover{background:<?php print("url(".$sgtube_root."/assets/img/".$channel_cover_id.") ".$channel_cover_repeat." ".$channel_cover_pos_x." ".$channel_cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
 </head>
 <body style="overflow:hidden;">
 
 <div class="wrap-the-load">
   <div class="loading-border">
 		<div class="loading-image">
-			<img src="/assets/img/cloud_pre.png">
+			<img src="<?php echo $sgtube_root; ?>/assets/img/cloud_pre.png">
 		</div>
 		<div class="loading-lower">
 			<span class="txt-init">Initializing <i>the</i> Awesome!</span><br>
@@ -42,14 +42,14 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </a>
-        <a class="brand" href="/">SynergyTube</a>
+        <a class="brand" href="<?php echo $sgtube_root; ?>/">SynergyTube</a>
         <div class="nav-collapse collapse">
           <ul class="nav">
-            <li><a href="/">Channels</a></li>
-            <li><a href="/categories">Categories</a></li>
+            <li><a href="<?php echo $sgtube_root; ?>/">Channels</a></li>
+            <li><a href="<?php echo $sgtube_root; ?>/categories">Categories</a></li>
           </ul>
           <ul class="nav pull-right">
-            <li ng-show="logged_in"><a href="/create_channel">Create Channel</a></li>
+            <li ng-show="logged_in"><a href="<?php echo $sgtube_root; ?>/create_channel">Create Channel</a></li>
             <li class="dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
               <div class="dropdown-menu login-dropdown">
                 <form ng-submit="login()">
@@ -146,9 +146,9 @@
               <tbody dnd-list="playlist">
                 <tr ng-repeat="item in playlist | filter:searchTitle | orderBy:'position'" ng-class="{playc: item._id == active_item}">
                   <td>{{item.position}}</td>
-                  <td><a href="{{item.url}}">{{item.caption}}</a></td>
+                  <td><a href="http://www.youtube.com/watch?v={{item.url}}">{{item.caption}}</a></td>
                   <td>{{getLength(item.duration)}}</td>
-                  <td><a href="/user/{{item.login_name}}">{{item.display_name}}</a></td>
+                  <td><a href="<?php echo $sgtube_root; ?>/user/{{item.login_name}}">{{item.display_name}}</a></td>
                   <td><a class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Play this" href="" ng-click="play_item(item._id)"><i class="icon-play"></i></a></td>
                   <td><a class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Remove this" href="" ng-click="remove_item(item._id)"><i class="icon-trash"></i></a></td>
                 </tr>
@@ -203,10 +203,10 @@
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
   <script>window.jQuery || document.write('<script type="text/javascript" src="/assets/js/jquery.min.js"><\/script>')</script>
   <script>$.fn.modal || document.write('<script type="text/javascript" src="/assets/js/bootstrap.min.js"><\/script>')</script>
-  <script>document.write('<script type="text/javascript" src="//' + document.location.host + ':8080/socket.io/socket.io.js"><\/script>');</script>
+  <script>document.write('<script type="text/javascript" src="//<?php echo $sgtube_host; ?>:8080/socket.io/socket.io.js"><\/script>');</script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
-  <script src="/assets/js/jquery.ddd.min.js"></script>
-  <script src="/assets/js/jquery.lionbars.min.js"></script>
-  <script src="/assets/js/channel.js"></script>
+  <script src<?php echo $sgtube_root; ?>assets/js/jquery.ddd.min.js"></script>
+  <script src="<?php echo $sgtube_root; ?>/assets/js/jquery.lionbars.min.js"></script>
+  <script src="<?php echo $sgtube_root; ?>/assets/js/channel.js"></script>
 </body>
 </html>

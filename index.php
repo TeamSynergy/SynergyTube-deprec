@@ -1,3 +1,4 @@
+<?php require("require/config.inc.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-  <link href="/assets/css/style.css" rel="stylesheet">
-  <link href="/assets/css/custom.css" rel="stylesheet">
+  <link href="<?php echo $sgtube_root;?>/assets/css/style.css" rel="stylesheet">
+  <link href="<?php echo $sgtube_root;?>/assets/css/custom.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
 </head>
 <body>
@@ -20,12 +21,12 @@
           <span class="icon-bar"></span>
         </a>
 
-        <a class="brand" href="/">SynergyTube</a>
+        <a class="brand" href="<?php echo $sgtube_root;?>/">SynergyTube</a>
         
         <div class="nav-collapse collapse">
           <ul class="nav">
-            <li class="active"><a href="/">Channels</a></li>
-            <li><a href="/categories">Categories</a></li>
+            <li class="active"><a href="<?php echo $sgtube_root;?>/">Channels</a></li>
+            <li><a href="<?php echo $sgtube_root;?>/categories">Categories</a></li>
           </ul>
           <ul class="nav pull-right">
             <li><a href="#">Login</a></li>
@@ -55,9 +56,9 @@
 
 
 
-  <script src="/assets/js/jquery.min.js"></script>
-  <script src="/assets/js/bootstrap.min.js"></script>
-  <script src="/assets/js/jquery.ddd.min.js"></script>
+  <script src="<?php echo $sgtube_root;?>/assets/js/jquery.min.js"></script>
+  <script src="<?php echo $sgtube_root;?>/assets/js/bootstrap.min.js"></script>
+  <script src="<?php echo $sgtube_root;?>/assets/js/jquery.ddd.min.js"></script>
   <script>$('.preview').each(function(_){$(this).dotdotdot({watch:true});});$('._tt').tooltip({placement:'bottom'});</script>
 </body>
 </html>

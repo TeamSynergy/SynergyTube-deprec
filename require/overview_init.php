@@ -13,9 +13,9 @@
 		$count_unique_views = mysqli_fetch_object($con->query("SELECT COUNT(DISTINCT ip_hash) AS '_c' FROM tblTracking WHERE channel_id = '".$row->_id."'"));
 		$url = "";
 		if($enable_mod_rewrite)
-			$url = "c/".$row->custom_url;
+			$url = $sgtube_root."/c/".$row->custom_url;
 		else
-			$url = "channel.php?c=".$row->custom_url;
+			$url = $sgtube_root."/channel.php?c=".$row->custom_url;
 		?>
 		<li><div class="preview">
 			<a href="<?php print $url ?>"><div class="caption-wrapper"><img src="//img.youtube.com/vi/<?php print $now_playing->url ?>/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
