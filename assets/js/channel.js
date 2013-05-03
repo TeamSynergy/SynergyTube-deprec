@@ -1,7 +1,7 @@
 var states = ["Waiting for Server...", "Crunching Data...", "Waiting for YouTube...", "There you go!"];
 var loading_error = false;
-var change_state = function(new_state){if(!loading_error){current_state = new_state;$('.txt-status').fadeOut(100,function(){$('.txt-status').html(states[current_state]);}).fadeIn(100);$('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');if(new_state == states.length - 1){$('.wrap-the-load').fadeOut('slow');$('body').css('overflow','auto');}}};
-var change_error = function(error_msg){	$('.txt-init').html(error_msg);$('.txt-status').stop().hide();$('.upper-hr').hide();$('.progress').hide();loading_error=true;};
+var change_state = function(new_state){if(!loading_error){current_state = new_state;window.document.title="SynergyTube | " + states[current_state];$('.txt-status').fadeOut(100,function(){$('.txt-status').html(states[current_state]);}).fadeIn(100);$('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');if(new_state == states.length - 1){$('.wrap-the-load').fadeOut('slow');$('body').css('overflow','auto');window.document.title="SynergyTube | " + channel_title;loading_error=true;}}};
+var change_error = function(error_msg){window.document.title="SynergyTube | Error!";$('.txt-init').html(error_msg);$('.txt-status').stop().hide();$('.upper-hr').hide();$('.progress').hide();loading_error=true;};
 var current_state = 0;
 var app = angular.module('channel', []);
 var socket = null;
@@ -132,6 +132,10 @@ function channel_controller($scope){
 		$scope.chat = $scope.chat.concat(data);
 		$scope.$apply();
 		$('.channel-chat > ul').scrollTop($scope.scroll_to_item.offset().top - $('.channel-chat > ul').offset().top + $('.channel-chat > ul').scrollTop());
+		if(data.length !== 0){
+			$scope.scroll_load_blocked = false;
+			// hide loading animation
+		}
 	});
 	socket.on('channel.user_join', function(data){
 		$scope.online.push(data.content);
@@ -232,6 +236,10 @@ function channel_controller($scope){
 		t = new Date(t);
 		return (t.getHours() < 10 ? '0' : '') + t.getHours() + ":" + (t.getMinutes() < 10 ? '0' : '') + t.getMinutes();
 	};
+	$scope.getDate = function(d){
+		d = new Date(d);
+		return (d.getDate() < 10 ? '0' : '') + d.getDate() + "." + (d.getMonth() < 9 ? '0' : '') + (d.getMonth() + 1) + "." + d.getFullYear() + " " + $scope.getTime(d);
+	}
 	$scope.getLength = function(s){
 		s = new Date(s * 1000);
 		return (s.getMinutes() < 10 ? '0' : '') + s.getMinutes() + ":" + (s.getSeconds() < 10 ? '0' : '') + s.getSeconds();
@@ -339,8 +347,11 @@ function channel_controller($scope){
 		}
 	};
 	$scope.load_messages = function(){
-		$scope.scroll_to_item = $('.channel-chat > ul > li:first-child');
-		socket.emit('chat.load_more', { append_at: $scope.chat[$scope.chat.length - 1].timestamp });
+		if(!$scope.scroll_load_blocked){
+			$scope.scroll_to_item = $('.channel-chat > ul > li:first-child');
+			$scope.scroll_load_blocked = true;
+			socket.emit('chat.load_more', { append_at: $scope.chat[$scope.chat.length - 1].timestamp });
+		}
 	};
 	
 	$scope.$watch("playlist", function(value){

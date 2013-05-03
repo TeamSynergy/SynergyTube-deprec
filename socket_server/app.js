@@ -169,10 +169,12 @@ io.sockets.on('connection', function (socket) {
 		});
 	});
 	socket.on('user.logout', function(){
-		if(socket.logged_in)
+		if(socket.logged_in) {
+			console.log("destroying session for " + socket.login_name);
 			backend.user.session.destroy(socket.handshake.query.session_id, socket.login_name, function(){
 				socket.emit("user.destroy_session");
 			});
+		}
 	});
 	socket.on('user.create_account', function(data){
 		backend.user.exists(data.login_name, data.email, function(user_exists){
@@ -184,8 +186,8 @@ io.sockets.on('connection', function (socket) {
 							from: "SynergyTube Accountservice <synergytube.slave@gmail.com>",
 							to: data.email,
 							subject: "Activate your SynergyTube Account",
-							text: "To activate your account go to this address: http://localhost/validate/" + validate_hash,
-							html: "<b>Welcome to SynergyTube, " + data.login_name + "!</b><br><hr><p>To Activate your new SynergyTube Account simply go to: <a href=\"http://localhost/validate/" + validate_hash + "\">http://localhost/validate/" + validate_hash + "</a></p>Thank you!"
+							text: "To activate your account go to this address: http://" + configuration.hostname + "/validate/" + validate_hash,
+							html: "<b>Welcome to SynergyTube, " + data.login_name + "!</b><br><hr><p>To Activate your new SynergyTube Account simply go to: <a href=\"http://" + configuration.hostname + "/validate/" + validate_hash + "\">http://" + configuration.hostname + "/validate/" + validate_hash + "</a></p>Thank you!"
 						};
 						backend.user.create(data.login_name, data.email, 'local', hasher.generate(data.password), validate_hash, function(){
 							var smtpTransport = nodemailer.createTransport("SMTP", configuration.mail);
@@ -224,6 +226,7 @@ io.sockets.on('connection', function (socket) {
 	socket.on('chat.load_more', function(data){
 		backend.channel.chat.getMore(socket.channel_id, 15, new Date(data.append_at), function(message_data){
 			socket.emit('chat.load_more', message_data);
+			console.log("sent 15 messages more...");
 		});
 	});
 	

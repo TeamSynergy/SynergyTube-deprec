@@ -24,7 +24,9 @@ if(!fs.existsSync('./config.json')){
 			console.log("\r\nenter email settings; using a gmail account (with @gmail.com please)");
 			get("\t- user: ", function(g_user){
 			get("\t- pass: ", function(g_pass){
+			get("\r\nthe (public) domain of this machine (eg: 'localhost','synergytube.com')", function(hostname){
 			created_conf.database = db_info;
+			created_conf.hostname = hostname;
 			created_conf.mail = {};
 			created_conf.mail.service = "Gmail";
 			created_conf.mail.auth = {};
@@ -38,6 +40,6 @@ if(!fs.existsSync('./config.json')){
 					console.log("Finished writing, restart the server!");
 				process.exit();
 			});
-		});});});});
+		});});});});});
 	});
 }

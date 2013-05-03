@@ -11,11 +11,16 @@
 		$count_favs = mysqli_fetch_object($con->query("SELECT COUNT(*) AS '_c' FROM relFavourites WHERE channel_id = '".$row->_id."'"));
 		$count_media = mysqli_fetch_object($con->query("SELECT COUNT(*) AS '_c' FROM tblMedia WHERE channel_id = '".$row->_id."'"));
 		$count_unique_views = mysqli_fetch_object($con->query("SELECT COUNT(DISTINCT ip_hash) AS '_c' FROM tblTracking WHERE channel_id = '".$row->_id."'"));
+		$url = "";
+		if($enable_mod_rewrite)
+			$url = "c/".$row->custom_url;
+		else
+			$url = "channel.php?c=".$row->custom_url;
 		?>
 		<li><div class="preview">
-			<a href="/c/<?php print $row->custom_url ?>"><div class="caption-wrapper"><img src="//img.youtube.com/vi/<?php print $now_playing->url ?>/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
+			<a href="<?php print $url ?>"><div class="caption-wrapper"><img src="//img.youtube.com/vi/<?php print $now_playing->url ?>/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
 			<p class="info-bar"><span class="_tt" data-toggle="tooltip" title="<?php print $count_favs->_c ?> Favourites"><i class="icon-star"></i> <?php print $count_favs->_c ?> </span>|<span class="_tt" data-toggle="tooltip" title="<?php print $count_unique_views->_c ?> Unique Visitors"> <i class="icon-globe"></i> <?php print $count_unique_views->_c ?> </span>|<span class="_tt" data-toggle="tooltip" title="<?php print $count_media->_c ?> Items in Playlist"> <i class="icon-th-list"></i> <?php print $count_media->_c ?></span></p>
-			<a href="/c/<?php print $row->custom_url ?>"><h3><?php print $row->name ?></h3></a>
+			<a href="<?php print $url ?>"><h3><?php print $row->name ?></h3></a>
 			<p class="description"><?php print $row->description ?></p>
 		</div></li>
 		<?php

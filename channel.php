@@ -162,7 +162,7 @@
             <h4>Chat:</h4>
             <ul class="unstyled" on-scroll="load_messages()">
               <li ng-repeat="message in chat | orderBy:'timestamp'">
-                <div class="chat-content"><hr><p><strong>{{message.display_name}}</strong> <small class="muted _tt" data-toggle="tooltip" title="{{getTime(message.timestamp)}}">{{getTime(message.timestamp)}}</small><br>
+                <div class="chat-content"><hr><p><strong>{{message.display_name}}</strong> <small class="muted _tt" data-toggle="tooltip" title="{{getDate(message.timestamp)}}">{{getTime(message.timestamp)}}</small><br>
                 {{message.content}}</p></div>
               </li>
             </ul>
@@ -196,7 +196,7 @@
   </div>
 
   
-  <script>var channel_error_msg = "<?php print $channel_error_msg."\";\r\n" ?> var channel_id = <?php print $channel_id ?>;</script>
+  <script>var channel_error_msg = "<?php print $channel_error_msg ?>", channel_id = <?php print $channel_id ?>, channel_title = "<?php print $channel_title ?>";</script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>

@@ -58,9 +58,9 @@ exports.createStructure = function(db_config, callback){
 	console.log("Successfully connected");
 	var c = function(statement,fn){return sql.query(statement,function(err){if(err){exports.onQueryError(err);return false;}else{return fn();}});};
 	// as of v0.2
-	c("CREATE DATABASE IF NOT EXISTS " + sql.escapeId(db_config.database) + " CHARACTER SET utf8 COLLATE utf8_general_ci", function(){
+	c("CREATE DATABASE IF NOT EXISTS `" + db_config.database + "` CHARACTER SET utf8 COLLATE utf8_general_ci", function(){
 		console.log("created database");
-	c("USE " + sql.escapeId(db_config.database), function(){
+	c("USE `" + db_config.database + "`", function(){
 	
  	c("CREATE TABLE IF NOT EXISTS relAdmins (channel_id int(11) NOT NULL, user_id int(11) NOT NULL, PRIMARY KEY(channel_id,user_id))",function(){
 		console.log("created table relAdmins");
