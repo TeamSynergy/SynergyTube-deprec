@@ -134,6 +134,11 @@
   margin:0;
   font: 1.0em 'PT Sans', sans-serif;
 }
+.loading-more{
+  text-align: center;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+}
 .channel-user{
   float:left;
   width:25%;
@@ -193,11 +198,11 @@ h3{margin:0}
   background-image:url(/assets/img/groovepaper.png);
 }
 .loading-border{
-  width:  500px;
+  width: 500px;
   position: absolute;
   left: 50%;
-  top:  50%;
-  margin:-200px 0 0 -250px;
+  top: 50%;
+  margin: -200px 0 0 -250px;
   background: #fff;
   text-align:center;
   -webkit-box-shadow: 0 0 13px -2px #000;

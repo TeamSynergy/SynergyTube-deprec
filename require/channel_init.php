@@ -7,6 +7,7 @@
 	$channel_error_msg = "";
 	$channel_url = $_GET['c'];
 	$channel_id = -1;
+	$channel_title = "";
 	
 	$con = new mysqli($db_host, $db_user, $db_password, $db_table);
 	if(!$con){

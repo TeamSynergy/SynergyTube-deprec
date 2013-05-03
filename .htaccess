@@ -1,4 +1,3 @@
 RewriteEngine On
-RewriteBase /
 RewriteRule ^c/(.*)$ channel.php?c=$1
 RewriteRule ^validate/(.*)$ /require/offline_backend.php?m=validate&p=$1

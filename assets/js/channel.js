@@ -1,7 +1,7 @@
 var states = ["Waiting for Server...", "Crunching Data...", "Waiting for YouTube...", "There you go!"];
 var loading_error = false;
 var change_state = function(new_state){if(!loading_error){current_state = new_state;window.document.title="SynergyTube | " + states[current_state];$('.txt-status').fadeOut(100,function(){$('.txt-status').html(states[current_state]);}).fadeIn(100);$('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');if(new_state == states.length - 1){$('.wrap-the-load').fadeOut('slow');$('body').css('overflow','auto');window.document.title="SynergyTube | " + channel_title;loading_error=true;}}};
-var change_error = function(error_msg){window.document.title="SynergyTube | Error!";$('.txt-init').html(error_msg);$('.txt-status').stop().hide();$('.upper-hr').hide();$('.progress').hide();loading_error=true;};
+var change_error = function(error_msg){window.document.title="SynergyTube | Error";$('.txt-init').html(error_msg);$('.txt-status').stop().hide();$('.upper-hr').hide();$('.progress').hide();loading_error=true;};
 var current_state = 0;
 var app = angular.module('channel', []);
 var socket = null;
@@ -134,8 +134,8 @@ function channel_controller($scope){
 		$('.channel-chat > ul').scrollTop($scope.scroll_to_item.offset().top - $('.channel-chat > ul').offset().top + $('.channel-chat > ul').scrollTop());
 		if(data.length !== 0){
 			$scope.scroll_load_blocked = false;
-			// hide loading animation
 		}
+		$('.channel-chat > ul > .loading-more').remove();
 	});
 	socket.on('channel.user_join', function(data){
 		$scope.online.push(data.content);
@@ -349,6 +349,7 @@ function channel_controller($scope){
 	$scope.load_messages = function(){
 		if(!$scope.scroll_load_blocked){
 			$scope.scroll_to_item = $('.channel-chat > ul > li:first-child');
+			$('.channel-chat > ul').prepend('<li class="loading-more"><h3>Loading more..</h3></li>');
 			$scope.scroll_load_blocked = true;
 			socket.emit('chat.load_more', { append_at: $scope.chat[$scope.chat.length - 1].timestamp });
 		}
