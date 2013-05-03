@@ -16,6 +16,11 @@ function emitUserData(socket) {
 	backend.channel.playlist.getAll(socket.channel_id, function(playlist){
 	backend.channel.playlist.findCurrent(socket.channel_id, function(current_item){
 	backend.channel.chat.getLatest(socket.channel_id, 15, function(messages){
+    // hash emails for gravatar - still not sure where in the waterfall doing this is best
+    for (var i = 0; i < messages.length; i++) {
+      messages[i]['gravatar'] = crypto.createHash('md5').update(messages[i]['email']).digest("hex");
+      messages[i]['email'] = null;
+    }
 	backend.channel.getUniqueVisits(socket.channel_id, function(views){
 	backend.channel.getFavourites(socket.channel_id, function(favourites){
 	socket.user_id = current_user._id;
@@ -24,6 +29,7 @@ function emitUserData(socket) {
 	backend.channel.isAdmin(socket.channel_id, socket.user_id, function(isAdmin){
 		socket.display_name = current_user.display_name;
 		socket.email = current_user.email;
+		socket.emailmd5 = crypto.createHash('md5').update(current_user.email).digest("hex");
 		socket.already_faved = isFaved;
 		socket.is_owner = isOwner;
 		socket.is_admin = isAdmin || isOwner;
@@ -62,6 +68,11 @@ function emitGuestData(socket){
 	backend.channel.playlist.getAll(socket.channel_id, function(playlist){
 	backend.channel.playlist.findCurrent(socket.channel_id, function(current_item){
 	backend.channel.chat.getLatest(socket.channel_id, 15, function(messages){
+        // hash emails for gravatar - still not sure where in the waterfall doing this is best
+    for (var i = 0; i < messages.length; i++) {
+      messages[i]['gravatar'] = crypto.createHash('md5').update(messages[i]['email']).digest("hex");
+      messages[i]['email'] = null;
+    }
 	backend.channel.getUniqueVisits(socket.channel_id, function(views){
 	backend.channel.getFavourites(socket.channel_id, function(favourites){
 		var online_user = init_online(socket.channel_id);
@@ -202,12 +213,17 @@ io.sockets.on('connection', function (socket) {
 	socket.on('chat.send', function(data){
 		if(socket.logged_in) {
 			backend.channel.chat.add(socket.channel_id, socket.user_id, data.content, function(){
-				io.sockets.in(socket.channel_id).emit('chat.incoming', { status: 0, content: { display_name: socket.display_name, content: data.content, timestamp: new Date() }});
+				io.sockets.in(socket.channel_id).emit('chat.incoming', { status: 0, content: { display_name: socket.display_name, gravatar: socket.emailmd5, content: data.content, timestamp: new Date() }});
 			});
 		}
 	});
 	socket.on('chat.load_more', function(data){
 		backend.channel.chat.getMore(socket.channel_id, 15, new Date(data.append_at), function(message_data){
+    // hash emails for gravatar - still not sure where in the waterfall doing this is best
+    for (var i = 0; i < messages.length; i++) {
+      messages[i]['gravatar'] = crypto.createHash('md5').update(messages[i]['email']).digest("hex");
+      messages[i]['email'] = null;
+    }
 			socket.emit('chat.load_more', message_data);
 		});
 	});
@@ -222,7 +238,18 @@ io.sockets.on('connection', function (socket) {
 			backend.channel.playlist.getHighestPosition(socket.channel_id, function(pos){
 				console.log("append new item at " + (pos + 1));
 				backend.channel.playlist.append(socket.channel_id, socket.user_id, data.url, (pos + 1), data.duration, data.caption, data.media_type, function(){
-					io.sockets.in(socket.channel_id).emit('playlist.append_item', { status: 0, content: { _id: res.insertId, position: (pos + 1), url: data.url, caption: data.caption, duration: data.duration, display_name: socket.display_name, login_name: socket.login_name, media_type: data.media_type }});
+					io.sockets.in(socket.channel_id).emit('playlist.append_item',{ 
+              status: 0, 
+              content: { 
+                position: (pos + 1), 
+                url: data.url, 
+                caption: data.caption, 
+                duration: data.duration, 
+                display_name: socket.display_name, 
+                login_name: socket.login_name, 
+                media_type: data.media_type 
+              }
+            });
 				});
 			});
 	});
