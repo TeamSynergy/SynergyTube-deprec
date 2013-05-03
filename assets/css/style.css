@@ -125,7 +125,14 @@
 .channel-chat li{
   margin:0 0 1px;
   padding:3px;
+  clear:both;
 }
+.channel-chat li .avatar img{
+  float: left;
+  width: 80px;
+  margin-right: 4px;
+}
+
 .channel-chat hr{
   margin:0;
 }

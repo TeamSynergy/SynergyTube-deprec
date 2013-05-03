@@ -248,7 +248,7 @@ exports.channel.getFavourites = function(channel_id, fn){
 	/* -- Channel.Chat -- */
 
 exports.channel.chat.getLatest = function(channel_id, count, fn){
-	sql.query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(channel_id) + " ORDER BY timestamp DESC LIMIT 0, " + sql.escape(count), function(err, rows){
+	sql.query("SELECT timestamp, content, display_name, email FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(channel_id) + " ORDER BY timestamp DESC LIMIT 0, " + sql.escape(count), function(err, rows){
 		if(err)
 			exports.onQueryError(err);
 		else
@@ -257,7 +257,7 @@ exports.channel.chat.getLatest = function(channel_id, count, fn){
 };
 
 exports.channel.chat.getMore = function(channel_id, count, last_stamp, fn){
-	sql.query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(channel_id) + " AND timestamp < " + sql.escape(last_stamp) + " ORDER BY timestamp DESC LIMIT 0, " + sql.escape(count), function(err, rows){
+	sql.query("SELECT timestamp, content, display_name, email FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(channel_id) + " AND timestamp < " + sql.escape(last_stamp) + " ORDER BY timestamp DESC LIMIT 0, " + sql.escape(count), function(err, rows){
 		if(err)
 			exports.onQueryError(err);
 		else
