@@ -19,7 +19,7 @@
 <div class="wrap-the-load">
   <div class="loading-border">
 		<div class="loading-image">
-			<img src="/assets/img/cloud_pre.png">
+			<img src="<?php echo $sgtube_root; ?>/assets/img/cloud_pre.png">
 		</div>
 		<div class="loading-lower">
 			<span class="txt-init">Initializing <i>the</i> Awesome!</span><br>
