@@ -238,7 +238,18 @@ io.sockets.on('connection', function (socket) {
 			backend.channel.playlist.getHighestPosition(socket.channel_id, function(pos){
 				console.log("append new item at " + (pos + 1));
 				backend.channel.playlist.append(socket.channel_id, socket.user_id, data.url, (pos + 1), data.duration, data.caption, data.media_type, function(){
-					io.sockets.in(socket.channel_id).emit('playlist.append_item', { status: 0, content: { _id: res.insertId, position: (pos + 1), url: data.url, caption: data.caption, duration: data.duration, display_name: socket.display_name, login_name: socket.login_name, media_type: data.media_type }});
+					io.sockets.in(socket.channel_id).emit('playlist.append_item',{ 
+              status: 0, 
+              content: { 
+                position: (pos + 1), 
+                url: data.url, 
+                caption: data.caption, 
+                duration: data.duration, 
+                display_name: socket.display_name, 
+                login_name: socket.login_name, 
+                media_type: data.media_type 
+              }
+            });
 				});
 			});
 	});
