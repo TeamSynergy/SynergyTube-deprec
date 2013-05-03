@@ -7,7 +7,7 @@
 	"scripts": {
 		"start": "node ./app.js",
 		"test": "echo coming soon",
-		"postdeploy": "node ./first_start.js",
+		"postdeploy": "node ./first_start.js"
 	},
 	"repository": {
 		"type": "git",
