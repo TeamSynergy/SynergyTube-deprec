@@ -8,9 +8,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
-  <link href="assets/css/custom.css" rel="stylesheet">
-  <link href="assets/css/style.css" rel="stylesheet">
-  <link href="assets/css/lionbars.css" rel="stylesheet">
+  <link href="/assets/css/custom.css" rel="stylesheet">
+  <link href="/assets/css/style.css" rel="stylesheet">
+  <link href="/assets/css/lionbars.css" rel="stylesheet">
   <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet">
   <style type="text/css">.channel-cover{background:<?php print("url(/assets/img/".$channel_cover_id.") ".$channel_cover_repeat." ".$channel_cover_pos_x." ".$channel_cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
 </head>
@@ -162,7 +162,6 @@
             <h4>Chat:</h4>
             <ul class="unstyled" on-scroll="load_messages()">
               <li ng-repeat="message in chat | orderBy:'timestamp'">
-                <div class="avatar"><img src="https://secure.gravatar.com/avatar/{{message.gravatar}}"></div>
                 <div class="chat-content"><hr><p><strong>{{message.display_name}}</strong> <small class="muted _tt" data-toggle="tooltip" title="{{getTime(message.timestamp)}}">{{getTime(message.timestamp)}}</small><br>
                 {{message.content}}</p></div>
               </li>
@@ -174,9 +173,14 @@
           <div class="channel-user">
             <h4>Who's Here?</h4>
             <ul class="unstyled user-list">
-              <li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">{{user.display_name}}</li>
-              <li ng-show="guests == 1">1 Guest</li>
-              <li ng-show="guests > 1">{{guests}} Guests</li>
+              <li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">
+                <hr>
+                <div class="avatar"><img src="//secure.gravatar.com/avatar/{{user.email}}?d=identicon"></div>
+                <p>{{user.display_name}}</p>
+              </li>
+              <!-- damned pluralization -->
+              <li ng-show="guests == 1"><p>1 Guest</p></li>
+              <li ng-show="guests > 1"><p>{{guests}} Guests</p></li>
             </ul>
           </div>
         </div>
@@ -197,12 +201,12 @@
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
-  <script>window.jQuery || document.write('<script type="text/javascript" src="assets/js/jquery.min.js"><\/script>')</script>
-  <script>$.fn.modal || document.write('<script type="text/javascript" src="assets/js/bootstrap.min.js"><\/script>')</script>
+  <script>window.jQuery || document.write('<script type="text/javascript" src="/assets/js/jquery.min.js"><\/script>')</script>
+  <script>$.fn.modal || document.write('<script type="text/javascript" src="/assets/js/bootstrap.min.js"><\/script>')</script>
   <script>document.write('<script type="text/javascript" src="//' + document.location.host + ':8080/socket.io/socket.io.js"><\/script>');</script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
-  <script src="assets/js/jquery.ddd.min.js"></script>
-  <script src="assets/js/jquery.lionbars.min.js"></script>
-  <script src="assets/js/channel.js"></script>
+  <script src="/assets/js/jquery.ddd.min.js"></script>
+  <script src="/assets/js/jquery.lionbars.min.js"></script>
+  <script src="/assets/js/channel.js"></script>
 </body>
 </html>

@@ -53,6 +53,7 @@ function channel_controller($scope){
 		$scope.playlist = data.playlist;
 		$scope.chat = data.last_chat;
 		$scope.online = data.users_online;
+		$scope.guests = data.guest_online;
 		$scope.favs = data.favs;
 		$scope.views = data.views;
 		if(data.now_playing){
@@ -290,6 +291,8 @@ function channel_controller($scope){
 	$scope.fav_this = function(){
 		socket.emit('channel.faved');
 	};
+
+	// Toggles between the textboxes
 	$scope.show_pl_bars = function(show_add, show_search){
 		if(($scope.show_add && show_add) || !show_add)
 			$scope.show_add = false;

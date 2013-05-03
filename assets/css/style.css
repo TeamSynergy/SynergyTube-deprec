@@ -127,18 +127,12 @@
   padding:3px;
   clear:both;
 }
-.channel-chat li .avatar img{
-  float: left;
-  width: 80px;
-  margin-right: 4px;
-}
-
 .channel-chat hr{
   margin:0;
 }
 .channel-chat li p{
   margin:0;
-  font:1.0em 'PT Sans', sans-serif;
+  font: 1.0em 'PT Sans', sans-serif;
 }
 .channel-user{
   float:left;
@@ -147,7 +141,20 @@
 .channel-user li{
   padding: 3px;
   margin-bottom:1px;
-  background:rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.1);
+}
+.channel-user li .avatar{
+  width: 20%;
+  float: left;
+  margin-right: 4px;
+}
+.channel-user hr{
+	margin:0;
+}
+.chat-submit > input{
+  -webkit-border-radius: 0px;
+     -moz-border-radius: 0px;
+          border-radius: 0px;
 }
 h3{margin:0}
 .table tbody tr.playc > td {
