@@ -175,7 +175,7 @@
             <ul class="unstyled user-list">
               <li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">
                 <hr>
-                <div class="avatar"><img src="//secure.gravatar.com/avatar/{{user.email}}?d=identicon"></div>
+                <div class="avatar"><img src="//secure.gravatar.com/avatar/{{user.email}}?d=mm"></div>
                 <p>{{user.display_name}}</p>
               </li>
               <!-- damned pluralization -->
