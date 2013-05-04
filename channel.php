@@ -205,7 +205,7 @@
   <script>$.fn.modal || document.write('<script type="text/javascript" src="/assets/js/bootstrap.min.js"><\/script>')</script>
   <script>document.write('<script type="text/javascript" src="//<?php echo $sgtube_host; ?>:8080/socket.io/socket.io.js"><\/script>');</script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
-  <script src<?php echo $sgtube_root; ?>assets/js/jquery.ddd.min.js"></script>
+  <script src="<?php echo $sgtube_root; ?>/assets/js/jquery.ddd.min.js"></script>
   <script src="<?php echo $sgtube_root; ?>/assets/js/jquery.lionbars.min.js"></script>
   <script src="<?php echo $sgtube_root; ?>/assets/js/channel.js"></script>
 </body>
