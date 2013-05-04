@@ -42,7 +42,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </a>
-        <a class="brand" href="<?php echo $sgtube_root; ?>/">SynergyTube</a>
+        <a class="brand" href="<?php echo $sgtube_root; ?>">SynergyTube</a>
         <div class="nav-collapse collapse">
           <ul class="nav">
             <li><a href="<?php echo $sgtube_root; ?>/">Channels</a></li>
@@ -103,7 +103,6 @@
           <strong ng-show="alert.strong">{{alert.strong}}:</strong> {{alert.text}}
         </div>
       </div>
-      <h1><?php echo $d_root ?></h2>
       <div class="channel-second">
         <div class="sp2 youtube-player">
           <div id="replace-player">

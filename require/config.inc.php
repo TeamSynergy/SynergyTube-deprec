@@ -2,8 +2,8 @@
 	// Database-Connection variables
 	$db_host = "localhost";
 	$db_user = "root";
-	$db_password = "";
-	$db_table = "test";
+	$db_password = "root";
+	$db_table = "synergy";
 
 	// Use mod_rewrite for url rewriting?
 	// eg: host.com/c/channel-name instead of host.com/channe.php?c=channel-name when enabled.

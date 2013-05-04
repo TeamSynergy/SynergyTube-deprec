@@ -224,7 +224,7 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 	socket.on('chat.load_more', function(data){
-		backend.channel.chat.getMore(socket.channel_id, 15, new Date(data.append_at), function(message_data){
+		backend.channel.chat.getMore(socket.channel_id, 15, 20, new Date(data.append_at), function(message_data){
 			socket.emit('chat.load_more', message_data);
 			console.log("sent 15 messages more...");
 		});
