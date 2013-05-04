@@ -149,24 +149,27 @@ io.sockets.on('connection', function (socket) {
 	/* --User Related--*/
 
 	socket.on('user.login', function(data){
-		backend.user.findByLoginName(data.login_name, function(user){
-			if(user){
-				if(user.is_valid === 1){
-					if(hasher.verify(data.password, user.hash)){
-						var session_id = hasher.generate(data.login_name + user.hash);
-						backend.user.session.create(data.login_name, session_id, function(){
-							socket.emit("user.session_id", { content: { session_id: session_id }});
-						});
+		if(typeof data.login_name !== "undefined" && typeof data.password !== "undefined")
+			backend.user.findByLoginName(data.login_name, function(user){
+				if(user){
+					if(user.is_valid === 1){
+						if(hasher.verify(data.password, user.hash)){
+							var session_id = hasher.generate(data.login_name + user.hash);
+							backend.user.session.create(data.login_name, session_id, function(){
+								socket.emit("user.session_id", { content: { session_id: session_id }});
+							});
+						} else {
+							socket.emit("error", { text: "Incorrect Username or Password." });
+						}
 					} else {
-						socket.emit("error", { text: "Incorrect Username or Password." });
+						socket.emit("error", { text: "Your Account is not ready yet. Please Check your mail for the Activation-Link" });
 					}
 				} else {
-					socket.emit("error", { text: "Your Account is not ready yet. Please Check your mail for the Activation-Link" });
+					socket.emit("error", { text: "Incorrect Username or Password." });
 				}
-			} else {
-				socket.emit("error", { text: "Incorrect Username or Password." });
-			}
-		});
+			});
+		else
+			socket.emit("error", { text: "Incorrect Username or Password." });
 	});
 	socket.on('user.logout', function(){
 		if(socket.logged_in) {
@@ -224,7 +227,7 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 	socket.on('chat.load_more', function(data){
-		backend.channel.chat.getMore(socket.channel_id, 15, new Date(data.append_at), function(message_data){
+		backend.channel.chat.getMore(socket.channel_id, 15, 20, new Date(data.append_at), function(message_data){
 			socket.emit('chat.load_more', message_data);
 			console.log("sent 15 messages more...");
 		});

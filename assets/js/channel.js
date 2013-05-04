@@ -74,8 +74,12 @@ function channel_controller($scope){
 		var intv = setInterval(function(){
 			console.log("waiting for player to finish initializing...");
 			if(player){
-				var start_seconds = (new Date().getTime() - new Date($scope.start_time).getTime()) / 1000;
-				player.loadVideoById(data.now_playing.url, start_seconds);
+				if((new Date().getTime() - new Date(data.now_playing.start_time).getTime()) / 1000 > data.now_playing.duration)
+					$scope.playNext();
+				else {
+					var start_seconds = (new Date().getTime() - new Date($scope.start_time).getTime()) / 1000;
+					player.loadVideoById(data.now_playing.url, start_seconds);
+				}
 				clearInterval(intv);
 			}
 		}, 1000);

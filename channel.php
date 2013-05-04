@@ -42,7 +42,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </a>
-        <a class="brand" href="<?php echo $sgtube_root; ?>/">SynergyTube</a>
+        <a class="brand" href="<?php echo $sgtube_root; ?>">SynergyTube</a>
         <div class="nav-collapse collapse">
           <ul class="nav">
             <li><a href="<?php echo $sgtube_root; ?>/">Channels</a></li>
@@ -103,7 +103,6 @@
           <strong ng-show="alert.strong">{{alert.strong}}:</strong> {{alert.text}}
         </div>
       </div>
-      <h1><?php echo $d_root ?></h2>
       <div class="channel-second">
         <div class="sp2 youtube-player">
           <div id="replace-player">
@@ -176,7 +175,7 @@
             <ul class="unstyled user-list">
               <li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">
                 <hr>
-                <div class="avatar"><img src="//secure.gravatar.com/avatar/{{user.email}}?d=identicon"></div>
+                <div class="avatar"><img src="//secure.gravatar.com/avatar/{{user.email}}?d=mm"></div>
                 <p>{{user.display_name}}</p>
               </li>
               <!-- damned pluralization -->
@@ -206,7 +205,7 @@
   <script>$.fn.modal || document.write('<script type="text/javascript" src="/assets/js/bootstrap.min.js"><\/script>')</script>
   <script>document.write('<script type="text/javascript" src="//<?php echo $sgtube_host; ?>:8080/socket.io/socket.io.js"><\/script>');</script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
-  <script src<?php echo $sgtube_root; ?>assets/js/jquery.ddd.min.js"></script>
+  <script src="<?php echo $sgtube_root; ?>/assets/js/jquery.ddd.min.js"></script>
   <script src="<?php echo $sgtube_root; ?>/assets/js/jquery.lionbars.min.js"></script>
   <script src="<?php echo $sgtube_root; ?>/assets/js/channel.js"></script>
 </body>
