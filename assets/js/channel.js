@@ -50,6 +50,7 @@ function channel_controller($scope){
 	
 	socket.on('channel.init', function(data){
 		change_state(2);
+    $scope.channel_id = channel_id;
 		$scope.playlist = data.playlist;
 		$scope.chat = data.last_chat;
 		$scope.online = data.users_online;
@@ -62,11 +63,11 @@ function channel_controller($scope){
 		}
 		$scope.logged_in = data.logged_in;
 		$scope.already_faved = data.already_faved;
-
 		if(data.logged_in){
 			$scope.is_admin = data.user_data.is_admin;
 			$scope.login_name = data.user_data.login_name;
 			$scope.display_name = data.user_data.display_name;
+			$scope.favourites = data.user_data.favourites;
 		} else {
 			$scope.is_admin = false;
 		}

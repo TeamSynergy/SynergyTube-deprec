@@ -2,13 +2,17 @@
 	// http://ipinfodb.com/ip_location_api.php for tracking ip to geolocation?
 	require("config.inc.php");
 
+  $channelpage_url = "";
+  if($enable_mod_rewrite)
+    $channelpage_url = $sgtube_root."/c/";
+  else
+    $channelpage_url = $sgtube_root."/channel.php?c=";
 	$channel_exists = false;
 	$channel_error = false;
 	$channel_error_msg = "";
 	$channel_url = $_GET['c'];
 	$channel_id = -1;
 	$channel_title = "";
-	
 	$con = new mysqli($db_host, $db_user, $db_password, $db_table);
 	if(!$con){
 		$channel_error = true;
@@ -18,9 +22,7 @@
 	if($con->error){
 		$channel_error = true;
 		$channel_error_msg = "Error 500 - Query Error :(";
-	}
-	elseif ($_set->num_rows == 1)
-	{
+	}elseif ($_set->num_rows == 1){
 		$_channel = mysqli_fetch_object($_set);
 		$channel_exists = true;
 		$channel_id = $_channel->_id;
@@ -38,8 +40,7 @@
 		$channel_error_msg = "Error 404 - Channel not found :(";
 	}
 
-	function is_bot()
-	{
+	function is_bot(){
 		$botlist = array("Teoma", "alexa", "froogle", "Gigabot", "inktomi", "looksmart", "URL_Spider_SQL", "Firefly", "NationalDirectory", "Ask Jeeves", "TECNOSEEK", "InfoSeek", "WebFindBot", "girafabot", "crawler", "www.galaxy.com", "Googlebot", "Scooter", "Slurp", "msnbot", "appie", "FAST", "WebBug", "Spade", "ZyBorg", "rabaz", "Baiduspider", "Feedfetcher-Google", "TechnoratiSnoop", "Rankivabot", "Mediapartners-Google", "Sogou web spider", "WebAlta Crawler","TweetmemeBot", "Butterfly","Twitturls","Me.dium","Twiceler");
 		foreach($botlist as $bot)
 			if(strpos($_SERVER['HTTP_USER_AGENT'], $bot) !== false)

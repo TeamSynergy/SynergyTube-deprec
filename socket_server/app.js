@@ -13,6 +13,7 @@ backend.connect(configuration.database);
 
 function emitUserData(socket) {
 	backend.user.findByLoginName(socket.login_name, function(current_user){
+	backend.user.favourites(current_user._id, function(current_user_favourites){
 	backend.channel.findByChannelID(socket.channel_id, function(current_channel){
 	backend.channel.playlist.getAll(socket.channel_id, function(playlist){
 	backend.channel.playlist.findCurrent(socket.channel_id, function(current_item){
@@ -27,9 +28,10 @@ function emitUserData(socket) {
 		socket.email = current_user.email;
 		socket.email_hash = current_user.email_hash;
 		socket.already_faved = isFaved;
+		socket.favourites = current_user_favourites;
 		socket.is_owner = isOwner;
 		socket.is_admin = isAdmin || isOwner;
-		var own_user = { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id, email: socket.email_hash };
+		var own_user = { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id, email: socket.email_hash, favourites: socket.favourites};
 		var online_user = init_online(socket.channel_id);
 		if(!already_online(socket.channel_id, socket.login_name))
 			online_user.push(own_user);
@@ -64,7 +66,7 @@ function emitUserData(socket) {
 			console.log("-- end of handshake log --\r\n");
 			return false;
 		}
-	});});});});});});});});});});
+	});});});});});});});});});});});
 }
 function emitGuestData(socket){
 	backend.channel.findByChannelID(socket.channel_id, function(current_channel){

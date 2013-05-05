@@ -179,6 +179,15 @@ exports.user.isFaved = function(channel_id, user_id, fn){
 	});
 };
 
+exports.user.favourites = function(user_id, fn){
+	sql.query("SELECT * FROM relFavourites INNER JOIN tblUser ON tblUser._id = relFavourites.user_id INNER JOIN tblChannels ON tblChannels._id = relFavourites.channel_id WHERE user_id = " + sql.escape(user_id), function(err, rows){
+		if(err)
+			exports.onQueryError(err);
+		else
+			return fn(rows);
+	});
+};
+
 exports.user.favChannel = function(user_id, channel_id, fn){
 	sql.query("INSERT INTO relFavourites (channel_id, user_id) VALUES (" + sql.escape(channel_id) + ", " + sql.escape(user_id) + ")", function(err){
 		if(err)

@@ -79,11 +79,36 @@
   color:#666;
 }
 
-/* === Login-Dropdown === */
+/* === Dropdowns === */
 .login-dropdown {
   padding:15px;
   padding-bottom:0;
 }
+
+.favourite-list>li {
+  overflow: hidden;
+}
+.favourite-list>li>a {
+  white-space:normal;
+}
+.favourite-list>li>a>h5 {
+  text-overflow: clip;
+  white-space: nowrap;
+}
+.favourite-list>li i.nowplaying {
+  display: none;
+}
+.favourite-list>li.current i.nowplaying {
+  display: inline-block;
+}
+.favourite-list>li>a>p {
+  overflow: hidden;
+  max-height: 90px;
+  max-width: 420px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 
 /* === Channel-Cover === */
 .channel-cover{

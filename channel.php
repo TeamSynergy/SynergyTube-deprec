@@ -49,7 +49,6 @@
             <li><a href="<?php echo $sgtube_root; ?>/categories">Categories</a></li>
           </ul>
           <ul class="nav pull-right">
-            <li ng-show="logged_in"><a href="<?php echo $sgtube_root; ?>/create_channel">Create Channel</a></li>
             <li class="dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
               <div class="dropdown-menu login-dropdown">
                 <form ng-submit="login()">
@@ -73,10 +72,32 @@
                 </form>
               </div>
             </li>
-            <li class="dropdown" ng-show="logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{display_name}}<b class="caret"></b></a>
+            <li class="dropdown" ng-show="logged_in">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-star"></i> Favourites<b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu favourite-list" role="menu">
+                <li ng-repeat="item in favourites" ng-class="{current: item.channel_id == channel_id}">
+                  <!--  Add fav/refav button.
+                    <i class="icon-star" style='float:left;'></i>
+                  -->
+                  <a href="<?php echo $channelpage_url; ?>{{item.custom_url}}">
+                    <h5>
+                      <i class="icon-play nowplaying"></i>
+                      {{item.name}}
+                    </h5>
+                    <p>
+                      {{item.description}}
+                    </p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="dropdown" ng-show="logged_in">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{display_name}}<b class="caret"></b></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href=""><i class="icon-user"></i> Profile</a></li>
-                <li><a href=""><i class="icon-heart"></i> Favourites</a></li>
+                <li><a href="<?php echo $sgtube_root; ?>/profile"><i class="icon-user"></i> Profile</a></li>
+                <li><a href="<?php echo $sgtube_root; ?>/create_channel"><i class="icon-plus-sign"></i> Create Channel</a></li>
                 <li class="divider"></li>
                 <li><a href="" ng-click="logout()"><i class="icon-off"></i> Log Out</a></li>
               </ul>
@@ -113,7 +134,7 @@
           <div class="playlist">
             <div class="info-bar">
               <div class="pull-left">
-                <a href="" class="_tt" data-toggle="tooltip" title="Favourites" ng-click="fav_this()"><i class="icon-heart"></i> {{favs}} - <span ng-show="already_faved">Unfav this</span><span ng-show="!already_faved">Fav this</span></a> |
+                <a href="" class="_tt" data-toggle="tooltip" title="Favourites" ng-click="fav_this()"><i class="icon-star"></i> {{favs}} - <span ng-show="already_faved">Unfav this</span><span ng-show="!already_faved">Fav this</span></a> |
                 <span class="_tt" data-toggle="tooltip" title="Unique Visitors"><i class="icon-globe"></i> {{views}}</span> |
                 <span class="_tt" data-toggle="tooltip" title="Online Users"><i class="icon-eye-open"></i> {{online.length + guests}}</span> |
                 <span class="_tt" data-toggle="tooltip" title="Items in Playlist"><i class="icon-th-list"></i> {{playlist.length}}</span>
