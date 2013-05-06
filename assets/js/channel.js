@@ -10,6 +10,7 @@ var change_state = function(new_state){
     $('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');
     if(new_state == 1){
       $('.wrap-the-load').css('background','rgba(255,255,255,0)');
+      $('.navbar').css('opacity',1);
     }
     if(new_state == 2){
       //while waiting for youtube, raise the menu since that will work fine youtube or not.
@@ -20,6 +21,7 @@ var change_state = function(new_state){
       $('.content-wrap').fadeIn('slow');
       $('body').css('overflow','auto');
       window.document.title="SynergyTube | " + channel_title;
+      $('.channel-chat-inner > ul').animate({ scrollTop: $('.channel-chat-inner > ul')[0].scrollHeight},800);
       loading_error=true;
     }
   }
@@ -51,10 +53,13 @@ if(channel_error_msg){
 var player;
 
 $(function(){
+  jQuery.event.props.push("dataTransfer");
 	// I hate the chromeless player, i'll never build my own controls. Take this dummy!
 	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "100%", "380", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" });
 	$('._tt').tooltip({placement:'bottom'});
 	$('.channel-cover-text').dotdotdot({watch:true});
+  
+  
 });
 
 function stateChangeProxy(state){angular.element('html').scope().playerStateChange(state);}
@@ -83,9 +88,11 @@ function channel_controller($scope){
 	$scope.removed = false;
 	
 	socket.on('channel.init', function(data){
-		change_state(2);
+    change_state(2);
+    
     $scope.channel_id = channel_id;
 		$scope.playlist = data.playlist;
+    $scope.playlist_center_current();
 		$scope.chat = data.last_chat;
 		$scope.online = data.users_online;
 		$scope.guests = data.guest_online;
@@ -125,6 +132,7 @@ function channel_controller($scope){
 	socket.on('playlist.append_item', function(data){
 		$scope.playlist.push(data.content);
 		$scope.$apply();
+    $scope.playlist_center_current();
 	});
 	socket.on('playlist.play_item', function(data){
 		var start_seconds = (new Date().getTime() - new Date(data.content.start_time).getTime()) / 1000;
@@ -138,6 +146,7 @@ function channel_controller($scope){
 		player.loadVideoById(item.url, start_seconds);
 		$scope.active_item = item._id;
 		$scope.$apply();
+    $scope.playlist_center_current();
 	});
 	socket.on('playlist.remove_item', function(data){
 		for (var i = 0; i < $scope.playlist.length; i++) {
@@ -151,6 +160,7 @@ function channel_controller($scope){
 			$scope.playlist[i].position = i + 1;
 		}
 		$scope.$apply();
+    $scope.playlist_center_current();
 	});
 	socket.on('playlist.reorder', function(data){
 		// may we get this a little more efficient?
@@ -161,6 +171,7 @@ function channel_controller($scope){
 			};
 		};
 		$scope.$apply();
+    $scope.playlist_center_current();
 	});
 	socket.on('chat.incoming', function(data){
 		$scope.chat.push(data.content);
@@ -370,6 +381,14 @@ function channel_controller($scope){
 				$('#addTextbox').focus();
 		}, 100);
 	};
+  $scope.playlist_center_current = function(){
+    setTimeout(function(){//This timeout is just because otherwise jQuery would be lookign for .playc before angular had updated it and thusly the scroll would be a step behind.
+      $('.playlist > .playlist-table').animate({ scrollTop: //Get out the geometry textbook faggot
+        $('.playlist-table > tbody').height()*($('.playlist-table > tbody tr').index($('.playc'))/$('.playlist-table > tbody tr').length)-($('.playlist-table').height()/2)+($('.playc').height()/1.5)
+      },400);
+    },0);
+  }
+
 	$scope.itemUrlCallback = function(){
 		var reg = $('#addTextbox').val().match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
 		if(reg){
@@ -487,3 +506,4 @@ function readCookie(name) {
 function eraseCookie(name) {
 	createCookie(name,"",-1);
 }
+
