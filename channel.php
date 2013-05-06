@@ -105,7 +105,7 @@
           <div class="bar"></div>
         </div>
         <hr class="lower-hr">
-        <span class="txt-copy">&copy;2013 <a href="mailto:screeny05@gmail.com">Screeny</a>; <a href="https://github.com/screeny05/SynergyTube">Fork me on GitHub</a></span>
+        <span class="txt-copy">&copy;2013 <a href="mailto:screeny05@gmail.com">The SynergyTube-Dev-Force!</a>; <a href="https://github.com/screeny05/SynergyTube">Fork me on GitHub</a></span>
       </div>
     </div>
   </div>
@@ -219,7 +219,7 @@
             <ul class="unstyled user-list">
               <li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">
                 <hr>
-                <div class="avatar"><img src="//secure.gravatar.com/avatar/{{user.email}}?d=mm"></div>
+                <div class="avatar"><img ng-src="//secure.gravatar.com/avatar/{{user.email}}?d=mm"></div>
                 <p>{{user.display_name}}</p>
               </li>
               <!-- less damned pluralization -->
