@@ -4,17 +4,16 @@
 <html ng-app="channel" ng-controller="channel_controller">
 <head>
   <title>SynergyTube | Loading Channel...</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="description" content="<?php echo $channel_description;?>">
-  <meta name="keywords" content="<?php echo $channel_tags;?>">
-  <meta name="author" content="<?php echo $channel_owner;?>">
-  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
-  <link href="<?php echo $sgtube_root;?>/assets/css/custom.css" rel="stylesheet">
-  <link href="<?php echo $sgtube_root;?>/assets/css/style.css" rel="stylesheet">
-  <link href="<?php echo $sgtube_root;?>/assets/css/lionbars.css" rel="stylesheet">
-  <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="description" content="<?php echo $channel_description;?>"/>
+  <meta name="keywords" content="<?php echo $channel_tags;?>"/>
+  <meta name="author" content="<?php echo $channel_owner;?>"/>
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
+  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet"/>
+  <link href="<?php echo $sgtube_root;?>/assets/css/style.css" rel="stylesheet"/>
+  <link href="<?php echo $sgtube_root;?>/assets/css/lionbars.css" rel="stylesheet"/>
+  <link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet"/>
   <style type="text/css">.channel-cover{background:<?php print("url(".$sgtube_root."/assets/img/".$channel_cover_id.") ".$channel_cover_repeat." ".$channel_cover_pos_x." ".$channel_cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
 </head>
 <body style="overflow:hidden;">
@@ -223,9 +222,11 @@
                 <div class="avatar"><img src="//secure.gravatar.com/avatar/{{user.email}}?d=mm"></div>
                 <p>{{user.display_name}}</p>
               </li>
-              <!-- damned pluralization -->
-              <li ng-show="guests == 1"><p>1 Guest</p></li>
-              <li ng-show="guests > 1"><p>{{guests}} Guests</p></li>
+              <!-- less damned pluralization -->
+              <li><p ng-pluralize count="guests"
+     when="{'0': 'No guests are viewing.',
+                 'one': '1 guest is viewing.',
+                 'other': '{} people are viewing.'}"></p></li>
             </ul>
           </div>
         </div>
