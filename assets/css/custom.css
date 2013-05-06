@@ -58,7 +58,7 @@ html,body {height:100%;background-image:url(../img/groovepaper.png);}
   height:100%;
 }
 .channel-chat ul{
-  height:520px;
+  max-height:520px;
   overflow:auto;
 }
 .sp2{

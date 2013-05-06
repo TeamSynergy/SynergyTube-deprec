@@ -188,23 +188,25 @@
         <div class="sp2">
           <div class="channel-chat">
             <h4>Chat:</h4>
-            <ul class="unstyled" on-scroll="load_messages()">
-              <li ng-repeat="message in chat | orderBy:'timestamp'">
-                <div class="chat-content">
-                  <div class='chat-header' ng-hide='message.display_name == chat[$index-1].display_name'>
-                    <strong>{{message.display_name}}</strong>
-                    <hr/>
+            <div class='channel-chat-inner'>
+              <ul class="unstyled" on-scroll="load_messages()">
+                <li ng-repeat="message in chat | orderBy:'timestamp'">
+                  <div class="chat-content">
+                    <div class='chat-header' ng-hide='message.display_name == chat[$index-1].display_name'>
+                      <strong>{{message.display_name}}</strong>
+                      <hr/>
+                    </div>
+                    <small class="muted" style='float:right;' data-toggle="tooltip" title="{{getDate(message.timestamp)}}">{{getTime(message.timestamp)}}</small>
+                    <p>
+                      {{message.content}}
+                    </p>
                   </div>
-                  <small class="muted" style='float:right;' data-toggle="tooltip" title="{{getDate(message.timestamp)}}">{{getTime(message.timestamp)}}</small>
-                  <p>
-                    {{message.content}}
-                  </p>
-                </div>
-              </li>
-            </ul>
-            <form class="chat-submit" ng-submit="sendMessage()" ng-show="logged_in">
-              <input type="text" ng-model="message" placeholder="Chat" class="input-block-level">
-            </form>
+                </li>
+              </ul>
+              <form class="chat-submit" ng-submit="sendMessage()" ng-show="logged_in">
+                <input type="text" ng-model="message" placeholder="Chat" class="input-block-level">
+              </form>
+            </div>
           </div>
           <div class="channel-user">
             <h4>Who's Here?</h4>

@@ -162,8 +162,13 @@
 .channel-chat{
   float:left;
   width:75%;
+  position: relative;
 }
-
+.channel-chat .channel-chat-inner {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
 .channel-chat li{
   padding: 1px 3px;
   clear:both;
@@ -180,6 +185,9 @@
 }
 .channel-chat .chat-content:hover {
   background: rgba(0,0,0,0.025);
+}
+.channel-chat form{
+  margin:0;
 }
 .loading-more{
   text-align: center;

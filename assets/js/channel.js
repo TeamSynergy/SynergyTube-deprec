@@ -164,7 +164,7 @@ function channel_controller($scope){
 	socket.on('chat.incoming', function(data){
 		$scope.chat.push(data.content);
 		$scope.$apply();
-		$('.channel-chat > ul').animate({ scrollTop: $('.channel-chat > ul')[0].scrollHeight},800);
+		$('.channel-chat-inner > ul').animate({ scrollTop: $('.channel-chat-inner > ul')[0].scrollHeight},800);
 	});
 	socket.on('chat.load_more', function(data){
 		$scope.chat = $scope.chat.concat(data);
