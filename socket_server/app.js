@@ -161,17 +161,17 @@ io.sockets.on('connection', function (socket) {
 								socket.emit("user.session_id", { content: { session_id: session_id }});
 							});
 						} else {
-							socket.emit("error", { text: "Incorrect Username or Password." });
+							socket.emit("error", { text: "Incorrect Username, Email or Password." });
 						}
 					} else {
 						socket.emit("error", { text: "Your Account is not ready yet. Please Check your mail for the Activation-Link" });
 					}
 				} else {
-					socket.emit("error", { text: "Incorrect Username or Password." });
+					socket.emit("error", { text: "Incorrect Username, Email or Password." });
 				}
 			});
 		else
-			socket.emit("error", { text: "Incorrect Username or Password." });
+			socket.emit("error", { text: "Incorrect Username, Email or Password." });
 	});
 	socket.on('user.logout', function(){
 		if(socket.logged_in) {

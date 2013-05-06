@@ -52,7 +52,7 @@
             <li class="dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
               <div class="dropdown-menu login-dropdown">
                 <form ng-submit="login()">
-                  <input type="text" placeholder="Username" name="username" ng-model="txtlogin_name" required>
+                  <input type="text" placeholder="Username or Email" name="username" ng-model="txtlogin_name" required>
                   <input type="password" placeholder="Password" name="password" ng-model="password" required>
                   <input class="btn btn-primary btn-block" type="submit" value="Login">
                   <p class="text-center">or</p>

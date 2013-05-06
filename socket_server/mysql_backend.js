@@ -122,7 +122,7 @@ exports.user.findBySessionID = function(session_id, fn){
 };
 
 exports.user.findByLoginName = function(login_name, fn){
-	sql.query("SELECT *, MD5(email) AS 'email_hash' FROM tblUser WHERE login_name = " + sql.escape(login_name.toLowerCase()), function(err, rows){
+	sql.query("SELECT *, MD5(email) AS 'email_hash' FROM tblUser WHERE login_name = " + sql.escape(login_name.toLowerCase()) +" OR email = " + sql.escape(login_name.toLowerCase()), function(err, rows){
 		if(err)
 			exports.onQueryError(err);
 		else
