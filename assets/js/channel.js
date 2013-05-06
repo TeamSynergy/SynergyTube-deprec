@@ -92,6 +92,7 @@ function channel_controller($scope){
     
     $scope.channel_id = channel_id;
 		$scope.playlist = data.playlist;
+    $scope.playlist_center_current();
 		$scope.chat = data.last_chat;
 		$scope.online = data.users_online;
 		$scope.guests = data.guest_online;
@@ -131,6 +132,7 @@ function channel_controller($scope){
 	socket.on('playlist.append_item', function(data){
 		$scope.playlist.push(data.content);
 		$scope.$apply();
+    $scope.playlist_center_current();
 	});
 	socket.on('playlist.play_item', function(data){
 		var start_seconds = (new Date().getTime() - new Date(data.content.start_time).getTime()) / 1000;
@@ -144,6 +146,7 @@ function channel_controller($scope){
 		player.loadVideoById(item.url, start_seconds);
 		$scope.active_item = item._id;
 		$scope.$apply();
+    $scope.playlist_center_current();
 	});
 	socket.on('playlist.remove_item', function(data){
 		for (var i = 0; i < $scope.playlist.length; i++) {
@@ -157,6 +160,7 @@ function channel_controller($scope){
 			$scope.playlist[i].position = i + 1;
 		}
 		$scope.$apply();
+    $scope.playlist_center_current();
 	});
 	socket.on('playlist.reorder', function(data){
 		// may we get this a little more efficient?
@@ -167,6 +171,7 @@ function channel_controller($scope){
 			};
 		};
 		$scope.$apply();
+    $scope.playlist_center_current();
 	});
 	socket.on('chat.incoming', function(data){
 		$scope.chat.push(data.content);
@@ -339,11 +344,6 @@ function channel_controller($scope){
 		player.loadVideoById(item.url);
 		$scope.active_item = item._id;
 		socket.emit('playlist.play_item', { _id: item_id, start_time: new Date() });
-    setTimeout(function(){//This timeout is just because otherwise jQuery would be lookign for .playc before angular had updated it and thusly the scroll would be a step behind.
-      $('.playlist > .playlist-table').animate({ scrollTop: //Get out the geometry textbook faggot
-        $('.playlist-table > tbody').height()*($('.playlist-table > tbody tr').index($('.playc'))/$('.playlist-table > tbody tr').length)-($('.playlist-table').height()/2)+($('.playc').height()/1.5)
-      },400);
-    },0);
 	};
 	$scope.add_new_item = function(){
 		socket.emit('playlist.append_item', { url:$scope.add_item.url, duration:$scope.add_item.duration, caption:$scope.add_item.caption, media_type: $scope.add_item.media_type});
@@ -381,6 +381,13 @@ function channel_controller($scope){
 				$('#addTextbox').focus();
 		}, 100);
 	};
+  $scope.playlist_center_current = function(){
+    setTimeout(function(){//This timeout is just because otherwise jQuery would be lookign for .playc before angular had updated it and thusly the scroll would be a step behind.
+      $('.playlist > .playlist-table').animate({ scrollTop: //Get out the geometry textbook faggot
+        $('.playlist-table > tbody').height()*($('.playlist-table > tbody tr').index($('.playc'))/$('.playlist-table > tbody tr').length)-($('.playlist-table').height()/2)+($('.playc').height()/1.5)
+      },400);
+    },0);
+  }
 
 	$scope.itemUrlCallback = function(){
 		var reg = $('#addTextbox').val().match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
