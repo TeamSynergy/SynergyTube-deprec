@@ -1,14 +1,47 @@
 var states = ["Waiting for Server...", "Crunching Data...", "Waiting for YouTube...", "There you go!"];
 var loading_error = false;
-var change_state = function(new_state){if(!loading_error){current_state = new_state;window.document.title="SynergyTube | " + states[current_state];$('.txt-status').fadeOut(100,function(){$('.txt-status').html(states[current_state]);}).fadeIn(100);$('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');if(new_state == states.length - 1){$('.wrap-the-load').fadeOut('slow');$('body').css('overflow','auto');window.document.title="SynergyTube | " + channel_title;loading_error=true;}}};
-var change_error = function(error_msg){window.document.title="SynergyTube | Error";$('.txt-init').html(error_msg);$('.txt-status').stop().hide();$('.upper-hr').hide();$('.progress').hide();loading_error=true;};
+var change_state = function(new_state){
+  if(!loading_error){
+    current_state = new_state;
+    window.document.title="SynergyTube | " + states[current_state];
+    $('.txt-status').fadeOut(100,function(){
+      $('.txt-status').html(states[current_state]);
+    }).fadeIn(100);
+    $('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');
+    if(new_state == 1){
+      $('.wrap-the-load').css('background','rgba(255,255,255,0)');
+    }
+    if(new_state == 2){
+      //while waiting for youtube, raise the menu since that will work fine youtube or not.
+      $('.wrap-the-load').css('z-index','500');
+    }
+    if(new_state == states.length - 1){
+      $('.wrap-the-load').fadeOut('slow');
+      $('.content-wrap').fadeIn('slow');
+      $('body').css('overflow','auto');
+      window.document.title="SynergyTube | " + channel_title;
+      loading_error=true;
+    }
+  }
+}
+var change_error = function(error_msg){
+  window.document.title="SynergyTube | Error";
+  $('.txt-init').html(error_msg);
+  $('.txt-status').stop().hide();
+  $('.upper-hr').hide();
+  $('.progress').hide();
+  loading_error=true;
+};
 var current_state = 0;
 var app = angular.module('channel', []);
 var socket = null;
 if(channel_error_msg){
 	change_error(channel_error_msg);
 } else {
-	change_state(1);
+  //Let's wait with the fadein till after the huge cover image has loaded :3
+  $('<img/>').attr('src', $('.channel-cover').css('background-image').slice($('.channel-cover').css('background-image').indexOf('(')+1,-1)).load(function() {
+    change_state(1);
+  });
 	if(typeof io !== "undefined")
 		socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "&channel_id=" + channel_id, secure: location.protocol === "https:" });
 	else
@@ -36,6 +69,7 @@ function channel_controller($scope){
 	$scope.chat = [];
 	$scope.online = [];
 	$scope.alert_stack = [];
+	$scope.skip = { voted: false, votes: 0, goal: 1 };
 	$scope.add_item = { valid: false };
 	$scope.login_name = "";
 	$scope.display_name = "";
@@ -50,6 +84,7 @@ function channel_controller($scope){
 	
 	socket.on('channel.init', function(data){
 		change_state(2);
+    $scope.channel_id = channel_id;
 		$scope.playlist = data.playlist;
 		$scope.chat = data.last_chat;
 		$scope.online = data.users_online;
@@ -62,11 +97,11 @@ function channel_controller($scope){
 		}
 		$scope.logged_in = data.logged_in;
 		$scope.already_faved = data.already_faved;
-
 		if(data.logged_in){
 			$scope.is_admin = data.user_data.is_admin;
 			$scope.login_name = data.user_data.login_name;
 			$scope.display_name = data.user_data.display_name;
+			$scope.favourites = data.user_data.favourites;
 		} else {
 			$scope.is_admin = false;
 		}
@@ -111,11 +146,11 @@ function channel_controller($scope){
 				break;
 			}
 		};
-		$scope.$apply();
 		$scope.removed = true;
 		for(var i = 0; i < $scope.playlist.length; i++){
 			$scope.playlist[i].position = i + 1;
 		}
+		$scope.$apply();
 	});
 	socket.on('playlist.reorder', function(data){
 		// may we get this a little more efficient?
@@ -130,7 +165,7 @@ function channel_controller($scope){
 	socket.on('chat.incoming', function(data){
 		$scope.chat.push(data.content);
 		$scope.$apply();
-		$('.channel-chat > ul').animate({ scrollTop: $('.channel-chat > ul')[0].scrollHeight},800);
+		$('.channel-chat-inner > ul').animate({ scrollTop: $('.channel-chat-inner > ul')[0].scrollHeight},800);
 	});
 	socket.on('chat.load_more', function(data){
 		$scope.chat = $scope.chat.concat(data);
@@ -215,6 +250,7 @@ function channel_controller($scope){
 		alert("Debug-Message");
 	}
 	$scope.login = function(){
+    console.log('login request sent');
 		socket.emit('user.login', { login_name: $scope.txtlogin_name, password: $scope.password  });
 	}
 	$scope.logout = function(){
@@ -255,6 +291,13 @@ function channel_controller($scope){
 			$scope.playNext();
 		}
 	};
+	$scope.skip_vote = function(){
+    if(!$scope.skip.voted){
+      $scope.skip.votes++;
+      $scope.skip.voted = true;
+      socket.emit('skip.vote');//Now do that on the server side, too.
+    }
+  }
 	$scope.playNext = function() {
 		var pos = -1;
 		var next_item = null;

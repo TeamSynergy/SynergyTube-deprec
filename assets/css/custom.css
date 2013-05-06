@@ -1,4 +1,4 @@
-html,body {height:100%;background-image:url(/assets/img/groovepaper.png);}
+html,body {height:100%;background-image:url(../img/groovepaper.png);}
 .content-wrap {min-height:100%;height:auto !important;height:100%;margin: 0 auto -60px;}
 .footer-container {padding-top:20px;}
 .footer-pusher,.footer {height:59px;}
@@ -58,7 +58,7 @@ html,body {height:100%;background-image:url(/assets/img/groovepaper.png);}
   height:100%;
 }
 .channel-chat ul{
-  height:520px;
+  max-height:520px;
   overflow:auto;
 }
 .sp2{

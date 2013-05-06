@@ -1,6 +1,7 @@
 /* === Global === */
-
-
+.navbar {
+  z-index: 501;
+}
 /* === Channel-Previews === */
 .channel-previews li{
   width:33%;
@@ -62,9 +63,6 @@
   text-align:center;
 }
 ._tt {
-  padding:0 3px;
-  -webkit-border-radius:2px;
-          border-radius:2px;
   -webkit-transition: background 200ms ease;
      -moz-transition: background 200ms ease;
       -ms-transition: background 200ms ease;
@@ -74,16 +72,60 @@
 ._tt:hover{
   background-color:#BBB;
 }
+
+.pull-left ._tt:first-child{
+  margin-left: 3px;
+}
+
+.pull-left ._tt::after {
+  padding-right: 1px;
+  margin-left: 1px;
+  content:'|';
+  background-color: black;
+}
+
+.pull-left ._tt:last-child::after, .pull-left ._tt:hover:last-child::after {
+  content:'';
+  padding-right: 0px;
+  margin-left: 0px;
+  background-color: inherit;
+}
+
 .preview .description {
   margin:0 5px;
   color:#666;
 }
 
-/* === Login-Dropdown === */
+/* === Dropdowns === */
 .login-dropdown {
   padding:15px;
   padding-bottom:0;
 }
+
+.favourite-list>li {
+  overflow: hidden;
+}
+.favourite-list>li>a {
+  white-space:normal;
+}
+.favourite-list>li>a>h5 {
+  text-overflow: clip;
+  white-space: nowrap;
+}
+.favourite-list>li i.nowplaying {
+  display: none;
+}
+.favourite-list>li.current i.nowplaying {
+  display: inline-block;
+}
+.favourite-list>li>a>p {
+  overflow: hidden;
+  max-height: 90px;
+  max-width: 420px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 
 /* === Channel-Cover === */
 .channel-cover{
@@ -120,19 +162,32 @@
 .channel-chat{
   float:left;
   width:75%;
+  position: relative;
 }
-
+.channel-chat .channel-chat-inner {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
 .channel-chat li{
-  margin:0 0 1px;
-  padding:3px;
+  padding: 1px 3px;
   clear:both;
 }
 .channel-chat hr{
   margin:0;
 }
 .channel-chat li p{
-  margin:0;
+  margin: 0;
+  margin-left: 3px;
   font: 1.0em 'PT Sans', sans-serif;
+}
+.channel-chat .chat-content {
+}
+.channel-chat .chat-content:hover {
+  background: rgba(0,0,0,0.025);
+}
+.channel-chat form{
+  margin:0;
 }
 .loading-more{
   text-align: center;
@@ -195,7 +250,12 @@ h3{margin:0}
   z-index: 1000;
   height:100%;
   width:100%;
-  background-image:url(/assets/img/groovepaper.png);
+  /*happy little white to transparent background transition*/
+  background: rgba(255,255,255,1);
+  -webkit-transition: all 0.75s ease-in;
+  -moz-transition: all 0.75s ease-in;
+  -o-transition: all 0.75s ease-in;
+  transition: all 0.75s ease-in;
 }
 .loading-border{
   width: 500px;
