@@ -132,7 +132,7 @@
           </div>
 
           <div class="playlist">
-            <div class="info-bar">
+            <div class="info-bar" style='text-align: center;'>
               <div class="pull-left">
                 <span class="_tt" data-toggle="tooltip" title="Favourites">
                   <a href="" ng-click="fav_this()">
@@ -146,7 +146,11 @@
                   <i class="icon-th-list"></i> {{playlist.length}}
                 </span>
               </div>
+                <a class="_tt" href="" ng-click="skip_vote()" data-toggle="tooltip" ng-show="logged_in" title="Skip({{skip.for}} out of {{skip.goal}})">
+                  <span>{{skip.votes}}</span><i class="icon-eject"></i><span>{{skip.goal}}</span>
+                </a>
               <div class="pull-right">
+                <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play last"><i class="icon-backward"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play last"><i class="icon-backward"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Pause"> <i class="icon-pause"></i></a>
                 <a class="_tt" href="" data-toggle="tooltip" ng-show="is_admin" title="Play next"><i class="icon-forward"></i></a><span ng-show="is_admin"> |</span>

@@ -69,6 +69,7 @@ function channel_controller($scope){
 	$scope.chat = [];
 	$scope.online = [];
 	$scope.alert_stack = [];
+	$scope.skip = { voted: false, votes: 0, goal: 1 };
 	$scope.add_item = { valid: false };
 	$scope.login_name = "";
 	$scope.display_name = "";
@@ -290,6 +291,13 @@ function channel_controller($scope){
 			$scope.playNext();
 		}
 	};
+	$scope.skip_vote = function(){
+    if(!$scope.skip.voted){
+      $scope.skip.votes++;
+      $scope.skip.voted = true;
+      socket.emit('skip.vote');//Now do that on the server side, too.
+    }
+  }
 	$scope.playNext = function() {
 		var pos = -1;
 		var next_item = null;
