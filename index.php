@@ -59,6 +59,7 @@
   <script src="<?php echo $sgtube_root;?>/assets/js/jquery.min.js"></script>
   <script src="<?php echo $sgtube_root;?>/assets/js/bootstrap.min.js"></script>
   <script src="<?php echo $sgtube_root;?>/assets/js/jquery.ddd.min.js"></script>
+  <script src="<?php echo $sgtube_root;?>/assets/js/global.js"></script>
   <script>$('.preview').each(function(_){$(this).dotdotdot({watch:true});});$('._tt').tooltip({placement:'bottom'});</script>
 </body>
 </html>

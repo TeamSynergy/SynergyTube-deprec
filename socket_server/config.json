@@ -1,15 +1,16 @@
 {
-	"hostname": "st.localcraft.de",
+	"hostname": "192.168.1.12",
+  "hostname__comment": "This should be the external hostname.",
 	"database": {
 		"user": "root",
-		"password": "root",
-		"database": "synergy"
+		"password": "",
+		"database": "test"
 	},
 	"mail": {
 		"service": "Gmail",
 		"auth": {
-			"user": "go-create-your-own@gmail.com",
-			"pass": "woah, dude.."
+			"user": "makeOne@gmail.com",
+			"pass": ""
 		}
 	}
 }

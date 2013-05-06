@@ -258,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `tbluser` (
   `hash` varchar(200) NOT NULL,
   `session_id` varchar(64) DEFAULT NULL,
   `is_valid` tinyint(1) NOT NULL,
-  `validate_hash` char(60) NOT NULL,
+  `validate_hash` char(64) NOT NULL,
   PRIMARY KEY (`_id`),
   UNIQUE KEY `login_name_UNIQUE` (`login_name`),
   UNIQUE KEY `email_UNIQUE` (`email`),
