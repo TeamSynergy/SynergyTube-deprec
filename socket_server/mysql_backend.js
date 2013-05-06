@@ -198,7 +198,7 @@ exports.user.favChannel = function(user_id, channel_id, fn){
 };
 
 exports.user.unFavChannel = function(user_id, channel_id, fn){
-	sql.query("DELETE FROM relFavourites WHERE channel_id = " + sql.escape(user_id) + " AND user_id = " + sql.escape(user_id), function(err){
+	sql.query("DELETE FROM relFavourites WHERE channel_id = " + sql.escape(channel_id) + " AND user_id = " + sql.escape(user_id), function(err){
 		if(err)
 			exports.onQueryError(err);
 		else
