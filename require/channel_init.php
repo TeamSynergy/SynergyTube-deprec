@@ -18,7 +18,7 @@
 		$channel_error = true;
 		$channel_error_msg = "Error 500 - Database Error :(";
 	}
-	$_set = $con->query("SELECT * FROM tblChannels WHERE custom_url = '".$con->real_escape_string($channel_url)."'");
+	$_set = $con->query("SELECT tblchannels.*, tbluser.display_name as owner_name FROM tblchannels INNER JOIN tbluser ON tblchannels.owner_id = tbluser._id WHERE custom_url = '".$con->real_escape_string($channel_url)."'");
 	if($con->error){
 		$channel_error = true;
 		$channel_error_msg = "Error 500 - Query Error :(";
@@ -27,6 +27,8 @@
 		$channel_exists = true;
 		$channel_id = $_channel->_id;
 		$channel_description = htmlentities($_channel->description);
+		$channel_tags = htmlentities(@$_channel->tags);
+		$channel_owner = htmlentities($_channel->owner_name);
 		$channel_title = htmlentities($_channel->name);
 		$channel_cover_id = htmlentities($_channel->cover_id);
 		$channel_cover_repeat = htmlentities($_channel->cover_repeat);
