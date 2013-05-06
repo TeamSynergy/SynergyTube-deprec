@@ -10,6 +10,7 @@ var change_state = function(new_state){
     $('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');
     if(new_state == 1){
       $('.wrap-the-load').css('background','rgba(255,255,255,0)');
+      $('.navbar').css('opacity',1);
     }
     if(new_state == 2){
       //while waiting for youtube, raise the menu since that will work fine youtube or not.
@@ -20,6 +21,7 @@ var change_state = function(new_state){
       $('.content-wrap').fadeIn('slow');
       $('body').css('overflow','auto');
       window.document.title="SynergyTube | " + channel_title;
+      $('.channel-chat-inner > ul').animate({ scrollTop: $('.channel-chat-inner > ul')[0].scrollHeight},800);
       loading_error=true;
     }
   }
@@ -51,10 +53,13 @@ if(channel_error_msg){
 var player;
 
 $(function(){
+  jQuery.event.props.push("dataTransfer");
 	// I hate the chromeless player, i'll never build my own controls. Take this dummy!
 	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "100%", "380", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" });
 	$('._tt').tooltip({placement:'bottom'});
 	$('.channel-cover-text').dotdotdot({watch:true});
+  
+  
 });
 
 function stateChangeProxy(state){angular.element('html').scope().playerStateChange(state);}
@@ -83,7 +88,8 @@ function channel_controller($scope){
 	$scope.removed = false;
 	
 	socket.on('channel.init', function(data){
-		change_state(2);
+    change_state(2);
+    
     $scope.channel_id = channel_id;
 		$scope.playlist = data.playlist;
 		$scope.chat = data.last_chat;
@@ -333,6 +339,11 @@ function channel_controller($scope){
 		player.loadVideoById(item.url);
 		$scope.active_item = item._id;
 		socket.emit('playlist.play_item', { _id: item_id, start_time: new Date() });
+    setTimeout(function(){//This timeout is just because otherwise jQuery would be lookign for .playc before angular had updated it and thusly the scroll would be a step behind.
+      $('.playlist > .playlist-table').animate({ scrollTop: //Get out the geometry textbook faggot
+        $('.playlist-table > tbody').height()*($('.playlist-table > tbody tr').index($('.playc'))/$('.playlist-table > tbody tr').length)-($('.playlist-table').height()/2)+($('.playc').height()/1.5)
+      },400);
+    },0);
 	};
 	$scope.add_new_item = function(){
 		socket.emit('playlist.append_item', { url:$scope.add_item.url, duration:$scope.add_item.duration, caption:$scope.add_item.caption, media_type: $scope.add_item.media_type});
@@ -370,6 +381,7 @@ function channel_controller($scope){
 				$('#addTextbox').focus();
 		}, 100);
 	};
+
 	$scope.itemUrlCallback = function(){
 		var reg = $('#addTextbox').val().match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
 		if(reg){
@@ -487,3 +499,4 @@ function readCookie(name) {
 function eraseCookie(name) {
 	createCookie(name,"",-1);
 }
+
