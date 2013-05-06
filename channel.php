@@ -137,9 +137,9 @@
                 <a href="" class="_tt" data-toggle="tooltip" title="Favourites" ng-click="fav_this()">
                   <i class="icon-star-empty" ng-show="!already_faved"></i><i class="icon-star" ng-show="already_faved"></i>
                   {{favs}}
-                </a> |
-                <span class="_tt" data-toggle="tooltip" title="Unique Visitors"><i class="icon-globe"></i> {{views}}</span> |
-                <span class="_tt" data-toggle="tooltip" title="Online Users"><i class="icon-eye-open"></i> {{online.length + guests}}</span> |
+                </a>
+                <span class="_tt" data-toggle="tooltip" title="Unique Visitors"><i class="icon-globe"></i> {{views}}</span>
+                <span class="_tt" data-toggle="tooltip" title="Online Users"><i class="icon-eye-open"></i> {{online.length + guests}}</span>
                 <span class="_tt" data-toggle="tooltip" title="Items in Playlist"><i class="icon-th-list"></i> {{playlist.length}}</span>
               </div>
               <div class="pull-right">

@@ -74,6 +74,15 @@
 ._tt:hover{
   background-color:#BBB;
 }
+
+.pull-left ._tt::after {
+  content:' | ';
+}
+
+.pull-left ._tt:last-child::after {
+  content:'';
+}
+
 .preview .description {
   margin:0 5px;
   color:#666;
