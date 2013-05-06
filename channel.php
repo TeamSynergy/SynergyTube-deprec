@@ -190,8 +190,16 @@
             <h4>Chat:</h4>
             <ul class="unstyled" on-scroll="load_messages()">
               <li ng-repeat="message in chat | orderBy:'timestamp'">
-                <div class="chat-content"><hr><p><strong>{{message.display_name}}</strong> <small class="muted _tt" data-toggle="tooltip" title="{{getDate(message.timestamp)}}">{{getTime(message.timestamp)}}</small><br>
-                {{message.content}}</p></div>
+                <div class="chat-content">
+                  <div class='chat-header' ng-hide='message.display_name == chat[$index-1].display_name'>
+                    <strong>{{message.display_name}}</strong>
+                    <hr/>
+                  </div>
+                  <small class="muted" style='float:right;' data-toggle="tooltip" title="{{getDate(message.timestamp)}}">{{getTime(message.timestamp)}}</small>
+                  <p>
+                    {{message.content}}
+                  </p>
+                </div>
               </li>
             </ul>
             <form class="chat-submit" ng-submit="sendMessage()" ng-show="logged_in">

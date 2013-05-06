@@ -165,16 +165,21 @@
 }
 
 .channel-chat li{
-  margin:0 0 1px;
-  padding:3px;
+  padding: 1px 3px;
   clear:both;
 }
 .channel-chat hr{
   margin:0;
 }
 .channel-chat li p{
-  margin:0;
+  margin: 0;
+  margin-left: 3px;
   font: 1.0em 'PT Sans', sans-serif;
+}
+.channel-chat .chat-content {
+}
+.channel-chat .chat-content:hover {
+  background: rgba(0,0,0,0.025);
 }
 .loading-more{
   text-align: center;
