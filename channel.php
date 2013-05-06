@@ -180,7 +180,7 @@
               <tbody dnd-list="playlist">
                 <tr ng-repeat="item in playlist | filter:searchTitle | orderBy:'position'" ng-class="{playc: item._id == active_item}">
                   <td>{{item.position}}</td>
-                  <td><a href="http://www.youtube.com/watch?v={{item.url}}">{{item.caption}}</a></td>
+                  <td><a ng-href="http://www.youtube.com/watch?v={{item.url}}">{{item.caption}}</a></td>
                   <td>{{getLength(item.duration)}}</td>
                   <td><a href="<?php echo $sgtube_root; ?>/user/{{item.login_name}}">{{item.display_name}}</a></td>
                   <td><a class="_tt" data-toggle="tooltip" ng-show="is_admin" title="Play this" href="" ng-click="play_item(item._id)"><i class="icon-play"></i></a></td>
