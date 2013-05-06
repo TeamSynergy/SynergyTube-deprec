@@ -16,24 +16,6 @@
 </head>
 <body style="overflow:hidden;">
 
-<div class="wrap-the-load">
-  <div class="loading-border">
-		<div class="loading-image">
-			<img src="<?php echo $sgtube_root; ?>/assets/img/cloud_pre.png">
-		</div>
-		<div class="loading-lower">
-			<span class="txt-init">Initializing <i>the</i> Awesome!</span><br>
-			<hr class="upper-hr">
-			<span class="txt-status">Waiting for Server...</span>
-			<div class="progress progress-striped active">
-				<div class="bar"></div>
-			</div>
-			<hr class="lower-hr">
-			<span class="txt-copy">&copy;2013 <a href="mailto:screeny05@gmail.com">Screeny</a>; <a href="https://github.com/screeny05/SynergyTube">Fork me on GitHub</a></span>
-		</div>
-	</div>
-</div>
-
   <div class="navbar">
     <div class="navbar-inner">
       <div class="container">
@@ -45,7 +27,6 @@
         <a class="brand" href="<?php echo $sgtube_root; ?>">SynergyTube</a>
         <div class="nav-collapse collapse">
           <ul class="nav">
-            <li><a href="<?php echo $sgtube_root; ?>/">Channels</a></li>
             <li><a href="<?php echo $sgtube_root; ?>/categories">Categories</a></li>
           </ul>
           <ul class="nav pull-right">
@@ -104,6 +85,25 @@
             </li>
           </ul>
         </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="wrap-the-load">
+    <div class="loading-border">
+      <div class="loading-image">
+        <img src="<?php echo $sgtube_root; ?>/assets/img/cloud_pre.png">
+      </div>
+      <div class="loading-lower">
+        <span class="txt-init">Initializing <i>the</i> Awesome!</span><br>
+        <hr class="upper-hr">
+        <span class="txt-status">Waiting for Server...</span>
+        <div class="progress progress-striped active">
+          <div class="bar"></div>
+        </div>
+        <hr class="lower-hr">
+        <span class="txt-copy">&copy;2013 <a href="mailto:screeny05@gmail.com">Screeny</a>; <a href="https://github.com/screeny05/SynergyTube">Fork me on GitHub</a></span>
       </div>
     </div>
   </div>

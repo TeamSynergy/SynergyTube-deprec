@@ -1,6 +1,7 @@
 /* === Global === */
-
-
+.navbar {
+  z-index: 501;
+}
 /* === Channel-Previews === */
 .channel-previews li{
   width:33%;
@@ -236,7 +237,12 @@ h3{margin:0}
   z-index: 1000;
   height:100%;
   width:100%;
-  background-image:url(/assets/img/groovepaper.png);
+  /*happy little white to transparent background transition*/
+  background: rgba(255,255,255,1);
+  -webkit-transition: all 0.75s ease-in;
+  -moz-transition: all 0.75s ease-in;
+  -o-transition: all 0.75s ease-in;
+  transition: all 0.75s ease-in;
 }
 .loading-border{
   width: 500px;
