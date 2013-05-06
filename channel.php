@@ -135,7 +135,7 @@
             <div class="info-bar">
               <div class="pull-left">
                 <span class="_tt" data-toggle="tooltip" title="Favourites">
-                  <a href="#" ng-click="fav_this()">
+                  <a href="" ng-click="fav_this()">
                     <i class="icon-star-empty" ng-show="!already_faved"></i><i class="icon-star" ng-show="already_faved"></i>
                     {{favs}}</a>
                 </span><span class="_tt" data-toggle="tooltip" title="Unique Visitors">
