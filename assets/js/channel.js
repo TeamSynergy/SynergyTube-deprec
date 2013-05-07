@@ -102,6 +102,9 @@ function channel_controller($scope){
 		if(data.now_playing){
 			$scope.active_item = data.now_playing._id;
 			$scope.start_time = data.now_playing.start_time;
+      $scope.skip.votes = data.now_playing.skip.votes;
+      $scope.skip.goal = data.now_playing.skip.goal;
+      $scope.skip.voted = data.now_playing.skip.already_skipped;//not there yet
 		}
 		$scope.logged_in = data.logged_in;
 		$scope.already_faved = data.already_faved;
@@ -174,6 +177,11 @@ function channel_controller($scope){
 		$scope.$apply();
     $scope.playlist_center_current();
 	});
+	socket.on('skip.vote', function(data){
+    $scope.skip=data.content;
+		$scope.$apply();
+    if($scope.skip.votes==$scope.skip.goal) animate_bg($('#skips i.icon-eject'), 0, 20);//we should make the coming skip obvious
+  });
 	socket.on('chat.incoming', function(data){
 		$scope.chat.push(data.content);
 		$scope.$apply();
@@ -242,7 +250,7 @@ function channel_controller($scope){
 		console.log("channel full");
 		change_error("Sorry, this Channel has reached its User-Limit. Come back soon!");
 	});
-
+  
 	socket.on('user.session_id', function(data){
 		createCookie("session_id", data.content.session_id);
 		$scope.password = "";
@@ -258,6 +266,7 @@ function channel_controller($scope){
 		$scope.alert_stack.push({ text: "Huray! We've created your account! Go check your Emails for the confirmation link in order to activate your Account." });
 		$scope.$apply();
 	});
+  
 	$scope.debug = function(){
 		alert("Debug-Message");
 	}
@@ -305,7 +314,6 @@ function channel_controller($scope){
 	};
 	$scope.skip_vote = function(){
     if(!$scope.skip.voted){
-      $scope.skip.votes++;
       $scope.skip.voted = true;
       socket.emit('skip.vote');//Now do that on the server side, too.
     }
@@ -335,6 +343,7 @@ function channel_controller($scope){
 		$scope.$apply();
 		player.loadVideoById(next_item.url);
 		socket.emit('playlist.item_changed', { caption: next_item.caption });
+    $scope.playlist_center_current();
 	};
 	$scope.play_item = function(item_id){
 		var item;
@@ -533,3 +542,9 @@ function eraseCookie(name) {
 	createCookie(name,"",-1);
 }
 
+//funny that jquery won't do this itself
+function animate_bg(ele, from, to) {
+    ele.css("background-color", "rgba(255, 127, 127, " + (from += from > to ? -1 : 1) / 10 + ")"); 
+    if(from != to)  
+        setTimeout(function() { animate_bg(ele, from, to) }, 20);
+}
