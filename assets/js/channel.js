@@ -55,11 +55,12 @@ var player;
 $(function(){
   jQuery.event.props.push("dataTransfer");
 	// I hate the chromeless player, i'll never build my own controls. Take this dummy!
-	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "100%", "380", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" });
+	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "100%", "380", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" }, function(e){
+		if(!e.success)
+			change_error("Unable to initialize YouTube-Player :(");
+	});
 	$('._tt').tooltip({placement:'bottom'});
 	$('.channel-cover-text').dotdotdot({watch:true});
-  
-  
 });
 
 function stateChangeProxy(state){angular.element('html').scope().playerStateChange(state);}
