@@ -286,7 +286,7 @@ exports.channel.chat.getMore = function(channel_id, count, max_messages, last_st
 		if(err){
 			exports.onQueryError(err);
 		} else if(stamps[0]._c  < max_messages){
-			int get_count = 0;
+			var get_count = 0;
 			
 			if(stamps[0]._c - max_messages < count)
 				get_count = stamps[0]._c - max_messages;
