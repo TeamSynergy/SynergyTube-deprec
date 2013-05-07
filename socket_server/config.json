@@ -1,6 +1,6 @@
 {
 	"hostname": "192.168.1.12",
-  "hostname__comment": "This should be the external hostname.",
+	"hostname__comment": "This should be the external hostname.",
 	"database": {
 		"user": "root",
 		"password": "",
