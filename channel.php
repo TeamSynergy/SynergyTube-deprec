@@ -203,9 +203,7 @@
                       <hr/>
                     </div>
                     <small class="muted" style='float:right;' data-toggle="tooltip" title="{{getDate(message.timestamp)}}">{{getTime(message.timestamp)}}</small>
-                    <p>
-                      {{message.content}}
-                    </p>
+                    <p parse-url="_blank">{{message.content}}</p>
                   </div>
                 </li>
               </ul>
