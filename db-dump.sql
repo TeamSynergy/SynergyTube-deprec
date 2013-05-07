@@ -56,6 +56,18 @@ INSERT INTO `relfavourites` (`channel_id`, `user_id`) VALUES
 (1, 1),
 (2, 1);
 
+--
+-- Table structure for table `relskips`
+--
+
+CREATE TABLE IF NOT EXISTS `relskips` (
+  `media_id` int(10) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  UNIQUE KEY `user_id` (`user_id`),
+  UNIQUE KEY `user_id_2` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 -- --------------------------------------------------------
 
 --
