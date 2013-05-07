@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `tblchannels` (
   `cover_repeat` varchar(10) NOT NULL,
   `cover_pos_x` varchar(10) NOT NULL,
   `cover_pos_y` varchar(10) NOT NULL,
-  `custom_url` varchar(45) DEFAULT NULL,
+  `custom_url` varchar(45) NOT NULL,
   `owner_id` int(11) NOT NULL,
   `description` varchar(400) NOT NULL,
   `user_limit` int(11) NOT NULL,
