@@ -331,24 +331,25 @@ exports.channel.playlist.findCurrent = function(channel_id, fn){
 		if(err)
 			exports.onQueryError(err);
 		else
-    //there might be a clever join way of doing this idk
-    sql.query("SELECT COUNT(*) as _c FROM relSkips WHERE media_id = " + sql.escape(rows[0]._id), function(err, skipCountRow){
-      if(err)
-        exports.onQueryError(err);
-      else
-        sql.query('SELECT tblchannels.skip_limit_multiplier as _m FROM `tblchannels` WHERE tblchannels._id = '+sql.escape(channel_id), function(err, skipMultiRow){
-          if(err)
-            exports.onQueryError(err);
-          else
-            if(rows.length > 0){
-              rows[0].skip={votes:skipCountRow[0]._c,multiplier:skipMultiRow[0]._m};
-              return fn(rows[0]);
-            }else
-              return fn(null);
-      });
-    });
-  });
-}
+			if(rows.length === 0)
+				return fn(null);
+			else {
+				//there might be a clever join way of doing this idk
+				sql.query("SELECT COUNT(*) as '_c' FROM relSkips WHERE media_id = " + sql.escape(rows[0]._id) + " AND channel_id = " + channel_id, function(err, skipCountRow){
+					if(err)
+						exports.onQueryError(err);
+					else
+						sql.query("SELECT skip_limit_multiplier as '_m' FROM tblChannels WHERE _id = " + sql.escape(channel_id), function(err, skipMultiRow){
+							if(err)
+								exports.onQueryError(err);
+							else
+								rows[0].skip = { votes: skipCountRow[0]._c, multiplier: skipMultiRow[0]._m };
+								return fn(rows[0]);
+						});
+				});
+			}
+	});
+};
 
 exports.channel.playlist.findByPosition = function(channel_id, position, fn){
 	sql.query("SELECT * FROM tblMedia WHERE channel_id = " + sql.escape(channel_id) + " AND position = " + sql.escape(position), function(err, rows){
@@ -364,27 +365,27 @@ exports.channel.playlist.findByPosition = function(channel_id, position, fn){
 //A little contrived
 exports.channel.playlist.skipVoteCurrent = function(channel_id, user_id, fn){
 	exports.channel.playlist.findCurrent(channel_id, function(current_media){
-    //this feels clever - each user can at a time only have one skip active - should maybe be per channel, actually? who is using more than one synergytube channel at once though
-  	sql.query('REPLACE INTO relSkips (user_id,media_id) VALUES ('+sql.escape(user_id)+','+sql.escape(current_media._id)+')', function(err){
-      if(err)
-        exports.onQueryError(err);
-      else {
-        sql.query('SELECT COUNT(*) as "_c" FROM relSkips WHERE media_id = '+sql.escape(current_media._id), function(err, rows){
-            if(err)
-              exports.onQueryError(err);
-            else {
-              var _c = rows[0]._c;
-              sql.query('SELECT tblchannels.skip_limit_multiplier as "_l" FROM `tblchannels` WHERE tblchannels._id = '+sql.escape(channel_id), function(err, rows){
-                if(err)
-                  exports.onQueryError(err);
-                else
-                  return fn({votes: _c, limit_multiplier: rows[0]._l});
-              });
-            }
-        });
-      }
-    });
-  });
+		//this feels clever - each user can at a time only have one skip active - should maybe be per channel, actually? who is using more than one synergytube channel at once though
+		sql.query('REPLACE INTO relSkips (user_id,media_id) VALUES (' + sql.escape(user_id) + ', ' + sql.escape(current_media._id) + ')', function(err){
+			if(err)
+				exports.onQueryError(err);
+			else {
+				sql.query('SELECT COUNT(*) as "_c" FROM relSkips WHERE media_id = '+sql.escape(current_media._id), function(err, rows){
+					if(err)
+						exports.onQueryError(err);
+					else {
+						var _c = rows[0]._c;
+						sql.query('SELECT tblchannels.skip_limit_multiplier as "_l" FROM `tblchannels` WHERE tblchannels._id = '+sql.escape(channel_id), function(err, rows){
+							if(err)
+								exports.onQueryError(err);
+							else
+								return fn({votes: _c, limit_multiplier: rows[0]._l});
+						});
+					}
+				});
+			}
+		});
+	});
 };
 
 exports.channel.playlist.findNext = function(channel_id, fn){
@@ -459,7 +460,7 @@ exports.channel.playlist.remove = function(item_id, fn){
 	});
 };
 
-exports.channel.playlist.length = function(channel_id, fn){
+exports.channel.playlist.count = function(channel_id, fn){
 	sql.query("SELECT COUNT(*) AS '_c' FROM tblMedia WHERE channel_id = " + sql.escape(channel_id), function(err, media_count){
 		if(err)
 			exports.onQueryError(err);

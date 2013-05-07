@@ -10,7 +10,7 @@ var change_state = function(new_state){
     $('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');
     if(new_state == 1){
       $('.wrap-the-load').css('background','rgba(255,255,255,0)');
-      $('.navbar').css('opacity',1);
+      $('.navbar').css('opacity', 1);
     }
     if(new_state == 2){
       //while waiting for youtube, raise the menu since that will work fine youtube or not.
@@ -102,13 +102,15 @@ function channel_controller($scope){
 		if(data.now_playing){
 			$scope.active_item = data.now_playing._id;
 			$scope.start_time = data.now_playing.start_time;
-      $scope.skip.votes = data.now_playing.skip.votes;
-      $scope.skip.goal = data.now_playing.skip.goal;
-      $scope.skip.voted = data.now_playing.skip.already_skipped;//not there yet
+      		$scope.skip.votes = data.now_playing.skip.votes;
+      		$scope.skip.goal = data.now_playing.skip.goal;
+      		$scope.skip.voted = data.now_playing.skip.already_skipped;//not there yet
+		} else {
+			// Throw something like: "You have to add at least one item";
 		}
 		$scope.logged_in = data.logged_in;
 		$scope.already_faved = data.already_faved;
-		if(data.logged_in){
+		if($scope.logged_in){
 			$scope.is_admin = data.user_data.is_admin;
 			$scope.login_name = data.user_data.login_name;
 			$scope.display_name = data.user_data.display_name;
@@ -136,7 +138,7 @@ function channel_controller($scope){
 	socket.on('playlist.append_item', function(data){
 		$scope.playlist.push(data.content);
 		$scope.$apply();
-    $scope.playlist_center_current();
+    	$scope.playlist_center_current();
 	});
 	socket.on('playlist.play_item', function(data){
 		var start_seconds = (new Date().getTime() - new Date(data.content.start_time).getTime()) / 1000;
@@ -150,7 +152,7 @@ function channel_controller($scope){
 		player.loadVideoById(item.url, start_seconds);
 		$scope.active_item = item._id;
 		$scope.$apply();
-    $scope.playlist_center_current();
+    	$scope.playlist_center_current();
 	});
 	socket.on('playlist.remove_item', function(data){
 		for (var i = 0; i < $scope.playlist.length; i++) {
@@ -164,7 +166,7 @@ function channel_controller($scope){
 			$scope.playlist[i].position = i + 1;
 		}
 		$scope.$apply();
-    $scope.playlist_center_current();
+    	$scope.playlist_center_current();
 	});
 	socket.on('playlist.reorder', function(data){
 		// may we get this a little more efficient?
@@ -175,7 +177,7 @@ function channel_controller($scope){
 			};
 		};
 		$scope.$apply();
-    $scope.playlist_center_current();
+    	$scope.playlist_center_current();
 	});
 	socket.on('skip.vote', function(data){
     $scope.skip=data.content;
@@ -230,8 +232,7 @@ function channel_controller($scope){
 		$scope.$apply();
 	});
 	socket.socket.on('error', function(data){
-		alert(JSON.stringify(data));
-		$scope.alert_stack.push({ status: "Server-Error", text: "Unable to connect to Synergy-Server"});
+		$scope.alert_stack.push({ status: "Server-Error", text: "Lost connection to the Server" });
 		$scope.$apply();
 	});
 	socket.on('error', function(data){
@@ -313,11 +314,11 @@ function channel_controller($scope){
 		}
 	};
 	$scope.skip_vote = function(){
-    if(!$scope.skip.voted){
-      $scope.skip.voted = true;
-      socket.emit('skip.vote');//Now do that on the server side, too.
-    }
-  }
+		if(!$scope.skip.voted){
+			$scope.skip.voted = true;
+			socket.emit('skip.vote'); //Now do that on the server side, too.
+		}
+	}
 	$scope.playNext = function() {
 		var pos = -1;
 		var next_item = null;
@@ -405,8 +406,8 @@ function channel_controller($scope){
 		if(youtube_reg){
 			$.getJSON("https://gdata.youtube.com/feeds/api/videos/" + youtube_reg[1] + "?alt=json-in-script&v=2&callback=?", function(data){
 				if(data.entry) {
-					for(var i = 0; i < data.entry.media$groupmedia$content.length; i++){
-						if(data.entry.media$groupmedia$content[i].yt$format === 5){
+					for(var i = 0; i < data.entry.media$group.media$content.length; i++){
+						if(data.entry.media$group.media$content[i].yt$format === 5){
 							$scope.add_item.valid = true;
 							break;
 						}
