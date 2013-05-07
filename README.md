@@ -35,6 +35,7 @@ We're planning on adding more soon after the system has reached version 0.3.
 
 ### Step-by-Step
 
+0. Download the master-branch as a [tarball](https://github.com/TeamSynergy/SynergyTube/archive/master.zip) or clone it with your native git-client
 1. **_Don't_** leave the socket_server folder accessible from the web. Copy it to a seperate folder (eg. /var/nodejs/synergy) and execute it from over there.
 2. If you intend to use MySQL as the DBMS of your choice just use backend-script this ships with. If you want to use another one just have a look at [/socket-server/mysql_backend.js](https://github.com/screeny05/synergyTube/blob/master/socket_server/mysql_backend.js) and create your own one in the same pattern or look arround the web for your database system. 
 3. (shouldn't be needed as of 0.4) Go To your /require in your WebPage-Directory and configure the "config.inc.php" file to your needs.
@@ -65,9 +66,10 @@ node app.js
 - Poll-System
 - [Full List here](https://github.com/screeny05/synergyTube/issues?labels=Feature&state=open)
 
-## Suport & Contributing
+## Suport, Contributing & Development
 If you want to support our work let us know:  
-[mail us](mailto:screeny05@gmail.com) | [open an issue](https://github.com/TeamSynergy/SynergyTube/issues/new) | [fork us](https://github.com/TeamSynergy/SynergyTube/fork)
+[mail us](mailto:screeny05@gmail.com) | [open an issue](https://github.com/TeamSynergy/SynergyTube/issues/new) | [make a pull request](https://github.com/TeamSynergy/SynergyTube/pull/new/master)  
+If you are not sure if a bug's currently beeing fixed check out the development branches
 
 ## Licensing
 Licensed under MIT-License.  
