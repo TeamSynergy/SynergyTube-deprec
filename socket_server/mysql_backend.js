@@ -56,7 +56,16 @@ exports.createStructure = function(db_config, callback){
 	console.log("Connecting to db...");
 	sql.connect(function(err){if(err)exports.onQueryError(err);else{
 	console.log("Successfully connected");
-	var c = function(statement,fn){return sql.query(statement,function(err){if(err){exports.onQueryError(err);return false;}else{return fn();}});};
+	var c = function(statement,fn){
+		return sql.query(statement,function(err){
+			if(err){
+				exports.onQueryError(err);
+				return false;
+			} else {
+				return fn();
+			}
+		});
+	};
 	// as of v0.2
 	c("CREATE DATABASE IF NOT EXISTS `" + db_config.database + "` CHARACTER SET utf8 COLLATE utf8_general_ci", function(){
 		console.log("created database");
@@ -391,11 +400,11 @@ exports.channel.playlist.playItem = function(item_id, fn){
 };
 
 exports.channel.playlist.append = function(channel_id, user_id, url, position, duration, caption, media_type, fn){
-	sql.query("INSERT INTO tblMedia (channel_id, user_id, url, position, duration, caption, media_type) VALUES (" + sql.escape(channel_id) + ", " + sql.escape(user_id) + ", " + sql.escape(url) + ", " + sql.escape(position) + ", " + sql.escape(duration) + ", " + sql.escape(caption) + ", " + sql.escape(media_type) + ")", function(err){
+	sql.query("INSERT INTO tblMedia (channel_id, user_id, url, position, duration, caption, media_type) VALUES (" + sql.escape(channel_id) + ", " + sql.escape(user_id) + ", " + sql.escape(url) + ", " + sql.escape(position) + ", " + sql.escape(duration) + ", " + sql.escape(caption) + ", " + sql.escape(media_type) + ")", function(err, result){
 		if(err)
 			exports.onQueryError(err);
 		else
-			return fn();
+			return fn(result.insertId);
 	});
 };
 
