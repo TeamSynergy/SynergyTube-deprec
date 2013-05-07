@@ -391,21 +391,33 @@ function channel_controller($scope){
   }
 
 	$scope.itemUrlCallback = function(){
-		var reg = $('#addTextbox').val().match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
-		if(reg){
-			$.getJSON("https://gdata.youtube.com/feeds/api/videos/" + reg[1] + "?alt=json-in-script&v=2&callback=?", function(data){
+		var youtube_reg = $('#addTextbox').val().match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
+		if(youtube_reg){
+			$.getJSON("https://gdata.youtube.com/feeds/api/videos/" + youtube_reg[1] + "?alt=json-in-script&v=2&callback=?", function(data){
 				if(data.entry) {
-					$scope.add_item.url = data.entry.media$group.yt$videoid.$t;
-					$scope.add_item.duration = data.entry.media$group.media$content[0].duration;
-					$scope.add_item.caption = data.entry.title.$t;
-					$scope.add_item.media_type = "youtube";
-					$scope.add_item.valid = true;
-					for (var i = 0; i < $scope.playlist.length; i++) {
-						if($scope.playlist[i].url == $scope.add_item.url)
-							$scope.alert_stack.push({ text: "The Item you are about to add is already in the Media List. Are you sure about adding this?" });
+					for(var i = 0; i < data.entry.media$groupmedia$content.length; i++){
+						if(data.entry.media$groupmedia$content[i].yt$format === 5){
+							$scope.add_item.valid = true;
+							break;
+						}
 					};
-				} else
+					if($scope.add_item.valid){
+						$scope.add_item.url = data.entry.media$group.yt$videoid.$t;
+						$scope.add_item.duration = data.entry.media$group.media$content[0].duration;
+						$scope.add_item.caption = data.entry.title.$t;
+						$scope.add_item.media_type = "youtube";
+						for (var i = 0; i < $scope.playlist.length; i++) {
+							if($scope.playlist[i].url == $scope.add_item.url){
+								$scope.alert_stack.push({ text: "The Item you are about to add is already in the Media List. Are you sure about adding this?" });
+								break;
+							}
+						};
+					} else {
+						$scope.alert_stack.push({ text: "This Item is not embeddable." });
+					}
+				} else {
 					$scope.add_item.valid = false;
+				}
 				$scope.$apply();
 			});
 		} else {
