@@ -148,7 +148,7 @@
                   <i class="icon-th-list"></i> {{playlist.length}}
                 </span>
               </div>
-                <a class="_tt" href="" ng-click="skip_vote()" data-toggle="tooltip" ng-show="logged_in" title="Skip({{skip.for}} out of {{skip.goal}})">
+                <a id='skips' class="_tt" href="" ng-click="skip_vote()" data-toggle="tooltip" title="Skip ({{skip.votes}} out of {{skip.goal}})">
                   <span>{{skip.votes}}</span><i class="icon-eject"></i><span>{{skip.goal}}</span>
                 </a>
               <div class="pull-right">
