@@ -80,7 +80,7 @@ exports.createStructure = function(db_config, callback){
 	c("CREATE TABLE IF NOT EXISTS `relskips` ( `media_id` int(10) NOT NULL, `user_id` int(11) NOT NULL, UNIQUE KEY `user_id` (`user_id`), UNIQUE KEY `user_id_2` (`user_id`))",function(){
 		console.log("created table relSkips");
 	
-	c("CREATE TABLE IF NOT EXISTS tblChannels (_id int(c) NOT NULL AUTO_INCREMENT, name varchar(45) NOT NULL, " +
+	c("CREATE TABLE IF NOT EXISTS tblChannels (_id int(11) NOT NULL AUTO_INCREMENT, name varchar(45) NOT NULL, " +
 		"cover_id varchar(45) NOT NULL, cover_repeat varchar(10) NOT NULL, cover_pos_x varchar(10) NOT NULL, cover_pos_y varchar(10) NOT NULL, " +
 		"custom_url varchar(45) NOT NULL, owner_id int(11) NOT NULL, description varchar(400) NOT NULL, user_limit int(11) NOT NULL, " +
 		"PRIMARY KEY(_id), UNIQUE KEY name_UNIQUE (name), UNIQUE KEY custom_url_UNIQUE (custom_url)) DEFAULT CHARSET=utf8",function(){
