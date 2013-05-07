@@ -475,14 +475,26 @@ app.directive('onChange', function(){
 	};
 });
 app.directive('onScroll', function(){
-	return function(scope, elm, attr){
-		var raw = elm[0];
-		elm.bind('scroll', function(){
+	return function(scope, element, attrs){
+		var raw = element[0];
+		element.bind('scroll', function(){
 			if(raw.scrollTop <= 0)
-				scope.$apply(attr.onScroll);
+				scope.$apply(attrs.onScroll);
 		});
 	}
-})
+});
+app.directive('parseUrl',function () {
+	var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
+	return function (scope, element, attrs) {
+		scope.$watch(element, function(){
+			var value = element.html();
+			angular.forEach(value.match(urlPattern), function(url){
+				value = value.replace(url,  "<a target=\"" + attrs.parseUrl + "\" href="+ url + ">" + url +"</a>");
+			});
+			element.html(value);
+		});
+	}
+});
 function createCookie(name,value,days) {
 	if (days) {
 		var date = new Date();
