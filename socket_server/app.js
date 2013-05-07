@@ -43,6 +43,7 @@ function emitUserData(socket) {
 			} else {
 				console.log("user already joined the server. don't broadcast new join");
 			}
+      current_item.skip.goal = Math.round(online_user.length*parseFloat(current_item.skip.multiplier));
 			socket.emit('channel.init', {
 				user_data: own_user,
 				users_online: online_user,
@@ -66,6 +67,7 @@ function emitUserData(socket) {
 			console.log("-- end of handshake log --\r\n");
 			return false;
 		}
+  //Aneurysm!
 	});});});});});});});});});});});
 }
 function emitGuestData(socket){
@@ -80,6 +82,7 @@ function emitGuestData(socket){
 		if(online_user.length <= current_channel.user_limit){
 			console.log("emiting join message");
 			socket.broadcast.to(socket.channel_id).emit('channel.guest_join');
+      current_item.skip.goal = Math.round(online_user.length*parseFloat(current_item.skip.multiplier));
 			socket.emit('channel.init', {
 				users_online: online_user,
 				guest_online: (init_guests(socket.channel_id) + 1),
@@ -99,6 +102,7 @@ function emitGuestData(socket){
 			console.log("-- end of handshake log --\r\n");
 			return false;
 		}
+  //Aneurysm!
 	});});});});});});
 }
 
@@ -238,6 +242,17 @@ io.sockets.on('connection', function (socket) {
 	
 	
 	/*--Video Related--*/
+  socket.on('skip.vote', function(){
+    console.log('skip.vote received');
+    backend.channel.playlist.skipVoteCurrent(socket.channel_id, socket.user_id, function(skip/*object: {votes]*/){
+      var online_users = init_online(socket.channel_id).length;
+      skip.goal = Math.round(online_users*skip.limit_multiplier);
+      socket.emit('skip.vote', { status: 0, content: skip});
+      if(skip.votes >= skip.goal){
+        console.log('we should skip this item now');
+      }
+    });
+  });
 		
 	socket.on('playlist.append_item', function(data){
 		// Check Privileges

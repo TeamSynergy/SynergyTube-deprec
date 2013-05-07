@@ -76,8 +76,11 @@ exports.createStructure = function(db_config, callback){
 	
 	c("CREATE TABLE IF NOT EXISTS relFavourites (channel_id int(11) NOT NULL, user_id int(11) NOT NULL, PRIMARY KEY(channel_id,user_id))",function(){
 		console.log("created table relFavourites");
+    
+	c("CREATE TABLE IF NOT EXISTS `relskips` ( `media_id` int(10) NOT NULL, `user_id` int(11) NOT NULL, UNIQUE KEY `user_id` (`user_id`), UNIQUE KEY `user_id_2` (`user_id`))",function(){
+		console.log("created table relSkips");
 	
-	c("CREATE TABLE IF NOT EXISTS tblChannels (_id int(11) NOT NULL AUTO_INCREMENT, name varchar(45) NOT NULL, " +
+	c("CREATE TABLE IF NOT EXISTS tblChannels (_id int(c) NOT NULL AUTO_INCREMENT, name varchar(45) NOT NULL, " +
 		"cover_id varchar(45) NOT NULL, cover_repeat varchar(10) NOT NULL, cover_pos_x varchar(10) NOT NULL, cover_pos_y varchar(10) NOT NULL, " +
 		"custom_url varchar(45) NOT NULL, owner_id int(11) NOT NULL, description varchar(400) NOT NULL, user_limit int(11) NOT NULL, " +
 		"PRIMARY KEY(_id), UNIQUE KEY name_UNIQUE (name), UNIQUE KEY custom_url_UNIQUE (custom_url)) DEFAULT CHARSET=utf8",function(){
@@ -102,7 +105,8 @@ exports.createStructure = function(db_config, callback){
 		"UNIQUE KEY display_name_UNIQUE (display_name)) DEFAULT CHARSET=utf8",function(){
 		console.log("created table tblUser");
 	callback(0);
-	});});});});});});});});});}});
+  //Aneurysm!
+	});});});});});});});});});});}});
 };
 
 
@@ -321,17 +325,30 @@ exports.channel.playlist.getAll = function(channel_id, fn){
 	});
 };
 
+//contrived :3
 exports.channel.playlist.findCurrent = function(channel_id, fn){
-	sql.query("SELECT * FROM tblMedia WHERE channel_id = " + sql.escape(channel_id) + " ORDER BY start_time DESC LIMIT 0,1", function(err, rows){
+	sql.query("SELECT * FROM tblMedia WHERE channel_id = " + sql.escape(channel_id) + " ORDER BY start_time DESC LIMIT 0,1 ", function(err, rows){
 		if(err)
 			exports.onQueryError(err);
 		else
-			if(rows.length > 0)
-				return fn(rows[0]);
-			else
-				return fn(null);
-	});
-};
+    //there might be a clever join way of doing this idk
+    sql.query("SELECT COUNT(*) as _c FROM relSkips WHERE media_id = " + sql.escape(rows[0]._id), function(err, skipCountRow){
+      if(err)
+        exports.onQueryError(err);
+      else
+        sql.query('SELECT tblchannels.skip_limit_multiplier as _m FROM `tblchannels` WHERE tblchannels._id = '+sql.escape(channel_id), function(err, skipMultiRow){
+          if(err)
+            exports.onQueryError(err);
+          else
+            if(rows.length > 0){
+              rows[0].skip={votes:skipCountRow[0]._c,multiplier:skipMultiRow[0]._m};
+              return fn(rows[0]);
+            }else
+              return fn(null);
+      });
+    });
+  });
+}
 
 exports.channel.playlist.findByPosition = function(channel_id, position, fn){
 	sql.query("SELECT * FROM tblMedia WHERE channel_id = " + sql.escape(channel_id) + " AND position = " + sql.escape(position), function(err, rows){
@@ -343,6 +360,31 @@ exports.channel.playlist.findByPosition = function(channel_id, position, fn){
 			else
 				return fn(null);
 	});
+};
+//A little contrived
+exports.channel.playlist.skipVoteCurrent = function(channel_id, user_id, fn){
+	exports.channel.playlist.findCurrent(channel_id, function(current_media){
+    //this feels clever - each user can at a time only have one skip active - should maybe be per channel, actually? who is using more than one synergytube channel at once though
+  	sql.query('REPLACE INTO relSkips (user_id,media_id) VALUES ('+sql.escape(user_id)+','+sql.escape(current_media._id)+')', function(err){
+      if(err)
+        exports.onQueryError(err);
+      else {
+        sql.query('SELECT COUNT(*) as "_c" FROM relSkips WHERE media_id = '+sql.escape(current_media._id), function(err, rows){
+            if(err)
+              exports.onQueryError(err);
+            else {
+              var _c = rows[0]._c;
+              sql.query('SELECT tblchannels.skip_limit_multiplier as "_l" FROM `tblchannels` WHERE tblchannels._id = '+sql.escape(channel_id), function(err, rows){
+                if(err)
+                  exports.onQueryError(err);
+                else
+                  return fn({votes: _c, limit_multiplier: rows[0]._l});
+              });
+            }
+        });
+      }
+    });
+  });
 };
 
 exports.channel.playlist.findNext = function(channel_id, fn){
