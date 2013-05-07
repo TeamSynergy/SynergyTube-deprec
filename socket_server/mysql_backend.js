@@ -397,7 +397,7 @@ exports.channel.playlist.append = function(channel_id, user_id, url, position, d
 		else
 			return fn();
 	});
-}
+};
 
 exports.channel.playlist.remove = function(item_id, fn){
 	sql.query("DELETE FROM tblMedia WHERE _id = " + sql.escape(item_id), function(err){
@@ -405,5 +405,14 @@ exports.channel.playlist.remove = function(item_id, fn){
 			exports.onQueryError(err);
 		else
 			return fn();
+	});
+};
+
+exports.channel.playlist.length = function(channel_id, fn){
+	sql.query("SELECT COUNT(*) AS '_c' FROM tblMedia WHERE channel_id = " + sql.escape(channel_id), function(err, media_count){
+		if(err)
+			exports.onQueryError(err);
+		else
+			return fn(media_count[0]._c);
 	});
 };
