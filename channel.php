@@ -162,7 +162,7 @@
             </div>
 
             <form class="form-append form-horizontal" name="appendForm" ng-submit="add_new_item()" ng-show="show_add">
-              <label class="control-label" for="itemURL">Item-URL</label>
+              <label class="control-label" for="addTextbox">Item URL:</label>
               <div class="controls">
                 <input type="url" class="input-block-level pull-left" id="addTextbox" on-change="itemUrlCallback()" placeholder="Item-URL" id="itemURL" ng-model="itemURL" required>
                 <div class="input-append">

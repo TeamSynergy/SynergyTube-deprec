@@ -39,7 +39,7 @@
 			$con->query("INSERT INTO tblTracking (ip_hash, channel_id, timestamp) VALUES ('".$ip_hash."', '".$channel_id."', NOW())");
 	}elseif($_set->num_rows > 1){
 		$channel_error = true;
-		$channel_error_msg = "Error - Channel-ID is not unique?"
+		$channel_error_msg = "Error - Channel-ID is not unique?";
 	} else {
 		$channel_error = true;
 		$channel_error_msg = "Error 404 - Channel not found :(";
