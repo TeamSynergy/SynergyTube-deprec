@@ -342,6 +342,7 @@ function channel_controller($scope){
 		$scope.$apply();
 		player.loadVideoById(next_item.url);
 		socket.emit('playlist.item_changed', { caption: next_item.caption });
+    $scope.playlist_center_current();
 	};
 	$scope.play_item = function(item_id){
 		var item;
