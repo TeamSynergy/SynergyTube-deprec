@@ -25,7 +25,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Tabellenstruktur für Tabelle `reladmins`
 --
 
-CREATE TABLE IF NOT EXISTS `reladmins` (
+CREATE TABLE IF NOT EXISTS `relAdmins` (
   `channel_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`channel_id`,`user_id`)
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `reladmins` (
 -- Tabellenstruktur für Tabelle `relfavourites`
 --
 
-CREATE TABLE IF NOT EXISTS `relfavourites` (
+CREATE TABLE IF NOT EXISTS `relFavourites` (
   `channel_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   PRIMARY KEY (`channel_id`,`user_id`)
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `relfavourites` (
 -- Daten für Tabelle `relfavourites`
 --
 
-INSERT INTO `relfavourites` (`channel_id`, `user_id`) VALUES
+INSERT INTO `relFavourites` (`channel_id`, `user_id`) VALUES
 (1, 1),
 (2, 1);
 
@@ -60,7 +60,7 @@ INSERT INTO `relfavourites` (`channel_id`, `user_id`) VALUES
 -- Table structure for table `relskips`
 --
 
-CREATE TABLE IF NOT EXISTS `relskips` (
+CREATE TABLE IF NOT EXISTS `relSkips` (
   `media_id` int(10) NOT NULL,
   `user_id` int(11) NOT NULL,
   UNIQUE KEY `user_id` (`user_id`),
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `relskips` (
 -- Tabellenstruktur für Tabelle `tblchannels`
 --
 
-CREATE TABLE IF NOT EXISTS `tblchannels` (
+CREATE TABLE IF NOT EXISTS `tblChannels` (
   `_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `cover_id` varchar(45) NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `tblchannels` (
 -- Daten für Tabelle `tblchannels`
 --
 
-INSERT INTO `tblchannels` (`_id`, `name`, `cover_id`, `cover_repeat`, `cover_pos_x`, `cover_pos_y`, `custom_url`, `owner_id`, `description`, `user_limit`) VALUES
+INSERT INTO `tblChannels` (`_id`, `name`, `cover_id`, `cover_repeat`, `cover_pos_x`, `cover_pos_y`, `custom_url`, `owner_id`, `description`, `user_limit`) VALUES
 (1, 'Bronies BW', '2.png', 'no-repeat', 'center', 'center', 'bronies-bw', 1, 'Official German Pony-Music Channel from BroniesBW! We play everything from Ponystep to Ponywhat. Pinkie Pie, Applejack, Twilight Sparkle, Derpy Hooves, Rarity, Sweetie Bell, Big Macintosh, Rainbow Dash, Scootalo, Princess Luna, Princess Celestia', 50),
 (2, 'Powermetal is best Metal!', '0.png', 'no-repeat', 'center', 'center', 'powermetal', 1, 'In the name of Metal! Beware of hard beats and fast rhythms on this channel.', 50);
 
@@ -104,7 +104,7 @@ INSERT INTO `tblchannels` (`_id`, `name`, `cover_id`, `cover_repeat`, `cover_pos
 -- Tabellenstruktur für Tabelle `tblmedia`
 --
 
-CREATE TABLE IF NOT EXISTS `tblmedia` (
+CREATE TABLE IF NOT EXISTS `tblMedia` (
   `_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `caption` varchar(200) NOT NULL,
   `url` varchar(200) NOT NULL,
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `tblmedia` (
 -- Daten für Tabelle `tblmedia`
 --
 
-INSERT INTO `tblmedia` (`_id`, `caption`, `url`, `position`, `channel_id`, `user_id`, `duration`, `start_time`, `media_type`) VALUES
+INSERT INTO `tblMedia` (`_id`, `caption`, `url`, `position`, `channel_id`, `user_id`, `duration`, `start_time`, `media_type`) VALUES
 (1, 'TuXe - Epic Wub Time MoP Wub Remix', 'WgAqoXT-2kM', 4, 1, 1, 241, '2013-04-28 22:39:27', 'youtube'),
 (2, 'Eurobeat Brony - Discord (The Living Tombstone''s Remix)', 'xPfMb50dsOk', 5, 1, 1, 194, '2013-04-29 22:08:54', 'youtube'),
 (3, 'Raise This Barn - MBAlpha (Remix)', '9FmzLk7jkSA', 6, 1, 1, 242, '2013-04-29 22:12:18', 'youtube'),
@@ -142,7 +142,7 @@ INSERT INTO `tblmedia` (`_id`, `caption`, `url`, `position`, `channel_id`, `user
 -- Tabellenstruktur für Tabelle `tblmessages`
 --
 
-CREATE TABLE IF NOT EXISTS `tblmessages` (
+CREATE TABLE IF NOT EXISTS `tblMessages` (
   `_id` int(11) NOT NULL AUTO_INCREMENT,
   `timestamp` datetime NOT NULL,
   `content` varchar(400) NOT NULL,
@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS `tblmessages` (
 -- Daten für Tabelle `tblmessages`
 --
 
-INSERT INTO `tblmessages` (`_id`, `timestamp`, `content`, `user_id`, `channel_id`) VALUES
+INSERT INTO `tblMessages` (`_id`, `timestamp`, `content`, `user_id`, `channel_id`) VALUES
 (1, '2013-03-28 00:00:00', 'Hello, World!', 1, 1),
 (3, '2013-03-29 19:48:45', 'blablub', 1, 1),
 (4, '2013-03-30 17:48:17', 'ohai', 1, 1),
@@ -210,7 +210,7 @@ INSERT INTO `tblmessages` (`_id`, `timestamp`, `content`, `user_id`, `channel_id
 -- Tabellenstruktur für Tabelle `tbltracking`
 --
 
-CREATE TABLE IF NOT EXISTS `tbltracking` (
+CREATE TABLE IF NOT EXISTS `tblTracking` (
   `_id` int(11) NOT NULL AUTO_INCREMENT,
   `ip_hash` char(64) NOT NULL,
   `channel_id` int(11) NOT NULL,
@@ -222,36 +222,10 @@ CREATE TABLE IF NOT EXISTS `tbltracking` (
 -- Daten für Tabelle `tbltracking`
 --
 
-INSERT INTO `tbltracking` (`_id`, `ip_hash`, `channel_id`, `timestamp`) VALUES
+INSERT INTO `tblTracking` (`_id`, `ip_hash`, `channel_id`, `timestamp`) VALUES
 (72, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:36:47'),
 (73, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:36:51'),
 (74, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:50:19'),
-(75, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:50:55'),
-(76, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:51:13'),
-(77, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:53:57'),
-(78, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:54:21'),
-(79, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:54:41'),
-(80, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:55:09'),
-(81, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:56:28'),
-(82, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:57:02'),
-(83, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:58:48'),
-(84, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:59:07'),
-(85, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 22:59:30'),
-(86, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:03:21'),
-(87, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:35:51'),
-(88, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:37:24'),
-(89, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:39:28'),
-(90, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:39:35'),
-(91, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:39:54'),
-(92, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:40:21'),
-(93, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:51:44'),
-(94, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:52:03'),
-(95, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:54:49'),
-(96, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:54:52'),
-(97, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:55:47'),
-(98, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:55:48'),
-(99, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:58:00'),
-(100, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-29 23:58:36'),
 (101, '12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0', 1, '2013-04-30 00:01:19');
 
 -- --------------------------------------------------------
@@ -260,7 +234,7 @@ INSERT INTO `tbltracking` (`_id`, `ip_hash`, `channel_id`, `timestamp`) VALUES
 -- Tabellenstruktur für Tabelle `tbluser`
 --
 
-CREATE TABLE IF NOT EXISTS `tbluser` (
+CREATE TABLE IF NOT EXISTS `tblUser` (
   `_id` int(11) NOT NULL AUTO_INCREMENT,
   `login_name` varchar(45) NOT NULL,
   `display_name` varchar(45) DEFAULT NULL,
@@ -281,6 +255,6 @@ CREATE TABLE IF NOT EXISTS `tbluser` (
 -- Daten für Tabelle `tbluser`
 --
 
-INSERT INTO `tbluser` (`_id`, `login_name`, `display_name`, `email`, `avatar_id`, `strategy`, `hash`, `session_id`, `is_valid`, `validate_hash`) VALUES
+INSERT INTO `tblUser` (`_id`, `login_name`, `display_name`, `email`, `avatar_id`, `strategy`, `hash`, `session_id`, `is_valid`, `validate_hash`) VALUES
 (1, 'screeny05', 'Graycode', 'screeny05@gmail.com', NULL, 'local', 'sha1$ddab66da$1$2a0a55b9dd86976bb508368716a8f6707056e625', 'sha1$6944cf6b$1$f3a93b9207df6f4bd93cb64d634acdb380e4adb4', 1, ''),
 (3, 'root', 'root', 'webmaster@localcraft.de', NULL, 'local', '-', '-', 1, '');
