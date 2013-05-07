@@ -16,7 +16,7 @@ You only have to log-in to use the chat functionality and take part in polls. Or
 Currently supported Media-Vendors are:
 - Youtube
 
-I'm planning on adding more soon after the system has reached the final version 0.3.
+We're planning on adding more soon after the system has reached version 0.3.
 
 ### Implemented Features
 - User Limit on Channels
@@ -66,7 +66,8 @@ node app.js
 - [Full List here](https://github.com/screeny05/synergyTube/issues?labels=Feature&state=open)
 
 ## Suport & Contributing
-If you want to support my work let me know: [mail me](mailto:screeny05@gmail.com) | [open an issue](https://github.com/screeny05/SynergyTube/issues/new) | [fork me](https://github.com/screeny05/SynergyTube/fork)
+If you want to support our work let us know:  
+[mail us](mailto:screeny05@gmail.com) | [open an issue](https://github.com/TeamSynergy/SynergyTube/issues/new) | [fork us](https://github.com/TeamSynergy/SynergyTube/fork)
 
 ## Licensing
 Licensed under MIT-License.  
