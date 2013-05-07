@@ -17,8 +17,8 @@
 		<li><div class="preview">
 			<a href="<?php print $url ?>"><div class="caption-wrapper"><img src="//img.youtube.com/vi/<?php print $now_playing->url ?>/mqdefault.jpg"><div class="play-overlay"><i class="icon-play-circle icon-white"></i></div></div></a>
 			<p class="info-bar"><span class="_tt" data-toggle="tooltip" title="<?php print $count_favs->_c ?> Favourites"><i class="icon-star"></i> <?php print $count_favs->_c ?> </span>|<span class="_tt" data-toggle="tooltip" title="<?php print $count_unique_views->_c ?> Unique Visitors"> <i class="icon-globe"></i> <?php print $count_unique_views->_c ?> </span>|<span class="_tt" data-toggle="tooltip" title="<?php print $count_media->_c ?> Items in Playlist"> <i class="icon-th-list"></i> <?php print $count_media->_c ?></span></p>
-			<a href="<?php print $url ?>"><h3><?php print $row->name ?></h3></a>
-			<p class="description"><?php print $row->description ?></p>
+			<a href="<?php print $url ?>"><h3><?php print(htmlentities($row->name)); ?></h3></a>
+			<p class="description"><?php print(htmlentities($row->description)); ?></p>
 		</div></li>
 		<?php
 	}
