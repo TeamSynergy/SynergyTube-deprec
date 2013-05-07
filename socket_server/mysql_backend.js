@@ -326,7 +326,6 @@ exports.channel.playlist.findCurrent = function(channel_id, fn){
           else
             if(rows.length > 0){
               rows[0].skip={votes:skipCountRow[0]._c,multiplier:skipMultiRow[0]._m};
-              console.log(rows[0]);
               return fn(rows[0]);
             }else
               return fn(null);
