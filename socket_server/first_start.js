@@ -1,10 +1,10 @@
 var fs = require('fs');
-if(!fs.existsSync('../config.json')){
+if(!fs.existsSync('./config.json')){
 	var get = function(statement, callback){process.stdout.write(statement);process.stdin.once('data', function(data){callback(data.toString().trim());});};
 	var created_conf = {};
 	console.log("This seems to be the first time you're using this SynergyTube-Server, in order to let this work the right way I have some questions to you.");
 	console.log(" - Which Backend do you want to use:");
-	var files = fs.readdirSync('./');
+	var files = fs.readdirSync('./backend/');
 	var b = [];
 	var x = 0;
 	for(var i=0; i<files.length;i++){
@@ -17,7 +17,7 @@ if(!fs.existsSync('../config.json')){
 	get("\r\nSelect Backend: ", function(backend_choice){
 		created_conf.backend = b[backend_choice - 1].replace("_backend.js","");
 		console.log("\r\nenter backend-specific informations: ");
-		var be = require("./" + b[backend_choice - 1]);
+		var be = require("./backend/" + b[backend_choice - 1]);
 		be.getInformation(function(db_info){
 			be.connect(db_info);
 			be.createStructure(db_info, function(errs){
