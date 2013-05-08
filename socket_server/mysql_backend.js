@@ -282,16 +282,19 @@ exports.channel.chat.getLatest = function(channel_id, count, fn){
 };
 
 exports.channel.chat.getMore = function(channel_id, count, max_messages, last_stamp, fn){
-	sql.query("SELECT COUNT(*) AS '_c' FROM tblMessages WHERE channel_id = " + sql.escape(channel_id) + " AND timestamp > " + sql.escape(last_stamp), function(err, stamps){
+	sql.query("SELECT COUNT(*) AS '_c' FROM tblMessages WHERE channel_id = " + sql.escape(channel_id) + " AND timestamp >= " + sql.escape(last_stamp), function(err, stamps){
+		console.log("user_message_display_count: " + stamps[0]._c);
 		if(err){
 			exports.onQueryError(err);
 		} else if(stamps[0]._c  < max_messages){
 			var get_count = 0;
 			
-			if(stamps[0]._c - max_messages < count)
-				get_count = stamps[0]._c - max_messages;
-			else
+			if(stamps[0]._c + count < max_messages)
 				get_count = count;
+			else
+				get_count = max_messages - stamps[0]._c;
+			
+			console.log("has: " + stamps[0]._c + "/max: " + max_messages + "/return: " + get_count + " messages");
 			
 			sql.query("SELECT timestamp, content, display_name FROM tblMessages INNER JOIN tblUser ON tblUser._id = tblMessages.user_id WHERE channel_id = " + sql.escape(channel_id) + " AND timestamp < " + sql.escape(last_stamp) + " ORDER BY timestamp DESC LIMIT 0, " + sql.escape(get_count), function(err, rows){
 				if(err)
