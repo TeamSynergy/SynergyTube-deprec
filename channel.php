@@ -392,7 +392,7 @@
               <ul class="unstyled" on-scroll="load_messages()">
                 <li ng-repeat="message in chat | orderBy:'timestamp'">
                   <div class="chat-content">
-                    <div class='chat-header' ng-hide='message.display_name == chat[$index-1].display_name'>
+                    <div class='chat-header' ng-hide='message.display_name == chat[chat.length - $index].display_name'>
                       <strong>{{message.display_name}}</strong>
                       <hr/>
                     </div>

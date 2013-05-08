@@ -1,7 +1,7 @@
 var states = ["Waiting for Server...", "Crunching Data...", "Waiting for YouTube...", "There you go!"];
-var loading_error = false;
+var loading_lock = false;
 var change_state = function(new_state){
-  if(!loading_error){
+  if(!loading_lock){
     current_state = new_state;
     window.document.title="SynergyTube | " + states[current_state];
     $('.txt-status').fadeOut(100,function(){
@@ -22,7 +22,7 @@ var change_state = function(new_state){
       $('body').css('overflow','auto');
       window.document.title="SynergyTube | " + channel_title;
       $('.channel-chat-inner > ul').animate({ scrollTop: $('.channel-chat-inner > ul')[0].scrollHeight},800);
-      loading_error=true;
+      loading_lock = true;
     }
   }
 }
@@ -32,7 +32,7 @@ var change_error = function(error_msg){
   $('.txt-status').stop().hide();
   $('.upper-hr').hide();
   $('.progress').hide();
-  loading_error=true;
+  loading_lock = true;
 };
 var current_state = 0;
 var app = angular.module('channel', []);
@@ -75,7 +75,7 @@ function channel_controller($scope){
 	$scope.chat = [];
 	$scope.online = [];
 	$scope.alert_stack = [];
-  $scope.show_cp = false;
+	$scope.show_cp = false;
 	$scope.skip = { voted: false, votes: 0, goal: 1 };
 	$scope.add_item = { valid: false };
 	$scope.login_name = "";
@@ -90,29 +90,32 @@ function channel_controller($scope){
 	$scope.removed = false;
 	
 	socket.on('channel.init', function(data){
-    change_state(2);
+		change_state(2);
     
-    $scope.channel_id = channel_id;
+		$scope.channel_id = channel_id;
 		$scope.playlist = data.playlist;
-    $scope.playlist_center_current();
+		
 		$scope.chat = data.last_chat;
 		$scope.online = data.users_online;
 		$scope.guests = data.guest_online;
 		$scope.favs = data.favs;
 		$scope.views = data.views;
+		
 		if(data.now_playing){
 			$scope.active_item = data.now_playing._id;
 			$scope.start_time = data.now_playing.start_time;
-      $scope.skip.votes = data.now_playing.skip.votes;
-      $scope.skip.goal = data.now_playing.skip.goal;
-      $scope.skip.voted = data.now_playing.skip.already_skipped;//not there yet
+			$scope.skip.votes = data.now_playing.skip.votes;
+			$scope.skip.goal = data.now_playing.skip.goal;
+			$scope.skip.voted = data.now_playing.skip.already_skipped; //not there yet
 		} else {
 			// Throw something like: "You have to add at least one item";
 		}
+		
 		$scope.logged_in = data.logged_in;
 		$scope.already_faved = data.already_faved;
+		
 		if(data.logged_in){
-      console.log(data.user_data);
+			console.log(data.user_data);
 			$scope.is_admin = data.user_data.is_admin;
 			$scope.login_name = data.user_data.login_name;
 			$scope.display_name = data.user_data.display_name;
@@ -135,14 +138,15 @@ function channel_controller($scope){
 				clearInterval(intv);
 			}
 		}, 1000);
+		
 		$scope.$apply();
-    if(typeof $('.channel-chat > ul')[0].scrollHeight !="undefined")
-      $('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
+		
+		if(typeof $('.channel-chat > ul')[0] !== "undefined")
+			$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
 	});
 	socket.on('playlist.append_item', function(data){
 		$scope.playlist.push(data.content);
 		$scope.$apply();
-    	$scope.playlist_center_current();
 	});
 	socket.on('playlist.play_item', function(data){
 		var start_seconds = (new Date().getTime() - new Date(data.content.start_time).getTime()) / 1000;
@@ -156,7 +160,6 @@ function channel_controller($scope){
 		player.loadVideoById(item.url, start_seconds);
 		$scope.active_item = item._id;
 		$scope.$apply();
-    	$scope.playlist_center_current();
 	});
 	socket.on('playlist.remove_item', function(data){
 		for (var i = 0; i < $scope.playlist.length; i++) {
@@ -170,9 +173,8 @@ function channel_controller($scope){
 			$scope.playlist[i].position = i + 1;
 		}
 		$scope.$apply();
-    	$scope.playlist_center_current();
 	});
-	socket.on('playlist.reorder', function(data){
+	socket.on('playlist.realign', function(data){
 		// may we get this a little more efficient?
 		for (var x = 0; x < $scope.playlist.length; x++) {
 			for (var y = 0; y < data.content.length; y++) {
@@ -181,13 +183,13 @@ function channel_controller($scope){
 			};
 		};
 		$scope.$apply();
-    	$scope.playlist_center_current();
 	});
 	socket.on('skip.vote', function(data){
-    $scope.skip=data.content;
+		$scope.skip=data.content;
 		$scope.$apply();
-    if($scope.skip.votes==$scope.skip.goal) animate_bg($('#skips i.icon-eject'), 0, 20);//we should make the coming skip obvious
-  });
+		if($scope.skip.votes === $scope.skip.goal)
+			animate_bg($('#skips i.icon-eject'), 0, 20); //we should make the coming skip obvious
+	});
 	socket.on('chat.incoming', function(data){
 		$scope.chat.push(data.content);
 		$scope.$apply();
@@ -196,7 +198,7 @@ function channel_controller($scope){
 	socket.on('chat.load_more', function(data){
 		$scope.chat = $scope.chat.concat(data);
 		$scope.$apply();
-		$('.channel-chat > ul').scrollTop($scope.scroll_to_item.offset().top - $('.channel-chat > ul').offset().top + $('.channel-chat > ul').scrollTop());
+		$('.channel-chat-inner > ul').scrollTop($scope.scroll_to_item.offset().top - $('.channel-chat-inner > ul').offset().top + $('.channel-chat-inner > ul').scrollTop());
 		if(data.length !== 0){
 			$scope.scroll_load_blocked = false;
 		}
@@ -359,7 +361,6 @@ function channel_controller($scope){
 		$scope.$apply();
 		player.loadVideoById(next_item.url);
 		socket.emit('playlist.item_changed', { caption: next_item.caption });
-    $scope.playlist_center_current();
 	};
 	$scope.play_item = function(item_id){
 		var item;
@@ -367,10 +368,7 @@ function channel_controller($scope){
 			if($scope.playlist[i]._id === item_id)
 				item = $scope.playlist[i];
 		};
-		player.loadVideoById(item.url);
-		$scope.active_item = item._id;
 		socket.emit('playlist.play_item', { _id: item_id, start_time: new Date() });
-    $scope.playlist_center_current();
 	};
 	$scope.add_new_item = function(){
 		socket.emit('playlist.append_item', { url:$scope.add_item.url, duration:$scope.add_item.duration, caption:$scope.add_item.caption, media_type: $scope.add_item.media_type});
@@ -408,13 +406,13 @@ function channel_controller($scope){
 				$('#addTextbox').focus();
 		}, 100);
 	};
-  $scope.playlist_center_current = function(){
-    setTimeout(function(){//This timeout is just because otherwise jQuery would be lookign for .playc before angular had updated it and thusly the scroll would be a step behind.
-      $('.playlist > .playlist-table').animate({ scrollTop: //Get out the geometry textbook faggot
-        $('.playlist-table > tbody').height()*($('.playlist-table > tbody tr').index($('.playc'))/$('.playlist-table > tbody tr').length)-($('.playlist-table').height()/2)+($('.playc').height()/1.5)
-      },400);
-    },0);
-  }
+	$scope.playlist_center_current = function(){
+		setTimeout(function(){//This timeout is just because otherwise jQuery would be lookign for .playc before angular had updated it and thusly the scroll would be a step behind.
+			$('.playlist > .playlist-table').animate({ scrollTop: //Get out the geometry textbook faggot
+				$('.playlist-table > tbody').height()*($('.playlist-table > tbody tr').index($('.playc'))/$('.playlist-table > tbody tr').length)-($('.playlist-table').height()/2)+($('.playc').height()/1.5)
+			},400);
+		},0);
+	}
 
 	$scope.itemUrlCallback = function(){
 		var youtube_reg = $('#addTextbox').val().match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/);
@@ -453,7 +451,7 @@ function channel_controller($scope){
 	};
 	$scope.load_messages = function(){
 		if(!$scope.scroll_load_blocked){
-			$scope.scroll_to_item = $('.channel-chat > ul > li:first-child');
+			$scope.scroll_to_item = $('.channel-chat-inner > ul > li:first-child');
 			$('.channel-chat > ul').prepend('<li class="loading-more"><h3>Loading more..</h3></li>');
 			$scope.scroll_load_blocked = true;
 			socket.emit('chat.load_more', { append_at: $scope.chat[$scope.chat.length - 1].timestamp });
@@ -463,9 +461,12 @@ function channel_controller($scope){
 	$scope.$watch("playlist", function(value){
 		if($scope.reordered || $scope.removed){
 			var r = value.map(function(e){ return { _id: e._id, position: e.position }; });
-			socket.emit('playlist.reorder', r);
+			socket.emit('playlist.realign', r);
 		}
 	}, true);
+	$scope.$watch("active_item", function(){
+		$scope.playlist_center_current();
+	});
 }
 
 app.directive('dndList', function(){
