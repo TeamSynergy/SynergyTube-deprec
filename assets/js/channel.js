@@ -103,9 +103,9 @@ function channel_controller($scope){
 		if(data.now_playing){
 			$scope.active_item = data.now_playing._id;
 			$scope.start_time = data.now_playing.start_time;
-      		$scope.skip.votes = data.now_playing.skip.votes;
-      		$scope.skip.goal = data.now_playing.skip.goal;
-      		$scope.skip.voted = data.now_playing.skip.already_skipped;//not there yet
+      $scope.skip.votes = data.now_playing.skip.votes;
+      $scope.skip.goal = data.now_playing.skip.goal;
+      $scope.skip.voted = data.now_playing.skip.already_skipped;//not there yet
 		} else {
 			// Throw something like: "You have to add at least one item";
 		}
@@ -136,8 +136,8 @@ function channel_controller($scope){
 			}
 		}, 1000);
 		$scope.$apply();
-		// $('.playlist-table').lionbars();
-		$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
+    if(typeof $('.channel-chat > ul')[0].scrollHeight !="undefined")
+      $('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
 	});
 	socket.on('playlist.append_item', function(data){
 		$scope.playlist.push(data.content);
