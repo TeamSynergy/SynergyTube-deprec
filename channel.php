@@ -330,9 +330,7 @@
           <div id="replace-player">
             <p><h1>An Error happened</h1>
             You need Flash player 8+ and JavaScript enabled to use SynergyTube.</p>
-          </div>
-
-					<div class="playlist">
+          </div><div class="playlist">
 						<div class="info-bar-channel" style='text-align: center;'>
 							<div class="pull-left">
 								<span class="_tt" data-toggle="tooltip" title="Favourites">
@@ -387,9 +385,7 @@
 							</tbody>
 						</table>
 					</div>
-				</div>
-
-        <div class="sp2">
+				</div><div class="sp2">
           <div class="channel-chat">
             <h4>Chat:</h4>
             <div class='channel-chat-inner'>
@@ -409,8 +405,7 @@
                 <input type="text" ng-model="message" placeholder="Chat" class="input-block-level">
               </form>
             </div>
-          </div>
-          <div class="channel-user">
+          </div><div class="channel-user">
             <h4>Who's Here?</h4>
             <ul class="unstyled user-list">
               <li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">

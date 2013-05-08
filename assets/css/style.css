@@ -1,13 +1,24 @@
+
+
+* { box-sizing: border-box }/*this is my god*/
+/* === Global Styles === */
+
 html,body {
   height:100%;
   background-image:url(../img/groovepaper.png);
 }
-.content-wrap {min-height:100%;height:auto !important;height:100%;margin: 0 auto;}
-.footer-container {padding-top:20px;}
-.footer {height:59px;background-color:#444;}
-
-* { box-sizing: border-box }/*this is my god*/
-/* === Global === */
+.content-wrap {
+  min-height:100%;
+  height:auto !important;
+  height:100%;
+  margin: 0 auto;
+}
+.footer-container {
+  padding-top:20px;
+}
+.footer {
+  height:59px;background-color:#444;
+}
 .navbar {
 	opacity: 0;
 	z-index: 501;
@@ -22,6 +33,36 @@ html,body {
 
 .navbar-inner{
 	border-radius: 0!important;
+}
+
+/* === Dropdowns === */
+.login-dropdown {
+	padding:15px;
+	padding-bottom:0;
+}
+
+.favourite-list>li {
+	overflow: hidden;
+}
+.favourite-list>li>a {
+	white-space:normal;
+}
+.favourite-list>li>a>h5 {
+	text-overflow: clip;
+	white-space: nowrap;
+}
+.favourite-list>li i.nowplaying {
+	display: none;
+}
+.favourite-list>li.current i.nowplaying {
+	display: inline-block;
+}
+.favourite-list>li>a>p {
+	overflow: hidden;
+	max-height: 90px;
+	max-width: 420px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 /* === Channel-Previews === */
@@ -83,8 +124,6 @@ html,body {
 .info-bar-channel{
 	background-color: #ededed;
 	text-align:center;
-	padding-top: 3px;
-	font-size: 16px;
 }
 .preview h3 {
 	background-color:#f6f6f6;
@@ -99,6 +138,9 @@ html,body {
 }
 ._tt:hover{
 	background-color:#BBB;
+}
+a._tt, ._tt a {
+  text-decoration: inherit;
 }
 a [class^="icon-"]{
 	color: #333;
@@ -123,36 +165,6 @@ a [class^="icon-"]{
 .preview .description {
 	margin:0 5px;
 	color:#666;
-}
-
-/* === Dropdowns === */
-.login-dropdown {
-	padding:15px;
-	padding-bottom:0;
-}
-
-.favourite-list>li {
-	overflow: hidden;
-}
-.favourite-list>li>a {
-	white-space:normal;
-}
-.favourite-list>li>a>h5 {
-	text-overflow: clip;
-	white-space: nowrap;
-}
-.favourite-list>li i.nowplaying {
-	display: none;
-}
-.favourite-list>li.current i.nowplaying {
-	display: inline-block;
-}
-.favourite-list>li>a>p {
-	overflow: hidden;
-	max-height: 90px;
-	max-width: 420px;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
 
 
@@ -239,18 +251,15 @@ letter-spacing: -2px;
 
 
 /* === Channel-Objects === */
-.channel-second{
-	overflow:hidden;
-	width:100%;
-	height:600px;
-}
 .sp2{
-	width:50%;
-	float:left;
-	height:100%;
+	display: inline-block;
+	width: 50%;
+	height: 100%;
+  vertical-align: top;
 }
 .channel-chat{
-	float:left;
+  vertical-align: top;
+	display: inline-block;
 	width:75%;
 	position: relative;
 	height:600px;
@@ -292,7 +301,7 @@ letter-spacing: -2px;
 	border-bottom: 1px solid #ddd;
 }
 .channel-user{
-	float:left;
+	display: inline-block;
 	width:25%;
 }
 .user-list li:first-child > hr{
@@ -322,18 +331,16 @@ h3{margin:0}
 }
 
 .youtube-player > object{
-	width:100%;
-	height:380px;
-	margin:0;
-	padding:0;
-	margin-bottom:-5px;
+	width: 100%;
+	height: 380px;
+	margin: 0;
+	padding: 0;
+  display: block;
 }
 
 .youtube-player > #replace-player {
-	height: 380px;
+	height: 360px;
 	background:#ccc;
-	padding-top:12px;
-	padding-left:12px;
 	color: #222;
 }
 .youtube-player > #replace-player * {
@@ -348,6 +355,10 @@ h3{margin:0}
 	overflow: auto;
 	display:block;
 	height:100%;
+}
+.playlist > .playlist-table tbody{
+	display:block;
+  position:relative;
 }
 .form-append .controls {
 	margin-left:70px;
