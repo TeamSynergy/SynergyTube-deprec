@@ -16,7 +16,7 @@ function emitUserData(socket) {
 	backend.channel.findByChannelID(socket.channel_id, function(current_channel){
 	backend.channel.playlist.getAll(socket.channel_id, function(playlist){
 	backend.channel.playlist.findCurrent(socket.channel_id, function(current_item){
-	backend.channel.chat.getLatest(socket.channel_id, 15, function(messages){
+	backend.channel.chat.getLatest(socket.channel_id, 30, function(messages){
 	backend.channel.getUniqueVisits(socket.channel_id, function(views){
 	backend.channel.getFavourites(socket.channel_id, function(favourites){
 	socket.user_id = current_user._id;
@@ -73,7 +73,7 @@ function emitGuestData(socket){
 	backend.channel.findByChannelID(socket.channel_id, function(current_channel){
 	backend.channel.playlist.getAll(socket.channel_id, function(playlist){
 	backend.channel.playlist.findCurrent(socket.channel_id, function(current_item){
-	backend.channel.chat.getLatest(socket.channel_id, 15, function(messages){
+	backend.channel.chat.getLatest(socket.channel_id, 30, function(messages){
 	backend.channel.getUniqueVisits(socket.channel_id, function(views){
 	backend.channel.getFavourites(socket.channel_id, function(favourites){
 		var online_user = init_online(socket.channel_id);
@@ -138,7 +138,8 @@ io.sockets.on('connection', function (socket) {
 			socket.broadcast.to(socket.channel_id).emit('channel.user_leave', { _id: socket.user_id });
 	});
 	socket.on('channel.faved', function(){
-		if(socket.logged_in)
+		if(socket.logged_in){
+			console.log(socket.login_name + " toggled fav. fav this = true, unfav this = false: " + !socket.already_faved);
 			if(!socket.already_faved)
 				backend.user.favChannel(socket.user_id, socket.channel_id, function(){
 					io.sockets.in(socket.channel_id).emit('channel.faved', { login_name: socket.login_name });
@@ -149,6 +150,7 @@ io.sockets.on('connection', function (socket) {
 					io.sockets.in(socket.channel_id).emit('channel.unfaved', { login_name: socket.login_name });
 					socket.already_faved = false;
 				});
+			}
 	});
 	
 	/* --User Related--*/
@@ -232,9 +234,9 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 	socket.on('chat.load_more', function(data){
-		backend.channel.chat.getMore(socket.channel_id, 15, 20, new Date(data.append_at), function(message_data){
+		console.log("chat.load_more from " + socket.login_name);
+		backend.channel.chat.getMore(socket.channel_id, 15, 80, new Date(data.append_at), function(message_data){
 			socket.emit('chat.load_more', message_data);
-			console.log("sent 15 messages more...");
 		});
 	});
 	
@@ -283,19 +285,20 @@ io.sockets.on('connection', function (socket) {
 			});
 	});
 	
-	socket.on('playlist.reorder', function(data){
+	socket.on('playlist.realign', function(data){
 		if(socket.is_admin){
 			console.log("align items to their position");
 			for(var i = 0; i < data.length; i++)
 				backend.channel.playlist.setItemPositionByID(data[i]._id, data[i].position);
-			socket.broadcast.to(socket.channel_id).emit('playlist.reorder', { status: 0, content: data});
+			socket.broadcast.to(socket.channel_id).emit('playlist.realign', { status: 0, content: data});
 		}
 	});
 	
 	socket.on('playlist.play_item', function(data){
 		if(socket.is_admin)
 			backend.channel.playlist.playItem(data._id, function(){
-				socket.broadcast.to(socket.channel_id).emit('playlist.play_item', { status: 0, content: data });
+				console.log("force-play-item: " + data._id);
+				io.sockets.in(socket.channel_id).emit('playlist.play_item', { status: 0, content: data });
 			});
 	});
 	socket.on('playlist.remove_item', function(data){
