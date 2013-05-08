@@ -1,5 +1,5 @@
 var fs = require('fs');
-if(!fs.existsSync('./config.json')){
+if(!fs.existsSync('../config.json')){
 	var get = function(statement, callback){process.stdout.write(statement);process.stdin.once('data', function(data){callback(data.toString().trim());});};
 	var created_conf = {};
 	console.log("This seems to be the first time you're using this SynergyTube-Server, in order to let this work the right way I have some questions to you.");
