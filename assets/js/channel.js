@@ -115,7 +115,6 @@ function channel_controller($scope){
 		$scope.already_faved = data.already_faved;
 		
 		if(data.logged_in){
-			console.log(data.user_data);
 			$scope.is_admin = data.user_data.is_admin;
 			$scope.login_name = data.user_data.login_name;
 			$scope.display_name = data.user_data.display_name;
