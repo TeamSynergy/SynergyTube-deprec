@@ -86,7 +86,7 @@
                 <li><a href="" ng-click="logout()"><i class="icon-off"></i> Log Out</a></li>
               </ul>
             </li>
-            <li><a href="" ng-click='toggle_cp()'><i class="" ng-class='{"icon-remove": show_cp == true, "icon-wrench": show_cp == false}'></i></a></li>
+            <li ng-show='logged_in'><a href="" ng-click='toggle_cp()'><i class="" ng-class='{"icon-remove": show_cp == true, "icon-wrench": show_cp == false}'></i></a></li>
           </ul>
         </div>
       </div>
