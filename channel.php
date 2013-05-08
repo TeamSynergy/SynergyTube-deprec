@@ -61,6 +61,7 @@
                 <i class="icon-star"></i> Favourites<b class="caret"></b>
               </a>
               <ul class="dropdown-menu favourite-list" role="menu">
+                <li ng-show="favourites.length == 0"><p>You haven't faved any Channels yet. To Fav a Channel click on the empty star in the control-bar under the media-container.</p></li>
                 <li ng-repeat="item in favourites" ng-class="{current: item.channel_id == channel_id}">
                   <!--  Add fav/refav button.
                     <i class="icon-star" style='float:left;'></i>
