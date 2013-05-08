@@ -1,4 +1,4 @@
-<?php require("require/channel_init.php"); ?>
+﻿<?php require("require/channel_init.php"); ?>
 
 <!DOCTYPE html>
 <html ng-app="channel" ng-controller="channel_controller">
@@ -19,78 +19,79 @@
 </head>
 <body style="overflow:hidden;">
 
-	<div class="navbar">
-		<div class="navbar-inner">
-			<div class="container">
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a>
-				<a class="brand" href="<?php echo $sgtube_root; ?>">SynergyTube</a>
-				<div class="nav-collapse collapse">
-					<ul class="nav">
-						<li><a href="<?php echo $sgtube_root; ?>/categories">Categories</a></li>
-					</ul>
-					<ul class="nav pull-right">
-						<li class="dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
-							<div class="dropdown-menu login-dropdown">
-								<form ng-submit="login()">
-									<input type="text" placeholder="Username or Email" name="username" ng-model="txtlogin_name" required>
-									<input type="password" placeholder="Password" name="password" ng-model="password" required>
-									<input class="btn btn-primary btn-block" type="submit" value="Login">
-									<p class="text-center">or</p>
-									<a href="" class="btn btn-block">Login with Facebook</a>
-									<a href="" class="btn btn-block">Login with Twitter</a>
-									<a href="" class="btn btn-block">Login with Google</a>
-								</form>
-							</div>
-						</li>
-						<li class="dropdown create-an-account-dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Create an Account<b class="caret"></b></a>
-							<div class="dropdown-menu login-dropdown">
-								<form ng-submit="create_account()">
-									<input type="text" placeholder="Username" name="username" ng-model="create_login_name" required>
-									<input type="email" placeholder="Email" name="email" ng-model="email" required>
-									<input type="password" placeholder="Password" name="password" ng-model="create_password" required>
-									<input class="btn btn-primary btn-block" type="submit" value="Create Account">
-								</form>
-							</div>
-						</li>
-						<li class="dropdown" ng-show="logged_in">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<i class="icon-star"></i> Favourites<b class="caret"></b>
-							</a>
-							<ul class="dropdown-menu favourite-list" role="menu">
-								<li ng-repeat="item in favourites" ng-class="{current: item.channel_id == channel_id}">
-									<!--	Add fav/refav button.
-										<i class="icon-star" style='float:left;'></i>
-									-->
-									<a href="<?php echo $channelpage_url; ?>{{item.custom_url}}">
-										<h5>
-											<i class="icon-play nowplaying"></i>
-											{{item.name}}
-										</h5>
-										<p>
-											{{item.description}}
-										</p>
-									</a>
-								</li>
-							</ul>
-						</li>
-						<li class="dropdown" ng-show="logged_in">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{display_name}}<b class="caret"></b></a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a href="<?php echo $sgtube_root; ?>/profile"><i class="icon-user"></i> Profile</a></li>
-								<li><a href="<?php echo $sgtube_root; ?>/create_channel"><i class="icon-plus-sign"></i> Create Channel</a></li>
-								<li class="divider"></li>
-								<li><a href="" ng-click="logout()"><i class="icon-off"></i> Log Out</a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <a class="brand" href="<?php echo $sgtube_root; ?>">SynergyTube</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li><a href="<?php echo $sgtube_root; ?>/categories">Categories</a></li>
+          </ul>
+          <ul class="nav pull-right">
+            <li class="dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Login<b class="caret"></b></a>
+              <div class="dropdown-menu login-dropdown">
+                <form ng-submit="login()">
+                  <input type="text" placeholder="Username or Email" name="username" ng-model="txtlogin_name" required>
+                  <input type="password" placeholder="Password" name="password" ng-model="password" required>
+                  <input class="btn btn-primary btn-block" type="submit" value="Login">
+                  <p class="text-center">or</p>
+                  <a href="" class="btn btn-block">Login with Facebook</a>
+                  <a href="" class="btn btn-block">Login with Twitter</a>
+                  <a href="" class="btn btn-block">Login with Google</a>
+                </form>
+              </div>
+            </li>
+            <li class="dropdown create-an-account-dropdown" ng-show="!logged_in"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Create an Account<b class="caret"></b></a>
+              <div class="dropdown-menu login-dropdown">
+                <form ng-submit="create_account()">
+                  <input type="text" placeholder="Username" name="username" ng-model="create_login_name" required>
+                  <input type="email" placeholder="Email" name="email" ng-model="email" required>
+                  <input type="password" placeholder="Password" name="password" ng-model="create_password" required>
+                  <input class="btn btn-primary btn-block" type="submit" value="Create Account">
+                </form>
+              </div>
+            </li>
+            <li class="dropdown" ng-show="logged_in">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-star"></i> Favourites<b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu favourite-list" role="menu">
+                <li ng-repeat="item in favourites" ng-class="{current: item.channel_id == channel_id}">
+                  <!--  Add fav/refav button.
+                    <i class="icon-star" style='float:left;'></i>
+                  -->
+                  <a href="<?php echo $channelpage_url; ?>{{item.custom_url}}">
+                    <h5>
+                      <i class="icon-play nowplaying"></i>
+                      {{item.name}}
+                    </h5>
+                    <p>
+                      {{item.description}}
+                    </p>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="dropdown" ng-show="logged_in">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{display_name}}<b class="caret"></b></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="<?php echo $sgtube_root; ?>/profile"><i class="icon-user"></i> Profile</a></li>
+                <li><a href="<?php echo $sgtube_root; ?>/create_channel"><i class="icon-plus-sign"></i> Create Channel</a></li>
+                <li class="divider"></li>
+                <li><a href="" ng-click="logout()"><i class="icon-off"></i> Log Out</a></li>
+              </ul>
+            </li>
+            <li><a href="" ng-click='toggle_cp()'><i class="" ng-class='{"icon-remove": show_cp == true, "icon-wrench": show_cp == false}'><b class="caret" ng-show='!show_cp'></b></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 	<div class="wrap-the-load">
@@ -111,28 +112,225 @@
 		</div>
 	</div>
 
-	<div class="content-wrap">
-		<div class="channel-cover">
-			<div class="channel-cover-text">
-				<div class="container">
-					<h1><?php print($channel_title);?></h1>
-					<p><?php	print($channel_description); ?></p>
-				</div>
-			</div>
-		</div>
-		<div class="container content">
-			<div class="alert-stack">
-				<div ng-repeat="alert in alert_stack" class="alert alert-info" style="margin:0">
-					<a href="" class="close" ng-click="dismiss_alert(alert)">&times;</a>
-					<strong ng-show="alert.strong">{{alert.strong}}:</strong> {{alert.text}}
-				</div>
-			</div>
-			<div class="channel-second">
-				<div class="sp2 youtube-player">
-					<div id="replace-player">
-						<p><h1>An Error happened</h1>
-						You need Flash player 8+ and JavaScript enabled to use SynergyTube.</p>
-					</div>
+  <div class="content-wrap">
+    <div class="channel-cover">
+      <div class='channel-cover-cp'>
+        <div class="container">
+        <div class="tabbable tabs-left">
+          <ul class="nav nav-tabs">
+            <li class='active'><a href="#tab1" data-toggle="tab">Profile</a></li>
+            <li><a href="#tab2" data-toggle="tab">Viewing</a></li>
+            <li><a href="#tab3" data-toggle="tab">Browsing</a></li>
+            <li><a href="#tab3" data-toggle="tab" ng-show='logged_in'>And add tabs</a></li>
+            <li><a href="#tab3" data-toggle="tab" ng-show='owns_channel||is_admin'>According to </a></li>
+            <li><a href="#tab3" data-toggle="tab" ng-show='is_admin'>permissions</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active fade in" id="tab1">
+              <a href="" ng-click='toggle_cp()' style='float:right; margin-right:24px;'><i ng-class='{"icon-remove": show_cp == true}'></i></a>
+              <form class="form-horizontal">
+                <fieldset>
+                  <legend>Profile Settings</legend>
+                  <div class="control-group">
+                    <label class="control-label" for="inputDP">Display Name</label>
+                    <div class="controls">
+                      <p>Current display name: <b>{{display_name}}</b></p>
+                      <input type="text" id="inputDP" placeholder="New display name?"/>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="inputGravatar">Gravatar</label>
+                    <div class="controls">
+                      <img ng-src="//secure.gravatar.com/avatar/{{email_hash}}?d=mm&s=128"/>
+                      <img ng-src="//secure.gravatar.com/avatar/{{email_hash}}?d=mm&s=78"/>
+                      <img ng-src="//secure.gravatar.com/avatar/{{email_hash}}?d=mm&s=28"/>
+                      <label class="checkbox">
+                        <input type="checkbox"> disable gravatar?
+                      </label>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="inputEmail">Email</label>
+                    <div class="controls">
+                      <p>Current Email: <b>{{email}}</b></p>
+                      <input type="text" id="inputEmail" placeholder="New email?"/>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="inputNewPassword">Password</label>
+                    <div class="controls">
+                      <input type="password" id="inputNewPassword" placeholder="New password once"/><br/>
+                      <input type="password" id="inputNewPassword2" placeholder="New password twice"/>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="controls">
+                      <input type="password" id="inputPassword" placeholder="Current password"/><br/>
+                      <button type="submit" class="btn">Update</button>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
+            <div class="tab-pane fade" id="tab2">
+              <form class="form-horizontal">
+                <fieldset>
+                  <legend>Of course it's a bad idea to even populate these tabs if the user doesn't have the permissions.</legend>
+                  <div class="control-group">
+                    <label class="control-label" for="inputEmail">Email</label>
+                    <div class="controls">
+                      <input type="text" id="inputEmail" placeholder="Email">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="inputPassword">Password</label>
+                    <div class="controls">
+                      <input type="password" id="inputPassword" placeholder="Password">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
+                        <input type="checkbox"> über awesome mega party client mode
+                      </label>
+                      <button type="submit" class="btn">Update</button>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
+            <div class="tab-pane fade" id="tab3">
+              <form class="form-horizontal">
+                <fieldset>
+                  <legend>So maybe we shouldn't even send them the contents if they don't?</legend>
+                  <div class="control-group">
+                    <label class="control-label" for="inputEmail">Email</label>
+                    <div class="controls">
+                      <input type="text" id="inputEmail" placeholder="Email">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="inputPassword">Password</label>
+                    <div class="controls">
+                      <input type="password" id="inputPassword" placeholder="Password">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
+                        <input type="checkbox"> Remember me
+                      </label>
+                      <button type="submit" class="btn">Update</button>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>							
+            <div class="tab-pane fade" id="tab4">
+              <form class="form-horizontal">
+                <fieldset>
+                  <legend>Maybe populate the "privileged" tabs html in php</legend>
+                  <div class="control-group">
+                    <label class="control-label" for="inputEmail">Email</label>
+                    <div class="controls">
+                      <input type="text" id="inputEmail" placeholder="Email">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="inputPassword">Password</label>
+                    <div class="controls">
+                      <input type="password" id="inputPassword" placeholder="Password">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
+                        <input type="checkbox"> Remember me
+                      </label>
+                      <button type="submit" class="btn">Update</button>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>							
+            <div class="tab-pane fade" id="tab5">
+              <form class="form-horizontal">
+                <fieldset>
+                  <legend>So maybe we shouldn't even send them the contents if they don't?</legend>
+                  <div class="control-group">
+                    <label class="control-label" for="inputEmail">Email</label>
+                    <div class="controls">
+                      <input type="text" id="inputEmail" placeholder="Email">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="inputPassword">Password</label>
+                    <div class="controls">
+                      <input type="password" id="inputPassword" placeholder="Password">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
+                        <input type="checkbox"> Remember me
+                      </label>
+                      <button type="submit" class="btn">Update</button>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>							
+            <div class="tab-pane fade" id="tab6">
+              <form class="form-horizontal">
+                <fieldset>
+                  <legend>So maybe we shouldn't even send them the contents if they don't?</legend>
+                  <div class="control-group">
+                    <label class="control-label" for="inputEmail">Email</label>
+                    <div class="controls">
+                      <input type="text" id="inputEmail" placeholder="Email">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <label class="control-label" for="inputPassword">Password</label>
+                    <div class="controls">
+                      <input type="password" id="inputPassword" placeholder="Password">
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="controls">
+                      <label class="checkbox">
+                        <input type="checkbox"> Remember me
+                      </label>
+                      <button type="submit" class="btn">Update</button>
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </div>							
+          </div>
+        </div>
+        </div>
+      </div>
+      <div class="channel-cover-text">
+        <div class="container">
+          <h1><?php print($channel_title);?></h1>
+          <p><?php  print($channel_description); ?></p>
+        </div>
+      </div>
+    </div>
+    <div class="container content">
+      <div class="alert-stack">
+        <div ng-repeat="alert in alert_stack" class="alert alert-info" style="margin:0">
+          <a href="" class="close" ng-click="dismiss_alert(alert)">&times;</a>
+          <strong ng-show="alert.strong">{{alert.strong}}:</strong> {{alert.text}}
+        </div>
+      </div>
+      <div class="channel-second">
+        <div class="sp2 youtube-player">
+          <div id="replace-player">
+            <p><h1>An Error happened</h1>
+            You need Flash player 8+ and JavaScript enabled to use SynergyTube.</p>
+          </div>
 
 					<div class="playlist">
 						<div class="info-bar-channel" style='text-align: center;'>
@@ -191,43 +389,47 @@
 					</div>
 				</div>
 
-				<div class="sp2">
-					<div class="channel-chat">
-						<h4>Chat:</h4>
-						<div class='channel-chat-inner'>
-							<ul class="unstyled" on-scroll="load_messages()">
-								<li ng-repeat="message in chat | orderBy:'timestamp'">
-									<div class="chat-content">
-										<div class='chat-header' ng-hide='message.display_name == chat[$index-1].display_name'>
-											<strong>{{message.display_name}}</strong>
-											<hr/>
-										</div>
-										<small class="muted" style='float:right;' data-toggle="tooltip" title="{{getDate(message.timestamp)}}">{{getTime(message.timestamp)}}</small>
-										<p parse-url="_blank">{{message.content}}</p>
-									</div>
-								</li>
-							</ul>
-							<form class="chat-submit" ng-submit="sendMessage()" ng-show="logged_in">
-								<input type="text" ng-model="message" placeholder="Chat" class="input-block-level">
-							</form>
-						</div>
-					</div>
-					<div class="channel-user">
-						<h4>Who's Here?</h4>
-						<ul class="unstyled user-list">
-							<li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">
-								<hr>
-								<div class="avatar"><img ng-src="//secure.gravatar.com/avatar/{{user.email}}?d=mm&amp;s=32"></div>
-								<p>{{user.display_name}}</p>
-							</li>
-							<!-- pluralization remains pluralization. tongue-breaker -->
-							<li><p ng-pluralize count="guests" when="{'0': 'No Guests', 'one': 'One Guest', 'other': '{} Guests'}"></p></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="sp2">
+          <div class="channel-chat">
+            <h4>Chat:</h4>
+            <div class='channel-chat-inner'>
+              <ul class="unstyled" on-scroll="load_messages()">
+                <li ng-repeat="message in chat | orderBy:'timestamp'">
+                  <div class="chat-content">
+                    <div class='chat-header' ng-hide='message.display_name == chat[$index-1].display_name'>
+                      <strong>{{message.display_name}}</strong>
+                      <hr/>
+                    </div>
+                    <small class="muted" style='float:right;' data-toggle="tooltip" title="{{getDate(message.timestamp)}}">{{getTime(message.timestamp)}}</small>
+                    <p parse-url="_blank">{{message.content}}</p>
+                  </div>
+                </li>
+              </ul>
+              <form class="chat-submit" ng-submit="sendMessage()" ng-show="logged_in">
+                <input type="text" ng-model="message" placeholder="Chat" class="input-block-level">
+              </form>
+            </div>
+          </div>
+          <div class="channel-user">
+            <h4>Who's Here?</h4>
+            <ul class="unstyled user-list">
+              <li ng-repeat="user in online | orderBy:'display_name'" ng-class="{elevated: user.is_admin}">
+                <hr>
+                <div class="avatar"><img ng-src="//secure.gravatar.com/avatar/{{user.email_hash}}?d=mm"></div>
+                <p>{{user.display_name}}</p>
+              </li>
+              <!-- less damned pluralization -->
+              <li><p ng-pluralize count="guests"
+     when="{'0': 'No guests are viewing.',
+                 'one': '1 guest is viewing.',
+                 'other': '{} people are viewing.'}"></p></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-pusher"></div>
+  </div>
 
 	<div class="footer">
 		<div class="container footer-container">

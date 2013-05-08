@@ -335,7 +335,7 @@ exports.channel.playlist.findCurrent = function(channel_id, fn){
 				return fn(null);
 			else {
 				//there might be a clever join way of doing this idk
-				sql.query("SELECT COUNT(*) as '_c' FROM relSkips WHERE media_id = " + sql.escape(rows[0]._id) + " AND channel_id = " + channel_id, function(err, skipCountRow){
+				sql.query("SELECT COUNT(*) as '_c' FROM relSkips WHERE media_id = " + sql.escape(rows[0]._id), function(err, skipCountRow){
 					if(err)
 						exports.onQueryError(err);
 					else

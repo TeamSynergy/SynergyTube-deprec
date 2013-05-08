@@ -10,7 +10,6 @@ io.setMaxListeners(0);
 io.set("log level", 2)
 backend.connect(configuration.database);
 
-
 function emitUserData(socket) {
 	backend.user.findByLoginName(socket.login_name, function(current_user){
 	backend.user.favourites(current_user._id, function(current_user_favourites){
@@ -31,7 +30,7 @@ function emitUserData(socket) {
 		socket.favourites = current_user_favourites;
 		socket.is_owner = isOwner;
 		socket.is_admin = isAdmin || isOwner;
-		var own_user = { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id, email: socket.email_hash, favourites: socket.favourites};
+		var own_user = { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id, email: socket.email, email_hash: socket.email_hash, favourites: socket.favourites};
 		var online_user = init_online(socket.channel_id);
 		if(!already_online(socket.channel_id, socket.login_name))
 			online_user.push(own_user);

@@ -75,6 +75,7 @@ function channel_controller($scope){
 	$scope.chat = [];
 	$scope.online = [];
 	$scope.alert_stack = [];
+  $scope.show_cp = false;
 	$scope.skip = { voted: false, votes: 0, goal: 1 };
 	$scope.add_item = { valid: false };
 	$scope.login_name = "";
@@ -110,10 +111,13 @@ function channel_controller($scope){
 		}
 		$scope.logged_in = data.logged_in;
 		$scope.already_faved = data.already_faved;
-		if($scope.logged_in){
+		if(data.logged_in){
+      console.log(data.user_data);
 			$scope.is_admin = data.user_data.is_admin;
 			$scope.login_name = data.user_data.login_name;
 			$scope.display_name = data.user_data.display_name;
+			$scope.email = data.user_data.email;
+			$scope.email_hash = data.user_data.email_hash;
 			$scope.favourites = data.user_data.favourites;
 		} else {
 			$scope.is_admin = false;
@@ -290,6 +294,17 @@ function channel_controller($scope){
 		$scope.message = '';
 	};
 
+	// Toggles the control panel
+	$scope.toggle_cp = function(){
+    if($scope.show_cp==false){
+      $scope.show_cp=true;
+      $('.channel-cover-cp').slideDown();
+    } else {
+      $scope.show_cp=false;
+      $('.channel-cover-cp').slideUp();
+    }
+	};
+  
 	$scope.dismiss_alert = function(alert){
 		$scope.alert_stack.splice($scope.alert_stack.indexOf(alert), 1);
 	};
@@ -548,4 +563,14 @@ function animate_bg(ele, from, to) {
     ele.css("background-color", "rgba(255, 127, 127, " + (from += from > to ? -1 : 1) / 10 + ")"); 
     if(from != to)  
         setTimeout(function() { animate_bg(ele, from, to) }, 20);
+}
+function equalHeight(group) {
+	var tallest = 0;
+	group.each(function() {
+		var thisHeight = $(this).height();
+		if(thisHeight > tallest) {
+			tallest = thisHeight;
+		}
+	});
+	group.height(tallest);
 }
