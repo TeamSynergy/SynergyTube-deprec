@@ -253,7 +253,7 @@ letter-spacing: -2px;
 	float:left;
 	width:75%;
 	position: relative;
-	height:410px;
+	height:600px;
 }
 .channel-chat .channel-chat-inner {
 	position: absolute;
@@ -261,9 +261,10 @@ letter-spacing: -2px;
 	width: 100%;
 }
 
+
 .channel-chat ul{
 	overflow:auto;
-	max-height:320px;
+	max-height:520px;
 }
 .channel-chat li{
 	padding: 1px 3px;
@@ -282,7 +283,7 @@ letter-spacing: -2px;
 .channel-chat .chat-content:hover {
 	background: rgba(0,0,0,0.025);
 }
-.channel-chat form{
+.channel-chat form, .channel-chat form input{
 	margin:0;
 }
 .loading-more{
