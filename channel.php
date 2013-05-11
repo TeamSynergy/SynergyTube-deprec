@@ -1,4 +1,4 @@
-﻿<?php require("require/channel_init.php"); ?>
+﻿<?php require_once("require/channel_init.php"); ?>
 
 <!DOCTYPE html>
 <html ng-app="channel" ng-controller="channel_controller">
@@ -6,19 +6,18 @@
 	<title>SynergyTube | Loading Channel...</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<meta name="description" content="<?php echo $channel_description;?>"/>
-	<meta name="keywords" content="<?php echo $channel_tags;?>"/>
-	<meta name="author" content="<?php echo $channel_owner;?>"/>
+	<meta name="description" content="<?php pe($channel_description)?>"/>
+	<meta name="keywords" content="<?php pe($channel_tags)?>"/>
+	<meta name="author" content="<?php pe($channel_owner)?>"/>
 	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
 	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet"/>
 	<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 	<link href="<?php echo $sgtube_root;?>/assets/css/style.css" rel="stylesheet"/>
 	<link href="<?php echo $sgtube_root;?>/assets/css/lionbars.css" rel="stylesheet"/>
 	<link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet"/>
-	<style type="text/css">.channel-cover{background:<?php print("url(".$sgtube_root."/assets/img/".$channel_cover_id.") ".$channel_cover_repeat." ".$channel_cover_pos_x." ".$channel_cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
+	<style type="text/css">.channel-cover{background:<?php p("url(".$sgtube_root."/assets/img/".$channel_cover_id.") ".$channel_cover_repeat." ".$channel_cover_pos_x." ".$channel_cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
 </head>
 <body style="overflow:hidden;">
-
   <div class="navbar">
     <div class="navbar-inner">
       <div class="container">

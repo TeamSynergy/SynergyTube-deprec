@@ -1,4 +1,4 @@
-require('./first_start.js');
+﻿require('./first_start.js');
 var io  = require('socket.io').listen(8080);
 var hasher = require('password-hash');
 var crypto = require('crypto');
@@ -42,7 +42,7 @@ function emitUserData(socket) {
 			} else {
 				console.log("user already joined the server. don't broadcast new join");
 			}
-		current_item.skip.goal = Math.round(online_user.length*parseFloat(current_item.skip.multiplier));
+      if(current_item) current_item.skip.goal = Math.round(online_user.length*parseFloat(current_item.skip.multiplier));
 			socket.emit('channel.init', {
 				user_data: own_user,
 				users_online: online_user,

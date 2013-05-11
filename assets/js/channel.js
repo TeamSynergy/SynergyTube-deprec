@@ -1,4 +1,4 @@
-var states = ["Waiting for Server...", "Crunching Data...", "Waiting for YouTube...", "There you go!"];
+﻿var states = ["Waiting for Server...", "Crunching Data...", "Waiting for YouTube...", "There you go!"];
 var loading_lock = false;
 var change_state = function(new_state){
   if(!loading_lock){
@@ -84,7 +84,7 @@ function channel_controller($scope){
 	$scope.favs = 0;
 	$scope.guests = 0;
 	// The currently active media-item-_id
-	$scope.active_item = 0;
+	$scope.active_item = new Date();
 	$scope.start_time = null;
 	$scope.reordered = false;
 	$scope.removed = false;
@@ -104,6 +104,7 @@ function channel_controller($scope){
 		if(data.now_playing){
 			$scope.active_item = data.now_playing._id;
 			$scope.start_time = data.now_playing.start_time;
+			$scope.duration = data.now_playing.duration;
 			$scope.skip.votes = data.now_playing.skip.votes;
 			$scope.skip.goal = data.now_playing.skip.goal;
 			$scope.skip.voted = data.now_playing.skip.already_skipped; //not there yet
@@ -126,16 +127,19 @@ function channel_controller($scope){
 		}
 
 		var intv = setInterval(function(){
-			console.log("waiting for player to finish initializing...");
-			if(player){
-				if((new Date().getTime() - new Date(data.now_playing.start_time).getTime()) / 1000 > data.now_playing.duration)
+			if(player && data.now_playing){
+				if((new Date().getTime() - new Date($scope.now_playing.start_time).getTime()) / 1000 > $scope.duration)
 					$scope.playNext();
 				else {
 					var start_seconds = (new Date().getTime() - new Date($scope.start_time).getTime()) / 1000;
 					player.loadVideoById(data.now_playing.url, start_seconds);
 				}
 				clearInterval(intv);
-			}
+			} else if (!player){
+        console.log("waiting for player to finish initializing...");
+      } else if (!data.now_playing){
+        console.log("waiting for a video to be added...");
+      }
 		}, 1000);
 		
 		$scope.$apply();

@@ -1,6 +1,6 @@
-<?php
+﻿<?php
 	// http://ipinfodb.com/ip_location_api.php for tracking ip to geolocation?
-	require("config.inc.php");
+	require_once("config.inc.php");
 
   $channelpage_url = "";
   if($enable_mod_rewrite)
@@ -13,12 +13,12 @@
 	$channel_url = $_GET['c'];
 	$channel_id = -1;
 	$channel_title = "";
-	$con = new mysqli($db_host, $db_user, $db_password, $db_table);
 	if(!$con){
 		$channel_error = true;
 		$channel_error_msg = "Error 500 - Database Error :(";
 	}
-	$_set = $con->query("SELECT tblchannels.*, tbluser.display_name as owner_name FROM tblchannels INNER JOIN tbluser ON tblchannels.owner_id = tbluser._id WHERE custom_url = '".$con->real_escape_string($channel_url)."'");
+	$_set = $con->query("SELECT tblChannels.*, tblUser.display_name AS 'owner_name' FROM tblChannels LEFT JOIN tblUser ON tblUser._id=tblChannels.owner_id WHERE custom_url = '".$con->real_escape_string($channel_url)."'");
+    
 	if($con->error){
 		$channel_error = true;
 		$channel_error_msg = "Error 500 - Query Error :(";
@@ -27,7 +27,7 @@
 		$channel_exists = true;
 		$channel_id = $_channel->_id;
 		$channel_description = htmlentities($_channel->description);
-		$channel_tags = htmlentities(@$_channel->tags);
+		$channel_tags = htmlentities($_channel->tags);
 		$channel_owner = htmlentities($_channel->owner_name);
 		$channel_title = htmlentities($_channel->name);
 		$channel_cover_id = htmlentities($_channel->cover_id);

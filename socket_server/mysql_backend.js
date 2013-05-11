@@ -1,4 +1,4 @@
-var mysql = require('mysql');
+﻿var mysql = require('mysql');
 var sql = null;
 var config = null;
 exports.connected = false;
@@ -147,7 +147,7 @@ exports.user.findByLoginName = function(login_name, fn){
 };
 
 exports.user.exists = function(login_name, email, fn){
-	sql.query("SELECT COUNT(*) AS '_c' FROM tblUser WHERE login_name = " + sql.escape(login_name) + " OR email = " + sql.escape(email), function(err, rows){
+	sql.query("SELECT IFNULL(COUNT(*),0) AS '_c' FROM tblUser WHERE login_name = " + sql.escape(login_name) + " OR email = " + sql.escape(email), function(err, rows){
 		if(err)
 			exports.onQueryError(err);
 		else
@@ -235,7 +235,7 @@ exports.channel.findByChannelID = function(channel_id, fn){
 };
 
 exports.channel.isOwner = function(channel_id, user_id, fn){
-	sql.query("SELECT COUNT(*) AS '_c' FROM tblChannels WHERE owner_id = " + sql.escape(user_id) + " AND _id = " + sql.escape(channel_id), function(err, rows){
+	sql.query("SELECT IFNULL(COUNT(*),0) AS '_c' FROM tblChannels WHERE owner_id = " + sql.escape(user_id) + " AND _id = " + sql.escape(channel_id), function(err, rows){
 		if(err)
 			exports.onQueryError(err);
 		else
@@ -244,7 +244,7 @@ exports.channel.isOwner = function(channel_id, user_id, fn){
 };
 
 exports.channel.isAdmin = function(channel_id, user_id, fn){
-	sql.query("SELECT COUNT(*) AS '_c' FROM relAdmins WHERE user_id = " + sql.escape(user_id) + " AND channel_id = " + sql.escape(channel_id), function(err, rows){
+	sql.query("SELECT IFNULL(COUNT(*),0) AS '_c' FROM relAdmins WHERE user_id = " + sql.escape(user_id) + " AND channel_id = " + sql.escape(channel_id), function(err, rows){
 		if(err)
 			exports.onQueryError(err);
 		else
@@ -253,7 +253,7 @@ exports.channel.isAdmin = function(channel_id, user_id, fn){
 };
 
 exports.channel.getUniqueVisits = function(channel_id, fn){
-	sql.query("SELECT COUNT(DISTINCT ip_hash) AS '_c' FROM tblTracking WHERE channel_id = " + sql.escape(channel_id), function(err, rows){
+	sql.query("SELECT IFNULL(COUNT(DISTINCT ip_hash),0) AS '_c' FROM tblTracking WHERE channel_id = " + sql.escape(channel_id), function(err, rows){
 		if(err)
 			exports.onQueryError(err);
 		else
@@ -262,7 +262,7 @@ exports.channel.getUniqueVisits = function(channel_id, fn){
 };
 
 exports.channel.getFavourites = function(channel_id, fn){
-	sql.query("SELECT COUNT(*) AS '_c' FROM relFavourites WHERE channel_id = " + sql.escape(channel_id), function(err, rows){
+	sql.query("SELECT IFNULL(COUNT(*),0) AS '_c' FROM relFavourites WHERE channel_id = " + sql.escape(channel_id), function(err, rows){
 		if(err)
 			exports.onQueryError(err);
 		else
@@ -333,24 +333,27 @@ exports.channel.playlist.findCurrent = function(channel_id, fn){
 	sql.query("SELECT * FROM tblMedia WHERE channel_id = " + sql.escape(channel_id) + " ORDER BY start_time DESC LIMIT 0,1 ", function(err, rows){
 		if(err)
 			exports.onQueryError(err);
-		else
+		else{
 			if(rows.length === 0)
 				return fn(null);
-			else {
+			else{
 				//there might be a clever join way of doing this idk
-				sql.query("SELECT COUNT(*) as '_c' FROM relSkips WHERE media_id = " + sql.escape(rows[0]._id), function(err, skipCountRow){
+				sql.query("SELECT IFNULL(COUNT(*),0) as '_c' FROM relSkips WHERE media_id = " + sql.escape(rows[0]._id), function(err, skipCountRow){//fabulous subquery
 					if(err)
 						exports.onQueryError(err);
-					else
+					else{
 						sql.query("SELECT skip_limit_multiplier as '_m' FROM tblChannels WHERE _id = " + sql.escape(channel_id), function(err, skipMultiRow){
 							if(err)
 								exports.onQueryError(err);
-							else
+							else {
 								rows[0].skip = { votes: skipCountRow[0]._c, multiplier: skipMultiRow[0]._m };
 								return fn(rows[0]);
+              }
 						});
+          }
 				});
-			}
+      }
+    }
 	});
 };
 

@@ -1,7 +1,6 @@
-<?php
+﻿<?php
 	require("config.inc.php");
 	$out_message = "You shouldn't be here..";
-	$con = new mysqli($db_host, $db_user, $db_password, $db_table) or die("Error, Database-Connection failed!");
 	if(!$con)
 		$out_message = "Database Error";
 	if(array_key_exists('m', $_GET) && array_key_exists('p', $_GET))
