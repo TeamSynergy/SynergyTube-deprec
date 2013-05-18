@@ -29,7 +29,8 @@ We're planning on adding more soon after the system has reached version 0.3.
 ## Installation
 ### Requirements
 
-* **node.js**-Instance
+* **node.js**-Instance  
+_Note: Always use the latest Node-Version_
 * **PHP**-Server
 * **MySQL**-Database
 
