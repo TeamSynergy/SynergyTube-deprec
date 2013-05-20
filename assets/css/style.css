@@ -20,7 +20,6 @@ html,body {
   height:59px;background-color:#444;
 }
 .navbar {
-	opacity: 0;
 	z-index: 501;
 	margin:0;
 	padding:0;
@@ -28,7 +27,7 @@ html,body {
 	-moz-transition: all 0.75s ease-in;
 	-o-transition: all 0.75s ease-in;
 	transition: all 0.75s ease-in;
-  box-shadow: 0 0px 20px rgba(0, 0, 0, 0.25);
+	box-shadow: 0 0px 20px rgba(0, 0, 0, 0.25);
 }
 
 .navbar-inner{
@@ -50,12 +49,10 @@ html,body {
 .favourite-list>li>a>h5 {
 	text-overflow: clip;
 	white-space: nowrap;
+	margin: 0;
 }
-.favourite-list>li i.nowplaying {
-	display: none;
-}
-.favourite-list>li.current i.nowplaying {
-	display: inline-block;
+.favourite-list>li>hr {
+	margin: 2px 0;
 }
 .favourite-list>li>a>p {
 	overflow: hidden;
@@ -73,17 +70,17 @@ html,body {
 	margin:15px 0;
 }
 .channel-previews .preview{
-	height:100%;
-	width:320px;
+	height: 100%;
+	width: 320px;
 	background-color:#fff;
 	margin: auto;
 	-webkit-box-shadow: 0 0 10px -5px #000;
-		 -moz-box-shadow: 0 0 10px -5px #000;
-					box-shadow: 0 0 10px -5px #000;
+	   -moz-box-shadow: 0 0 10px -5px #000;
+	        box-shadow: 0 0 10px -5px #000;
 }
 .preview .caption-wrapper{
-	position:relative;
-	overflow:hidden;
+	position: relative;
+	overflow: hidden;
 }
 .preview img{
 	height: 180px;
@@ -376,13 +373,10 @@ h3{margin:0}
 .form-append {
 	background-color:#f6f6f6;
 	-webkit-transition: all 250ms ease;
-		 -moz-transition: all 250ms ease;
-			-ms-transition: all 250ms ease;
-			 -o-transition: all 250ms ease;
-					transition: all 250ms ease;
-}
-.form_append_hide {
-	display:none;
+	   -moz-transition: all 250ms ease;
+	    -ms-transition: all 250ms ease;
+	     -o-transition: all 250ms ease;
+	        transition: all 250ms ease;
 }
 
 /* === Loading-Screen === */
@@ -392,12 +386,7 @@ h3{margin:0}
 	z-index: 1000;
 	height:100%;
 	width:100%;
-	/*happy little white to transparent background transition*/
-	background: rgba(255,255,255,1);
-	-webkit-transition: all 0.75s ease-in;
-	-moz-transition: all 0.75s ease-in;
-	-o-transition: all 0.75s ease-in;
-	transition: all 0.75s ease-in;
+	background: #fff;
 }
 .loading-border{
 	width: 500px;
@@ -408,8 +397,8 @@ h3{margin:0}
 	background: #fff;
 	text-align:center;
 	-webkit-box-shadow: 0 0 13px -2px #000;
-		 -moz-box-shadow: 0 0 13px -2px #000;
-					box-shadow: 0 0 13px -2px #000;
+	   -moz-box-shadow: 0 0 13px -2px #000;
+	        box-shadow: 0 0 13px -2px #000;
 }
 .loading-image{
 	padding-top: 20px;

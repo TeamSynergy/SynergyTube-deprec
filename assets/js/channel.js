@@ -1,38 +1,29 @@
-﻿var states = ["Waiting for Server...", "Crunching Data...", "Waiting for YouTube...", "There you go!"];
+﻿var states = ["Waiting for Server...", "Crunching Data...", "Waiting for Media-Player...", "Here you go!"];
 var loading_lock = false;
 var change_state = function(new_state){
-  if(!loading_lock){
-    current_state = new_state;
-    window.document.title="SynergyTube | " + states[current_state];
-    $('.txt-status').fadeOut(100,function(){
-      $('.txt-status').html(states[current_state]);
-    }).fadeIn(100);
-    $('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');
-    if(new_state == 1){
-      $('.wrap-the-load').css('background','rgba(255,255,255,0)');
-      $('.navbar').css('opacity', 1);
-    }
-    if(new_state == 2){
-      //while waiting for youtube, raise the menu since that will work fine youtube or not.
-      $('.wrap-the-load').css('z-index','500');
-    }
-    if(new_state == states.length - 1){
-      $('.wrap-the-load').fadeOut('slow');
-      $('.content-wrap').fadeIn('slow');
-      $('body').css('overflow','auto');
-      window.document.title="SynergyTube | " + channel_title;
-      $('.channel-chat-inner > ul').animate({ scrollTop: $('.channel-chat-inner > ul')[0].scrollHeight},800);
-      loading_lock = true;
-    }
-  }
+	if(!loading_lock){
+		current_state = new_state;
+		window.document.title="SynergyTube | " + states[current_state];
+		$('.txt-status').fadeOut(100, function(){
+			$('.txt-status').html(states[current_state]);
+		}).fadeIn(100);
+		$('.bar').css('width', (current_state / (states.length - 1) * 100) + '%');
+		if(new_state == states.length - 1){
+			$('.wrap-the-load').fadeOut('slow');
+			$('.content-wrap').fadeIn('slow');
+			window.document.title="SynergyTube | " + channel_title;
+			$('.channel-chat-inner > ul').animate({ scrollTop: $('.channel-chat-inner > ul')[0].scrollHeight},800);
+			loading_lock = true;
+		}
+	}
 }
 var change_error = function(error_msg){
-  window.document.title="SynergyTube | Error";
-  $('.txt-init').html(error_msg);
-  $('.txt-status').stop().hide();
-  $('.upper-hr').hide();
-  $('.progress').hide();
-  loading_lock = true;
+	window.document.title="SynergyTube | Error";
+	$('.txt-init').html(error_msg);
+	$('.txt-status').stop().hide();
+	$('.upper-hr').hide();
+	$('.progress').hide();
+	loading_lock = true;
 };
 var current_state = 0;
 var app = angular.module('channel', []);
@@ -40,10 +31,10 @@ var socket = null;
 if(channel_error_msg){
 	change_error(channel_error_msg);
 } else {
-  //Let's wait with the fadein till after the huge cover image has loaded :3
-  $('<img/>').attr('src', $('.channel-cover').css('background-image').slice($('.channel-cover').css('background-image').indexOf('(')+1,-1)).load(function() {
-    change_state(1);
-  });
+	//Let's wait with the fadein till after the huge cover image has loaded :3
+	$('<img/>').attr('src', $('.channel-cover').css('background-image').slice($('.channel-cover').css('background-image').indexOf('(')+1,-1)).load(function() {
+		change_state(1);
+	});
 	if(typeof io !== "undefined")
 		socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "&channel_id=" + channel_id, secure: location.protocol === "https:" });
 	else
@@ -53,11 +44,11 @@ if(channel_error_msg){
 var player;
 
 $(function(){
-  jQuery.event.props.push("dataTransfer");
-	// I hate the chromeless player, i'll never build my own controls. Take this dummy!
+	jQuery.event.props.push("dataTransfer");
+	// I hate the chromeless player, I'll never build my own controls. Take this dummy!
 	swfobject.embedSWF("http://www.youtube.com/v/xxxxxxxxxxx?enablejsapi=1&playerapiid=ytplayer&version=3&autohide=1&theme=light", "replace-player", "100%", "380", "8", null, null, { allowScriptAccess: "always" }, { id: "myytplayer" }, function(e){
 		if(!e.success)
-			change_error("Unable to initialize YouTube-Player :(");
+			change_error("Unable to initialize Media-Player :(<br/>Be sure to enable the Flash-Player");
 	});
 	$('._tt').tooltip({placement:'bottom'});
 	$('.channel-cover-text').dotdotdot({watch:true});
@@ -91,6 +82,8 @@ function channel_controller($scope){
 	
 	socket.on('channel.init', function(data){
 		change_state(2);
+
+		console.log("received: " + data.playlist.length + " media items; " + data.last_chat.length + " messages;")
     
 		$scope.channel_id = channel_id;
 		$scope.playlist = data.playlist;
@@ -128,7 +121,7 @@ function channel_controller($scope){
 
 		var intv = setInterval(function(){
 			if(player && data.now_playing){
-				if((new Date().getTime() - new Date($scope.now_playing.start_time).getTime()) / 1000 > $scope.duration)
+				if((new Date().getTime() - new Date($scope.start_time).getTime()) / 1000 > $scope.duration)
 					$scope.playNext();
 				else {
 					var start_seconds = (new Date().getTime() - new Date($scope.start_time).getTime()) / 1000;

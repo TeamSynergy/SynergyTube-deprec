@@ -1,21 +1,17 @@
 ﻿<?php
-  function _(){
-    //Let's use this for localization whenever we get around to implementing that.
-  }
-
   function p(){
     foreach(func_get_args() as $arg){
-      print $arg;
+      print($arg);
     }
-  }  
+  }
   function pe(){
     foreach(func_get_args() as $arg){
-      print htmlentities($arg);
+      print(htmlspecialchars($arg, ENT_QUOTES, "UTF-8"));
     }
   }
   function purl(){
     foreach(func_get_args() as $arg){
-      print urlencode($arg);
+      print(urlencode($arg));
     }
   }
 ?>

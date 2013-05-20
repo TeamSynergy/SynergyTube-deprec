@@ -1,5 +1,4 @@
-﻿<?php require_once("require/channel_init.php"); ?>
-
+﻿<?php require_once("require/channel_init.php"); require("require/util.func.php");?>
 <!DOCTYPE html>
 <html ng-app="channel" ng-controller="channel_controller">
 <head>
@@ -17,7 +16,7 @@
 	<link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:regular,bold" rel="stylesheet"/>
 	<style type="text/css">.channel-cover{background:<?php p("url(".$sgtube_root."/assets/img/".$channel_cover_id.") ".$channel_cover_repeat." ".$channel_cover_pos_x." ".$channel_cover_pos_y); ?>;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}</style>
 </head>
-<body style="overflow:hidden;">
+<body>
   <div class="navbar">
     <div class="navbar-inner">
       <div class="container">
@@ -62,18 +61,16 @@
               <ul class="dropdown-menu favourite-list" role="menu">
                 <li ng-show="favourites.length == 0"><p>You haven't faved any Channels yet. To Fav a Channel click on the empty star in the control-bar under the media-container.</p></li>
                 <li ng-repeat="item in favourites" ng-class="{current: item.channel_id == channel_id}">
-                  <!--  Add fav/refav button.
-                    <i class="icon-star" style='float:left;'></i>
-                  -->
                   <a href="<?php echo $channelpage_url; ?>{{item.custom_url}}">
                     <h5>
-                      <i class="icon-play nowplaying"></i>
+                      <i ng-show="item.channel_id == channel_id" class="icon-play"></i>
                       {{item.name}}
                     </h5>
                     <p>
                       {{item.description}}
                     </p>
                   </a>
+                  <hr ng-hide="$index == favourites.length - 1">
                 </li>
               </ul>
             </li>
@@ -100,14 +97,14 @@
 				<img src="<?php echo $sgtube_root; ?>/assets/img/cloud_pre.png">
 			</div>
 			<div class="loading-lower">
-				<span class="txt-init">Initializing <i>the</i> Awesome!</span><br>
+				<span class="txt-init">Initializing <i>the</i> Channel</span><br>
 				<hr class="upper-hr">
 				<span class="txt-status">Waiting for Server...</span>
 				<div class="progress progress-striped active">
 					<div class="bar"></div>
 				</div>
 				<hr class="lower-hr">
-				<span class="txt-copy">&copy;2013 <a href="mailto:screeny05@gmail.com">TeamSynergy!</a> <a href="https://github.com/screeny05/SynergyTube">Fork me on GitHub</a></span>
+				<span class="txt-copy">&copy;2013 <a href="mailto:screeny05@gmail.com">TeamSynergy!</a> <a href="https://github.com/screeny05/SynergyTube">Fork us on GitHub</a></span>
 			</div>
 		</div>
 	</div>
@@ -159,8 +156,8 @@
                   <div class="control-group">
                     <label class="control-label" for="inputNewPassword">Password</label>
                     <div class="controls">
-                      <input type="password" id="inputNewPassword" placeholder="New password once"/><br/>
-                      <input type="password" id="inputNewPassword2" placeholder="New password twice"/>
+                      <input type="password" id="inputNewPassword" placeholder="New password"/><br/>
+                      <input type="password" id="inputNewPassword2" placeholder="Repeat new password"/>
                     </div>
                   </div>
                   <div class="control-group">
@@ -396,7 +393,7 @@
                       <strong>{{message.display_name}}</strong>
                       <hr/>
                     </div>
-                    <small class="muted" style='float:right;' data-toggle="tooltip" title="{{getDate(message.timestamp)}}">{{getTime(message.timestamp)}}</small>
+                    <small class="muted pull-right" data-toggle="tooltip" title="{{getDate(message.timestamp)}}">{{getTime(message.timestamp)}}</small>
                     <p parse-url="_blank">{{message.content}}</p>
                   </div>
                 </li>
@@ -428,7 +425,7 @@
 
 	<div class="footer">
 		<div class="container footer-container">
-			<p>&copy; SynergyTube by Screeny05 (It's v0.2); Fork me on <a href="https://github.com/screeny05/synergyTube">GitHub</a></p>
+			<p>&copy; SynergyTube by TeamSynergy (It's v0.2); Fork us on <a href="https://github.com/screeny05/synergyTube">GitHub</a></p>
 		</div>
 	</div>
 

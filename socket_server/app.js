@@ -131,6 +131,7 @@ io.sockets.on('connection', function (socket) {
 	/* --Channel Related-- */
 
 	socket.on('disconnect', function(){
+		console.log(socket.login_name + " left the channel " + socket.channel_id);
 		socket.leave(socket.channel_id);
 		if(!socket.logged_in)
 			socket.broadcast.to(socket.channel_id).emit('channel.guest_leave');
