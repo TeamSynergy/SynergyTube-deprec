@@ -1,5 +1,5 @@
-﻿<?php require("require/config.inc.php"); require("require/util.func.php");?>
 <!DOCTYPE html>
+<?php require("require/config.inc.php");?>
 <html lang="en">
 <head>
 	<meta charset="utf-8"/>
@@ -39,7 +39,7 @@
 		<div class="container content">
 			<div class="page-header"><h1>Browse all Channels</h1></div>
 			<ul class="channel-previews unstyled">
-				<?php require("require/overview_init.php"); ?>
+				<?php require_once("require/util.func.php");require("require/overview_init.php"); ?>
 			</ul>
 		</div>
 		<div class="footer-pusher"></div>

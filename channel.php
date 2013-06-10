@@ -1,4 +1,4 @@
-﻿<?php require_once("require/channel_init.php"); require("require/util.func.php");?>
+<?php require_once("require/channel_init.php"); require("require/util.func.php");?>
 <!DOCTYPE html>
 <html ng-app="channel" ng-controller="channel_controller">
 <head>
@@ -83,7 +83,7 @@
                 <li><a href="" ng-click="logout()"><i class="icon-off"></i> Log Out</a></li>
               </ul>
             </li>
-            <li ng-show='logged_in'><a href="" ng-click='toggle_cp()'><i class="" ng-class='{"icon-remove": show_cp == true, "icon-wrench": show_cp == false}'></i></a></li>
+            <li><a href="" ng-click='toggle_cp()'><i class="" ng-class='{"icon-remove": show_cp == true, "icon-wrench": show_cp == false}'></i></a></li>
           </ul>
         </div>
       </div>
@@ -412,9 +412,9 @@
               </li>
               <!-- less damned pluralization -->
               <li><p ng-pluralize count="guests"
-     when="{'0': 'No guests are viewing.',
-                 'one': '1 guest is viewing.',
-                 'other': '{} people are viewing.'}"></p></li>
+     when="{'0': 'No Guests.',
+                 'one': '1 Guest.',
+                 'other': '{} Guests.'}"></p></li>
             </ul>
           </div>
         </div>

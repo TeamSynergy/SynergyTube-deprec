@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	require("config.inc.php");
 	$out_message = "You shouldn't be here..";
 	if(!$con)

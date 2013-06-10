@@ -502,72 +502,9 @@ app.directive('dndList', function(){
 		}, 1000);
 	};
 });
-app.directive('onChange', function(){
-	return function(scope, element, attrs){
-		$(element[0]).live('input', function(){
-			scope.$apply(attrs.onChange);
-		});
-	};
-});
-app.directive('onScroll', function(){
-	return function(scope, element, attrs){
-		var raw = element[0];
-		element.bind('scroll', function(){
-			if(raw.scrollTop <= 0)
-				scope.$apply(attrs.onScroll);
-		});
-	}
-});
-app.directive('parseUrl',function () {
-	var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
-	return function (scope, element, attrs) {
-		scope.$watch(element, function(){
-			var value = element.html();
-			angular.forEach(value.match(urlPattern), function(url){
-				value = value.replace(url,  "<a target=\"" + attrs.parseUrl + "\" href="+ url + ">" + url +"</a>");
-			});
-			element.html(value);
-		});
-	}
-});
-function createCookie(name,value,days) {
-	if (days) {
-		var date = new Date();
-		date.setTime(date.getTime()+(days*24*60*60*1000));
-		var expires = "; expires="+date.toGMTString();
-	}
-	else var expires = "";
-	document.cookie = name+"="+value+expires+"; path=/";
-}
-
-function readCookie(name) {
-	var nameEQ = name + "=";
-	var ca = document.cookie.split(';');
-	for(var i=0;i < ca.length;i++) {
-		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-	}
-	return null;
-}
-
-function eraseCookie(name) {
-	createCookie(name,"",-1);
-}
 
 //funny that jquery won't do this itself
 function animate_bg(ele, from, to) {
     ele.css("background-color", "rgba(255, 127, 127, " + (from += from > to ? -1 : 1) / 10 + ")"); 
     if(from != to)  
-        setTimeout(function() { animate_bg(ele, from, to) }, 20);
-}
-function equalHeight(group) {
-	var tallest = 0;
-	group.each(function() {
-		var thisHeight = $(this).height();
-		if(thisHeight > tallest) {
-			tallest = thisHeight;
-		}
-	});
-	group.height(tallest);
-}
+        setTimeout(function() {

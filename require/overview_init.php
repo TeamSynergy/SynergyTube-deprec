@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	$_set = $con->query("SELECT * FROM tblChannels");
 	while($row = $_set->fetch_object())
 	{

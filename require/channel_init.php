@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	// http://ipinfodb.com/ip_location_api.php for tracking ip to geolocation?
 require_once("config.inc.php");
 
