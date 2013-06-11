@@ -1,58 +1,64 @@
-if(typeof io !== "undefined")
+/*if(typeof io !== "undefined")
 	socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id"), secure: location.protocol === "https:" });
 else
-	alert("Seems like our Servers are currently down :(");
+	alert("Seems like our Servers are currently down :(");*/
 
 function settings_controller($scope){
 
 }
 
 var app = angular.module('syn_app', []);
-function navbar_controller($scope){
+
+app.controller('navbar_controller', function($scope){
 	$scope.collapsed = $(window).width() < 767;
-	
+	$scope.showLoginForm = false;
+	$scope.doLogin = true;
+
 	$scope.collapsableResize = function(){
 		if($scope.collapsed && $(window).width() >= 767)
 			$scope.uncollapse();
 		else if(!$scope.collapsed && $(window).width() < 767)
 			$scope.collapse();
-	}
+	};
 	$scope.menuToggle = function(){
 		if($scope.collapsed)
 			$scope.uncollapse();
 		else
 			$scope.collapse();
-	}
+	};
 	$scope.collapse = function(){
 		$('.nav').css('display', 'none');
 		$('.nav').css('opacity', 0);
 		$('.nav li').css('height', 0);
 		$scope.collapsed = true;
-	}
+	};
 	$scope.uncollapse = function(){
 		$('.nav').css('display', 'inline');
 		$('.nav').css('opacity', 1);
 		$('.nav li').css('height', 'auto');
 		$scope.collapsed = false;
-	}
+	};
 	$scope.processLink = function(obj){
-		if(!$scope.collapsed && !$(obj).children('a').hasClass('no-collapse'))
+		if(!$scope.collapsed && !$(obj).children('a').hasClass('no-collapse') && $(window).width() < 767)
 			$scope.collapse();
-	}
-}
+	};
+	$scope.userForm = function(login){
+		$scope.showLoginForm = !$scope.showLoginForm;
+		$scope.doLogin = login;
+		if($(window).width() < 767)
+			$(".user-form, .login-form-button > .chevron").animate({ height: 'toggle' });
+		else
+			$(".user-form, .login-form-button > .chevron").animate({ width: 'toggle' });
+	};
+});
 
 $(function(){
 	equalHeight($('.row > .column > .info-box'));
 });
 
-$('.login-form-button').click(function(e){
-	if(!collapsed)
-		$('.user-form, .login-form-button > .chevron').animate({ height: 'toggle' });
-	else
-		$('.user-form, .login-form-button > .chevron').animate({ width: 'toggle' });
-});
 
-/* === useful extra-direcitves === */
+
+/* === useful direcitves === */
 
 app.directive('onResize', function(){
 	return function(scope, element, attrs){
@@ -83,23 +89,36 @@ app.directive('parseUrl', function() {
 		scope.$watch(element, function(){
 			var value = element.html();
 			angular.forEach(value.match(urlPattern), function(url){
-				value = value.replace(url,  "<a target=\"" + attrs.parseUrl + "\" href="+ url + ">" + url +"</a>");
+				value = value.replace(url,	"<a target=\"" + attrs.parseUrl + "\" href="+ url + ">" + url +"</a>");
 			});
 			element.html(value);
 		});
 	}
 });
 app.directive('clickChildren', function($parse){
-  return {
-    restrict: 'A',
-    link: function(scope, element, attrs){       
-      var selector = attrs.selector;
-      var fun = $parse(attrs.clickChildren);   
-      element.on('click', selector, function(e){        
-        fun(scope)(this);        
-      });
-    }
-  };
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs){
+			var selector = attrs.selector;
+			var href = $(this).children('a').attr('href');
+			var fun = $parse(attrs.clickChildren);
+			element.on('click', selector, function(e){
+				if(href === "" || href === "#");
+					e.preventDefault();
+				fun(scope)(this);
+			});
+		}
+	};
+});
+app.directive('slideCollb', function(){
+	return function(scope, element, attrs){
+		element.click(function(){
+			if($(window).width() < 767)
+				$(attrs.slideCollb).animate({ height: 'toggle' });
+			else
+				$(attrs.slideCollb).animate({ width: 'toggle' });
+		});
+	};
 });
 
 

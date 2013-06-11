@@ -26,7 +26,6 @@ var change_error = function(error_msg){
 	loading_lock = true;
 };
 var current_state = 0;
-var app = angular.module('channel', []);
 var socket = null;
 if(channel_error_msg){
 	change_error(channel_error_msg);
@@ -465,46 +464,9 @@ function channel_controller($scope){
 	});
 }
 
-app.directive('dndList', function(){
-	return function(scope, element, attrs){
-		var toUpdate;
-		var startIndex = -1;
-		
-		scope.$watch(attrs.dndList, function(value){
-			toUpdate = value;
-		},true);
-
-		var intv = setInterval(function(){
-			console.log("waiting for socket.io to finish initializing...");
-			if(typeof scope.logged_in !== "undefined"){
-				if(scope.is_admin)
-					$(element[0]).sortable({
-						items:'tr',
-						start: function(event, ui){
-							startIndex = ($(ui.item).index());
-							scope.reordered = true;
-						},
-						stop: function(event, ui){
-							console.log("Item: " + toUpdate[startIndex]._id + "; Old Position: " + toUpdate[startIndex].position + "; New Position: " + ($(ui.item).index() + 1));
-							var newIndex = ($(ui.item).index());
-							var toMove = toUpdate[startIndex];
-							toUpdate.splice(startIndex, 1);
-							toUpdate.splice(newIndex,0,toMove);
-							for(var i = 0; i < scope.playlist.length; i++){
-								scope.playlist[i].position = i + 1;
-							}
-							scope.$apply(scope.playlist);
-						},
-						axis: 'y'
-					});
-				clearInterval(intv);
-			}
-		}, 1000);
-	};
-});
-
 //funny that jquery won't do this itself
 function animate_bg(ele, from, to) {
     ele.css("background-color", "rgba(255, 127, 127, " + (from += from > to ? -1 : 1) / 10 + ")"); 
     if(from != to)  
-        setTimeout(function() {
+        setTimeout(function() { animate_bg(ele, from, to) }, 20);
+}

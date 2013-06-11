@@ -1,10 +1,10 @@
 <?php require_once("require/channel_init.php"); require("require/util.func.php");?>
 <!DOCTYPE html>
-<html ng-app="channel" ng-controller="channel_controller">
+<html ng-app="syn_app" ng-controller="channel_controller">
 <head>
 	<title>SynergyTube | Loading Channel...</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<meta name="description" content="<?php pe($channel_description)?>"/>
 	<meta name="keywords" content="<?php pe($channel_tags)?>"/>
 	<meta name="author" content="<?php pe($channel_owner)?>"/>

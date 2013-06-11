@@ -86,6 +86,9 @@
 	.top-bar{
 		position: static !important;
 	}
+	.content-offset{
+		padding: 30px 0 !important;
+	}
 	.menu-toggle{
 		display: inline-block !important;
 	}
@@ -182,6 +185,48 @@
 }
 
 /*
+	=== Tab-Bar Stuff ===
+*/
+
+.tab-bar{
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+	float: left;
+}
+.tab-bar:hover > li > a{
+	border-left: solid 4px #aaa;
+}
+.tab-bar > li > a:hover{
+	border-left: solid 4px #f57d7d;
+}
+.tab-bar > li > a{
+	display: block;
+	float: none;
+	background: rgba(0,0,0,0.6);
+	color: #fff;
+	font-size: 16px;
+	padding: 8px 7px;
+	border-left: solid 4px #aaa;
+
+	-webkit-transition: all .5s ease;
+	   -moz-transition: all .5s ease;
+	    -ms-transition: all .5s ease;
+	     -o-transition: all .5s ease;
+		    transition: all .5s ease;
+}
+.tab-bar > .active > a{
+	border-left: solid 4px #f57d7d;
+	color: #ddd;
+}
+
+.view-container{
+	background: #ddd;
+	float:left;
+	width: 100%;
+}
+
+/*
 	=== Login-Form ===
 */
 
@@ -250,14 +295,12 @@
 html, body{
 	height: 100%;
 	width: 100%;
+	background-color: #fafafa;
 	font-family: 'PT Sans', Helvetica, sans-serif;
 }
 
-.content{
-	background: #fff;
-}
 .content-offset{
-	padding: 30px 0;
+	padding: 85px 0;
 }
 .container{
 	margin: 0 auto;
@@ -304,7 +347,7 @@ h1{
 }
 
 a{
-	color:#2f8f8f;
+	color:#6c0808;
 	text-decoration: none;
 	-webkit-transition: all .3s ease;
 	   -moz-transition: all .3s ease;
@@ -313,10 +356,10 @@ a{
 		    transition: all .3s ease;
 }
 a:visited{
-	color:#2f8f8f;
+	color:#6c0808;
 }
 a:hover{
-	color:#3CB5B5;
+	color:#eb1111;
 }
 ::selection {
 	background:#8ceafe;color:#555;
