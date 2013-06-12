@@ -8,7 +8,7 @@
 	<link href="assets/css/normalize.css" rel="stylesheet"/>
 	<link href="assets/css/rewrite.css" rel="stylesheet"/>
 	<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
-	<link href='http://fonts.googleapis.com/css?family=Cabin|PT+Sans|PT+Sans+Narrow' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Cabin|PT+Sans|PT+Sans+Narrow|Raleway:600' rel='stylesheet' type='text/css'>
 </head>
 <body>
 	<div class="top-bar" ng-controller="navbar_controller" on-resize="collapsableResize()">
@@ -29,31 +29,65 @@
 		</div>
 	</div>
 
-	<div class="container content-offset" ng-controller="settings_controller">
-		<h1>Settings</h1>
-		<hr>
-		<ul class="tab-bar">
-			<li class="active"><a href="">Profile</a></li>
-			<li><a href="">Channels</a></li>
-			<li><a href="">Synch</a></li>
-			<li><a href="">SynergyTube</a></li>
-		</ul>
-		<div class="view-container">
-			<h2>Profile Settings</h2>
-			<p><img src="https://secure.gravatar.com/avatar/ac012582f341845987532c33f0acde3a?d=mm">
-			Change Profile Picture</p>
-			<p>Change Login-Data:</p>
-			<input type="text" placeholder="Displayname"><br>
-			<input type="password" placeholder="Password"><br>
-			<input type="password" placeholder="Repeat Password">
+	<div class="container content-offset settings-container" ng-controller="settings_controller">
+
+		<div class="row tab-bar-header">
+			<div class="title">
+				<h2>Profile Settings</h2>
+			</div>
 		</div>
 
+		<div class="row">
+			<ul class="tab-bar column span_3" click-children="clkTabBar" selector="li">
+				<li class="active"><a href=""><i class="icon-user"></i> Profile</a></li>
+				<li><a href=""><i class="icon-th-list"></i> Channels</a></li>
+				<li><a href=""><i class="icon-tasks"></i> Synchronization</a></li>
+				<li><a href=""><i class="icon-cloud"></i> SynergyTube</a></li>
+			</ul>
+			<div class="column span_13 view-container">
+				<div class="view-container-content">
+					<form enctype="multipart/form-data">
+						<img class="img-rounded pull-left avatar-change-help" id="imgShow" alt="Preview" src="https://secure.gravatar.com/avatar/null?d=mm">
+						<p><strong>Change Avatar</strong><br>You can Upload GIF, PNG and JPG. (File Size Limit is 2mb)</p>
+						<input type="file" id="imgInp" alt-change="imageUpload">
+					</form>
+					
+					<div class="credentials row">
+						<div class="column span_8">
+							<label for="txtName">Change <abbr title="The name that's displayed for everyone. Warning! Not the Login Name - You can't change that.">Displayname</abbr>:</label>
+							<input id="txtName" ng-model="txtName" type="text" placeholder="New Displayname" on-change="show_confirm()">
+
+							<label for="txtEmail">Change Email:</label>
+							<input id="txtEmail" ng-model="txtEmail" type="text" placeholder="New Email" on-change="show_confirm()">
+
+							<label for="txtNewPwd">Change Password:</label>
+							<input id="txtNewPwd" ng-model="txtNewPwd" type="password" placeholder="New Password" on-change="show_confirm()">
+						</div>
+						<div class="confirmation column span_8" style="display:none">
+							<label>Enter Password:</label>
+							<input type="password" id="pw_1" ng-model="pw_1" placeholder="Enter (old) Password">
+							<label>Repeat Password:</label>
+							<input type="password" ng-model="pw_2" placeholder="Repeat (old) Password">
+						</div>
+					</div>
+					<span class="text-error"></span>
+				</div>
+				<div class="view-submit">
+					<div class="submit-buttons">
+						<a href="" ng-click="valid_submit()" class="button button-dark" id="frmSubmit">Save</a>
+						<a href="" ng-click="cancel()" class="button button-red" id="frmCancel">Cancel</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
 	</div>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
-	<!--<script type="text/javascript" src="<?php echo $sgtube_host ?>:8080/socket.io/socket.io.js"></script>-->
+	<script type="text/javascript" src="<?php echo $sgtube_host ?>:8080/socket.io/socket.io.js"></script>
+	<script src="assets/js/global.js"></script>
 	<script src="assets/js/settings.js"></script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 ﻿require('./first_start.js');
+var fs = require('fs');
 var io  = require('socket.io').listen(8080);
 var hasher = require('password-hash');
 var crypto = require('crypto');
@@ -25,12 +26,11 @@ function emitUserData(socket) {
 	backend.channel.isAdmin(socket.channel_id, socket.user_id, function(isAdmin){
 		socket.display_name = current_user.display_name;
 		socket.email = current_user.email;
-		socket.email_hash = current_user.email_hash;
 		socket.already_faved = isFaved;
 		socket.favourites = current_user_favourites;
 		socket.is_owner = isOwner;
 		socket.is_admin = isAdmin || isOwner;
-		var own_user = { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id, email: socket.email, email_hash: socket.email_hash, favourites: socket.favourites};
+		var own_user = { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id, email: socket.email, favourites: socket.favourites};
 		var online_user = init_online(socket.channel_id);
 		if(!already_online(socket.channel_id, socket.login_name))
 			online_user.push(own_user);
@@ -224,6 +224,15 @@ io.sockets.on('connection', function (socket) {
 			}
 		});
 	});
+
+	/*--User-Settings Related--*/
+	socket.on('user.profile.picture', function(data, fn){
+		var matches = data.file.match(/^data:.+\/(.+);base64,(.*)$/);
+		var buffer = new Buffer(matches[2], 'base64');
+		console.log("User changing profile picture");
+		fs.writeFileSync(configuration.static_folder + "/profile_pics/" + socket.login_name + "." + matches[1], buffer);
+		fn({success: true});
+	});
 	
 	/*--Chat Related--*/
 	
@@ -346,8 +355,7 @@ function init_online(channel_id){
 					display_name: c[i].display_name,
 					login_name: c[i].login_name,
 					is_admin: c[i].is_admin,
-					user_id: c[i].user_id,
-					email: c[i].email_hash
+					user_id: c[i].user_id
 				});
 				usernames.push(c[i].login_name);
 		}

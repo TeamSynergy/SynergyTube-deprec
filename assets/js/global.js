@@ -115,6 +115,13 @@ app.directive('slideCollb', function(){
 		});
 	};
 });
+app.directive('altChange', function($parse){
+	return function(scope, element, attrs){
+		element.change(function(){
+			$parse(attrs.altChange)(scope)(this);
+		});
+	};
+});
 app.directive('dndList', function(){
 	return function(scope, element, attrs){
 		var toUpdate;

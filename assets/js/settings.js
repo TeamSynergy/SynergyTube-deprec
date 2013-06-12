@@ -1,158 +1,69 @@
-/*if(typeof io !== "undefined")
-	socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id"), secure: location.protocol === "https:" });
-else
-	alert("Seems like our Servers are currently down :(");*/
+app.controller('settings_controller', function($scope){
+	$scope.txtName = "";
+	$scope.txtEmail = "";
+	$scope.txtNewPwd = "";
+	$scope.pictureBlob = "";
+	$scope.pw_1 = "";
+	$scope.pw_2 = "";
 
-function settings_controller($scope){
+	if(typeof io != "undefined")
+		$scope.socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "&channel_id=1", secure: location.protocol === "https:" });
 
-}
+	$scope.imageUpload = function(input){
+		if(input.files && input.files[0]){
+			$(".text-error").text("");
+			var file = input.files[0];
 
-var app = angular.module('syn_app', []);
-
-app.controller('navbar_controller', function($scope){
-	$scope.collapsed = $(window).width() < 767;
-	$scope.showLoginForm = false;
-	$scope.doLogin = true;
-
-	$scope.collapsableResize = function(){
-		if($scope.collapsed && $(window).width() >= 767)
-			$scope.uncollapse();
-		else if(!$scope.collapsed && $(window).width() < 767)
-			$scope.collapse();
-	};
-	$scope.menuToggle = function(){
-		if($scope.collapsed)
-			$scope.uncollapse();
-		else
-			$scope.collapse();
-	};
-	$scope.collapse = function(){
-		$('.nav').css('display', 'none');
-		$('.nav').css('opacity', 0);
-		$('.nav li').css('height', 0);
-		$scope.collapsed = true;
-	};
-	$scope.uncollapse = function(){
-		$('.nav').css('display', 'inline');
-		$('.nav').css('opacity', 1);
-		$('.nav li').css('height', 'auto');
-		$scope.collapsed = false;
-	};
-	$scope.processLink = function(obj){
-		if(!$scope.collapsed && !$(obj).children('a').hasClass('no-collapse') && $(window).width() < 767)
-			$scope.collapse();
-	};
-	$scope.userForm = function(login){
-		$scope.showLoginForm = !$scope.showLoginForm;
-		$scope.doLogin = login;
-		if($(window).width() < 767)
-			$(".user-form, .login-form-button > .chevron").animate({ height: 'toggle' });
-		else
-			$(".user-form, .login-form-button > .chevron").animate({ width: 'toggle' });
-	};
-});
-
-$(function(){
-	equalHeight($('.row > .column > .info-box'));
-});
-
-
-
-/* === useful direcitves === */
-
-app.directive('onResize', function(){
-	return function(scope, element, attrs){
-		$(window).resize(function(){
-			scope.$apply(attrs.onResize);
-		});
-	};
-});
-app.directive('onChange', function(){
-	return function(scope, element, attrs){
-		$(element[0]).live('input', function(){
-			scope.$apply(attrs.onChange);
-		});
-	};
-});
-app.directive('onScroll', function(){
-	return function(scope, element, attrs){
-		var raw = element[0];
-		element.bind('scroll', function(){
-			if(raw.scrollTop <= 0)
-				scope.$apply(attrs.onScroll);
-		});
-	}
-});
-app.directive('parseUrl', function() {
-	var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
-	return function (scope, element, attrs) {
-		scope.$watch(element, function(){
-			var value = element.html();
-			angular.forEach(value.match(urlPattern), function(url){
-				value = value.replace(url,	"<a target=\"" + attrs.parseUrl + "\" href="+ url + ">" + url +"</a>");
-			});
-			element.html(value);
-		});
-	}
-});
-app.directive('clickChildren', function($parse){
-	return {
-		restrict: 'A',
-		link: function(scope, element, attrs){
-			var selector = attrs.selector;
-			var href = $(this).children('a').attr('href');
-			var fun = $parse(attrs.clickChildren);
-			element.on('click', selector, function(e){
-				if(href === "" || href === "#");
-					e.preventDefault();
-				fun(scope)(this);
-			});
+			if(file.type === "image/gif" || file.type === "image/png" || file.type === "image/jpeg"){	
+				if(file.size > 2097152){
+					$(".text-error").text("File is bigger than the given Limit.");
+				} else {
+					if(!window.FileReader)
+						$(".text-error").text("Upgrade your Browser to enable Avatar-Upload.");
+					var reader = new FileReader();
+					reader.onload = function(e){
+						$('#imgShow').attr('src', e.target.result);
+						$scope.pictureBlob = e.target.result;
+					};
+					reader.readAsDataURL(file);
+				}
+			} else {
+				$(".text-error").text("Please select a valid Image (either GIF, PNG or JPG).");
+			}
 		}
 	};
-});
-app.directive('slideCollb', function(){
-	return function(scope, element, attrs){
-		element.click(function(){
-			if($(window).width() < 767)
-				$(attrs.slideCollb).animate({ height: 'toggle' });
-			else
-				$(attrs.slideCollb).animate({ width: 'toggle' });
-		});
+	$scope.clkTabBar = function(item){
+		
+	};
+	$scope.show_confirm = function(){
+		if($scope.txtName.length + $scope.txtEmail.length + $scope.txtNewPwd.length === 0)
+			$(".confirmation").animate({ opacity: 'hide' });
+		else
+			$(".confirmation").animate({ opacity: 'show' });
+	};
+	$scope.valid_submit = function(){
+		if($scope.txtName.length > 3 || $scope.txtEmail.length > 4 || $scope.txtNewPwd.length > 6)
+			if($scope.pw_1 == $scope.pw_2){
+				if($scope.pw_1.length + $scope.pw_2.length != 0){
+					$scope.submit();
+				} else {
+					$(".text-error").text("Please enter your Passwords.");
+					$("#pw_1").focus();
+				}
+			} else {
+				$(".text-error").text("The given passwords do not match, please retype them.");
+				$("#pw_1").focus();
+			}
+		else if($scope.txtName.length + $scope.txtEmail.length + $scope.txtNewPwd.length > 0)
+			$(".text-error").text("Displaynames must be longer than 3 Characters and Passwords must be longer than 4 Characters.");
+		else
+			$scope.submit();
+
+	};
+	$scope.submit = function(){
+		if($scope.pictureBlob.length > 0)
+			$scope.socket.emit('user.profile.picture', { file: $scope.pictureBlob }, function(data){
+				alert(JSON.stringify(data));
+			});
 	};
 });
-
-
-/* === some everyday functions === */
-
-function equalHeight(group) {
-	var tallest = 0;
-	group.each(function() {
-		var thisHeight = $(this).height();
-		if(thisHeight > tallest)
-			tallest = thisHeight;
-	});
-	group.height(tallest);
-}
-function createCookie(name,value,days) {
-	if (days) {
-		var date = new Date();
-		date.setTime(date.getTime()+(days*24*60*60*1000));
-		var expires = "; expires="+date.toGMTString();
-	}
-	else var expires = "";
-	document.cookie = name+"="+value+expires+"; path=/";
-}
-
-function readCookie(name) {
-	var nameEQ = name + "=";
-	var ca = document.cookie.split(';');
-	for(var i=0;i < ca.length;i++) {
-		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-	}
-	return null;
-}
-function eraseCookie(name) {
-	createCookie(name,"",-1);
-}

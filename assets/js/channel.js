@@ -12,7 +12,7 @@ var change_state = function(new_state){
 			$('.wrap-the-load').fadeOut('slow');
 			$('.content-wrap').fadeIn('slow');
 			window.document.title="SynergyTube | " + channel_title;
-			$('.channel-chat-inner > ul').animate({ scrollTop: $('.channel-chat-inner > ul')[0].scrollHeight},800);
+			$('.channel-chat-inner > ul').animate({ scrollTop: $('.channel-chat-inner > ul')[0].scrollHeight}, 800);
 			loading_lock = true;
 		}
 	}

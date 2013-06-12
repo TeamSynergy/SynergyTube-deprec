@@ -25,6 +25,7 @@ if(!fs.existsSync('./config.json')){
 			get("\t- user: ", function(g_user){
 			get("\t- pass: ", function(g_pass){
 			get("\r\nthe (public) domain of this machine (eg: 'localhost','synergytube.com')", function(hostname){
+			get("\r\nWhere to save static files (like profile-pictures or channel-covers; Can be relative or absolute)", function(static_folder){
 			created_conf.database = db_info;
 			created_conf.hostname = hostname;
 			created_conf.mail = {};
@@ -32,6 +33,7 @@ if(!fs.existsSync('./config.json')){
 			created_conf.mail.auth = {};
 			created_conf.mail.auth.user = g_user;
 			created_conf.mail.auth.pass = g_pass;
+			created_conf.static_folder = static_folder;
 		
 			fs.writeFile('./config.json', JSON.stringify(created_conf, null, 4), function(err){
 				if(err)
@@ -40,6 +42,8 @@ if(!fs.existsSync('./config.json')){
 					console.log("Finished writing, restart the server!");
 				process.exit();
 			});
-		});});});});});
+
+
+		});});});});});});
 	});
 }

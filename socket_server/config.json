@@ -1,6 +1,7 @@
 {
 	"hostname": "192.168.1.10",
 	"hostname__comment": "This should be the external hostname.",
+    "static_folder": "D:/Apps/UwAmp/www/static_files",
 	"database": {
 		"user": "root",
 		"password": "",
