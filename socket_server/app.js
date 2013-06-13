@@ -25,12 +25,13 @@ function emitUserData(socket) {
 	backend.channel.isOwner(socket.channel_id, socket.user_id, function(isOwner){
 	backend.channel.isAdmin(socket.channel_id, socket.user_id, function(isAdmin){
 		socket.display_name = current_user.display_name;
+		socket.picture = "/static_files" + current_user.avatar_id || "/static_files/profile_pictures/null.png";
 		socket.email = current_user.email;
 		socket.already_faved = isFaved;
 		socket.favourites = current_user_favourites;
 		socket.is_owner = isOwner;
 		socket.is_admin = isAdmin || isOwner;
-		var own_user = { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id, email: socket.email, favourites: socket.favourites};
+		var own_user = { display_name: socket.display_name, login_name: socket.login_name, is_admin: socket.is_admin, user_id: socket.user_id, email: socket.email, favourites: socket.favourites, picture: socket.picture};
 		var online_user = init_online(socket.channel_id);
 		if(!already_online(socket.channel_id, socket.login_name))
 			online_user.push(own_user);
@@ -227,11 +228,19 @@ io.sockets.on('connection', function (socket) {
 
 	/*--User-Settings Related--*/
 	socket.on('user.profile.picture', function(data, fn){
+		console.log("User changing profile picture");
+
 		var matches = data.file.match(/^data:.+\/(.+);base64,(.*)$/);
 		var buffer = new Buffer(matches[2], 'base64');
-		console.log("User changing profile picture");
-		fs.writeFileSync(configuration.static_folder + "/profile_pics/" + socket.login_name + "." + matches[1], buffer);
-		fn({success: true});
+		var filename = "/profile_pictures/" + socket.login_name + "." + matches[1];
+		fs.writeFile(configuration.static_folder + filename, buffer, function(err){
+			if(err)
+				console.log("unable to change picture: " + err)
+			else
+				backend.user.profile.setPictureID(socket.user_id, filename, function(){
+					fn();
+				});
+		});
 	});
 	
 	/*--Chat Related--*/
@@ -355,7 +364,8 @@ function init_online(channel_id){
 					display_name: c[i].display_name,
 					login_name: c[i].login_name,
 					is_admin: c[i].is_admin,
-					user_id: c[i].user_id
+					user_id: c[i].user_id,
+					picture: c[i].picture
 				});
 				usernames.push(c[i].login_name);
 		}
@@ -379,4 +389,9 @@ function already_online(channel_id, login_name){
 			is = true;
 	};
 	return is;
+}
+function exists_create_dir(path){
+	fs.mkdir(path, function(err){
+		return (!e || (e && e.code === 'EEXIST'));
+	});
 }

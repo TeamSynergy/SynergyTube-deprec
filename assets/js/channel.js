@@ -81,7 +81,7 @@ function channel_controller($scope){
 	
 	socket.on('channel.init', function(data){
 		change_state(2);
-
+		console.log(data);
 		console.log("received: " + data.playlist.length + " media items; " + data.last_chat.length + " messages;")
     
 		$scope.channel_id = channel_id;

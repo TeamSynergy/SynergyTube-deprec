@@ -100,7 +100,7 @@ exports.createStructure = function(db_config, callback){
 		console.log("created table tblTracking");
 	
 	c("CREATE TABLE IF NOT EXISTS tblUser(_id int(11) NOT NULL AUTO_INCREMENT, login_name varchar(45) NOT NULL, display_name varchar(45) NOT NULL, " +
-		"email varchar(90) NOT NULL, strategy varchar(10) NOT NULL, hash varchar(200) NOT NULL, session_id char(64) DEFAULT NULL, " +
+		"email varchar(90) NOT NULL, avatar_id varchar(45) DEFAULT NULL, strategy varchar(10) NOT NULL, hash varchar(200) NOT NULL, session_id char(64) DEFAULT NULL, " +
 		"is_valid tinyint(1) NOT NULL, validate_hash char(64) NOT NULL, PRIMARY KEY(_id), UNIQUE KEY login_name_UNIQUE (login_name), UNIQUE KEY email_UNIQUE (email), " +
 		"UNIQUE KEY display_name_UNIQUE (display_name)) DEFAULT CHARSET=utf8",function(){
 		console.log("created table tblUser");
@@ -116,6 +116,7 @@ exports.onQueryError = function(err){
 
 exports.user = {};
 exports.user.session = {};
+exports.user.profile = {};
 exports.channel = {};
 exports.channel.chat = {};
 exports.channel.playlist = {};
@@ -218,6 +219,17 @@ exports.user.unFavChannel = function(user_id, channel_id, fn){
 			return fn();
 	});
 };
+
+/* === User-Profile Functions === */
+
+exports.user.profile.setPictureID = function(user_id, picture_id, fn){
+	sql.query("UPDATE tblUser SET avatar_id = " + sql.escape(picture_id) + " WHERE _id = " + sql.escape(user_id), function(err){
+		if(err)
+			exports.onQueryError();
+		else
+			return fn();
+	});
+}
 
 
 /* === Channel-Functions === */
