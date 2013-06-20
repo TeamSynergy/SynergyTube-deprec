@@ -194,7 +194,7 @@ exports.user.isFaved = function(channel_id, user_id, fn){
 };
 
 exports.user.favourites = function(user_id, fn){
-	sql.query("SELECT * FROM relFavourites INNER JOIN tblUser ON tblUser._id = relFavourites.user_id INNER JOIN tblChannels ON tblChannels._id = relFavourites.channel_id WHERE user_id = " + sql.escape(user_id), function(err, rows){
+	sql.query("SELECT channel_id, user_id, name, description FROM relFavourites INNER JOIN tblChannels ON tblChannels._id = relFavourites.channel_id WHERE user_id = " + sql.escape(user_id), function(err, rows){
 		if(err)
 			exports.onQueryError(err);
 		else

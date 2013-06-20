@@ -1,3 +1,13 @@
+$(function(){
+	if(window.location.hash){
+		$(".view-container-content").hide();
+		$(window.location.hash).show();
+		$(".tab-bar > li").removeClass("active");
+		$('.tab-bar a[href="' + window.location.hash + '"]').parent("li").addClass("active");
+	}
+});
+$("input[type='text'],input[type='password']").click(function(){$(this).select()})
+
 app.controller('settings_controller', function($scope){
 	$scope.txtName = "";
 	$scope.txtEmail = "";
@@ -8,6 +18,12 @@ app.controller('settings_controller', function($scope){
 
 	if(typeof io != "undefined")
 		$scope.socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id") + "&channel_id=1", secure: location.protocol === "https:" });
+
+	$scope.socket.on('channel.init', function(data){
+		$scope.txtName = data.user_data.display_name;
+		$scope.txtEmail = data.user_data.email;
+		$scope.$apply();
+	});
 
 	$scope.imageUpload = function(input){
 		if(input.files && input.files[0]){
@@ -33,7 +49,16 @@ app.controller('settings_controller', function($scope){
 		}
 	};
 	$scope.clkTabBar = function(item){
-		
+		var oldId = $(".tab-bar > .active > a").attr("href");
+		var newId = $(item).children("a").attr("href");
+
+		$(".tab-bar > li").removeClass("active");
+		$(item).addClass("active");
+
+		/*$(oldId).animate({ height: 'hide' });
+		$(newId).animate({ height: 'show' });*/
+		$(oldId).hide();
+		$(newId).show();
 	};
 	$scope.show_confirm = function(){
 		if($scope.txtName.length + $scope.txtEmail.length + $scope.txtNewPwd.length === 0)
@@ -62,7 +87,7 @@ app.controller('settings_controller', function($scope){
 	};
 	$scope.submit = function(){
 		if($scope.pictureBlob.length > 0)
-			$scope.socket.emit('user.profile.picture', { file: $scope.pictureBlob }, function(data){
+			$scope.socket.emit('settings.profile.picture', { file: $scope.pictureBlob }, function(data){
 				alert(JSON.stringify(data));
 			});
 	};

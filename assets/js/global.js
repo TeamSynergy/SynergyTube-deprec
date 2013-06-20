@@ -40,10 +40,11 @@ app.controller('navbar_controller', function($scope){
 	$scope.userForm = function(login){
 		$scope.showLoginForm = !$scope.showLoginForm;
 		$scope.doLogin = login;
-		if($(window).width() < 767)
-			$(".user-form, .login-form-button > .chevron").animate({ height: 'toggle' });
-		else
-			$(".user-form, .login-form-button > .chevron").animate({ width: 'toggle' });
+		if($(window).width() < 767){
+			$(".user-form").animate({ height: 'toggle' });
+		} else {
+			$(".user-form").animate({ width: 'toggle' });
+		}
 	};
 });
 
@@ -98,7 +99,7 @@ app.directive('clickChildren', function($parse){
 			var href = $(this).children('a').attr('href');
 			var fun = $parse(attrs.clickChildren);
 			element.on('click', selector, function(e){
-				if(href === "" || href === "#");
+				if((href === "" || href === "#") && typeof attrs.allowHash == "undefined")
 					e.preventDefault();
 				fun(scope)(this);
 			});

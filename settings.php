@@ -22,8 +22,8 @@
 					<input type="text" class="no-collapse" placeholder="User" ng-model="userName" required>
 					<input type="password" class="no-collapse" placeholder="Password" ng-model="userPassword" required>
 				</form></li>
-				<li><a href="" class="login-form-button no-collapse" ng-click="userForm(false)">Login <i class="icon-chevron-right chevron" style="display:none"></i></a></li>
-				<li><a href="" class="login-form-button no-collapse" ng-click="userForm(true)">Create Account <i class="icon-chevron-right chevron" style="display:none"></i></a></li>
+				<li><a href="" class="login-form-button form-button no-collapse" ng-click="userForm(false)">Login <i class="icon-chevron-right chevron" style="display:none"></i></a></li>
+				<li><a href="" class="register-form-button form-button no-collapse" ng-click="userForm(true)">Create Account <i class="icon-chevron-right chevron" style="display:none"></i></a></li>
 			</ul>
 			<div class="clearfix"></div>
 		</div>
@@ -38,14 +38,16 @@
 		</div>
 
 		<div class="row">
-			<ul class="tab-bar column span_3" click-children="clkTabBar" selector="li">
-				<li class="active"><a href=""><i class="icon-user"></i> Profile</a></li>
-				<li><a href=""><i class="icon-th-list"></i> Channels</a></li>
-				<li><a href=""><i class="icon-tasks"></i> Synchronization</a></li>
-				<li><a href=""><i class="icon-cloud"></i> SynergyTube</a></li>
+			<ul class="tab-bar column span_3" click-children="clkTabBar" allow-hash selector="li">
+				<li class="active"><a href="#profile"><i class="icon-user"></i> Profile</a></li>
+				<li><a href="#channels"><i class="icon-th-list"></i> Channels</a></li>
+				<li><a href="#synch"><i class="icon-tasks"></i> Synchronization</a></li>
+				<li><a href="#synergy"><i class="icon-cloud"></i> SynergyTube</a></li>
 			</ul>
+
 			<div class="column span_13 view-container">
-				<div class="view-container-content">
+
+				<div id="profile" class="view-container-content">
 					<form enctype="multipart/form-data">
 						<img class="img-rounded pull-left avatar-change-help" id="imgShow" alt="Preview" src="https://secure.gravatar.com/avatar/null?d=mm">
 						<p><strong>Change Avatar</strong><br>You can Upload GIF, PNG and JPG. (File Size Limit is 2mb)</p>
@@ -72,6 +74,37 @@
 					</div>
 					<span class="text-error"></span>
 				</div>
+
+				<div id="channels" class="view-container-content" style="display:none">
+					<table class="table">
+						<thead>
+							<tr>
+								<td>Title</td>
+								<td>Playlist Length</td>
+								<td>Description</td>
+								<td>Settings</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Bronies BW</td>
+								<td>22</td>
+								<td>Official German Pony-Music Channel from BroniesBW! We play everything f...</td>
+								<td><a href=""><i class="icon-cogs"></i></a></td>
+							</tr>
+						</tbody>
+						<tbody>
+							<tr>
+								<td>Powermetal is best Metal</td>
+								<td>2</td>
+								<td>In the name of Metal! Beware of hard beats and fast rhythms on this channel.</td>
+								<td><a href=""><i class="icon-cogs"></i></a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+
 				<div class="view-submit">
 					<div class="submit-buttons">
 						<a href="" ng-click="valid_submit()" class="button button-dark" id="frmSubmit">Save</a>

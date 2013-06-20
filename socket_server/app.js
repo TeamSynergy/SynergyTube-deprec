@@ -226,8 +226,38 @@ io.sockets.on('connection', function (socket) {
 		});
 	});
 
-	/*--User-Settings Related--*/
-	socket.on('user.profile.picture', function(data, fn){
+	/*--Settings Related--*/
+	socket.on('settings.set', function(data, fn){
+		if(typeof data.profile.avatar != "undefined"){
+
+		}
+		if(typeof data.profile.display_name != "undefined"){
+
+		}
+		if(typeof data.profile.password != "undefined"){
+
+		}
+		if(typeof data.profile.email != "undefined"){
+
+		}
+		if(typeof data.sync.interval != "undefined"){
+
+		}
+		if(typeof data.sync.at_all != "undefined"){
+
+		}
+		if(typeof data.synergytube.max_max_user != "undefined"){
+
+		}
+
+		if(typeof data.synergytube.max_max_items != "undefined"){
+
+		}
+	});
+	socket.on('settings.channel.set', function(data, fn){
+
+	});
+	socket.on('settings.profile.picture', function(data, fn){
 		console.log("User changing profile picture");
 
 		var matches = data.file.match(/^data:.+\/(.+);base64,(.*)$/);
