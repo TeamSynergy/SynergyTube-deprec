@@ -229,7 +229,39 @@ exports.user.profile.setPictureID = function(user_id, picture_id, fn){
 		else
 			return fn();
 	});
-}
+};
+
+exports.user.profile.setDisplayName = function(user_id, display_name, fn){
+	sql.query("UPDATE tblUser SET display_name = " + sql.escape(display_name) + " WHERE _id = " + sql.escape(user_id), function(err){
+		if(err)
+			exports.onQueryError();
+		fn(err);
+	});
+};
+
+exports.user.profile.setPassword = function(user_id, password, fn){
+	sql.query("UPDATE tblUser SET hash = " + sql.escape(password) + " WHERE _id = " + sql.escape(user_id), function(err){
+		if(err)
+			exports.onQueryError();
+		fn(err);
+	});
+};
+
+exports.user.profile.setEmail = function(user_id, email, fn){
+	sql.query("UPDATE tblUser SET email = " + sql.escape(email) + " WHERE _id = " + sql.escape(user_id), function(err){
+		if(err)
+			exports.onQueryError();
+		fn(err);
+	});
+};
+
+exports.user.profile.deletion = function(user_id, fn){
+	sql.query("DELETE FROM tblUser WHERE _id = " + sql.escape(user_id), function(err){
+		if(err)
+			exports.onQueryError();
+		fn(err);
+	});
+};
 
 
 /* === Channel-Functions === */

@@ -4,6 +4,7 @@ var io  = require('socket.io').listen(8080);
 var hasher = require('password-hash');
 var crypto = require('crypto');
 var nodemailer = require('nodemailer');
+var async = require('async');
 
 var configuration = require('./config.json');
 var backend = require('./mysql_backend.js');
@@ -228,49 +229,77 @@ io.sockets.on('connection', function (socket) {
 
 	/*--Settings Related--*/
 	socket.on('settings.set', function(data, fn){
-		if(typeof data.profile.avatar != "undefined"){
-
+		var verified = false;
+		if(typeof data.profile.orgPassword){
+			backend.user.findByLoginName(socket.login_name, function(user){
+				if(user && user.is_valid === 1)
+					verified = hasher.verify(data.profile.orgPassword, user.hash);
+			});
 		}
-		if(typeof data.profile.display_name != "undefined"){
-
-		}
-		if(typeof data.profile.password != "undefined"){
-
-		}
-		if(typeof data.profile.email != "undefined"){
-
-		}
-		if(typeof data.sync.interval != "undefined"){
-
-		}
-		if(typeof data.sync.at_all != "undefined"){
-
-		}
-		if(typeof data.synergytube.max_max_user != "undefined"){
-
-		}
-
-		if(typeof data.synergytube.max_max_items != "undefined"){
-
-		}
+		async.series({
+			avatar: function(callback){
+				if(typeof data.profile.avatar != "undefined"){
+					console.log(socket.login_name + " changing profile picture");
+					var matches = data.profile.avatar.match(/^data:.+\/(.+);base64,(.*)$/);
+					var buffer = new Buffer(matches[2], 'base64');
+					var filename = "/profile_pictures/" + socket.login_name + "." + matches[1];
+					fs.writeFile(configuration.static_folder + filename, buffer, function(err){
+						if(err){
+							console.log("setting picture failed: " + err);
+							callback(null, false);
+						} else {
+							backend.user.profile.setPictureID(socket.user_id, filename, function(){
+								console.log("setting picture suceeded");
+								callback(null, true);
+							});
+						}
+					});
+				} else
+					callback(null, undefined);
+			},
+			display_name: function(callback){
+				if(data.profile.display_name){
+					backend.user.profile.setDisplayName(socket.user_id, data.profile.display_name, function(err){
+						callback(null, !err);
+					});
+				} else
+					callback(null, undefined);
+			},
+			password: function(callback){
+				if(data.profile.password){
+					backend.user.profile.setPassword(socket.user_id, hasher.generate(data.profile.password), function(err){
+						callback(null, !err);
+					});
+				} else
+					callback(null, undefined);
+			},
+			email: function(callback){
+				if(data.profile.email){
+					backend.user.profile.setEmail(socket.user_id, data.profile.email, function(err){
+						callback(null, !err);
+					});
+				} else
+					callback(null, undefined);
+			},
+			deletion: function(callback){
+				if(data.profile.deletion){
+					if(verified){
+						backend.user.profile.deletion(socket.user_id, function(err){
+							callback(null, !err);
+						});
+					} else {
+						callback(null, false);
+					}
+				} else
+					callback(null, undefined);
+			}
+		}, function(err, results){
+			console.log(results);
+			fn(results);
+		});
 	});
 	socket.on('settings.channel.set', function(data, fn){
 
-	});
-	socket.on('settings.profile.picture', function(data, fn){
-		console.log("User changing profile picture");
-
-		var matches = data.file.match(/^data:.+\/(.+);base64,(.*)$/);
-		var buffer = new Buffer(matches[2], 'base64');
-		var filename = "/profile_pictures/" + socket.login_name + "." + matches[1];
-		fs.writeFile(configuration.static_folder + filename, buffer, function(err){
-			if(err)
-				console.log("unable to change picture: " + err)
-			else
-				backend.user.profile.setPictureID(socket.user_id, filename, function(){
-					fn();
-				});
-		});
 	});
 	
 	/*--Chat Related--*/

@@ -1,3 +1,7 @@
+/*if(typeof io !== "undefined")
+	socket = io.connect('//' + window.location.host + ':8080', { query:"session_id=" + readCookie("session_id"), secure: location.protocol === "https:" });
+else
+	alert("Seems like our Servers are currently down :(");*/
 var app = angular.module('syn_app', []);
 
 app.controller('navbar_controller', function($scope){
@@ -30,9 +34,8 @@ app.controller('navbar_controller', function($scope){
 		$scope.collapsed = false;
 	};
 	$scope.processLink = function(obj){
-		if(!$scope.collapsed && !$(obj).children('a').hasClass('no-collapse') && $(window).width() < 767 && $(obj).has("a").length > 0){
+		if(!$scope.collapsed && !$(obj).children('a').hasClass('no-collapse') && $(window).width() < 767)
 			$scope.collapse();
-		}
 	};
 	$scope.userForm = function(login){
 		$scope.showLoginForm = !$scope.showLoginForm;

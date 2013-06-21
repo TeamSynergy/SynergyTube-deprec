@@ -1,6 +1,6 @@
 {
   "name": "SynergyTubeServer",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "private": "true",
   "author": "Screeny <screeny05@gmail.com>",
   "description": "Server-Side delievery of Socket.IO based Communications to the Client",
@@ -15,7 +15,8 @@
     "socket.io": "0.9.x",
     "mysql": "2.0.x",
     "nodemailer": "0.4.x",
-    "password-hash": "1.2.x"
+    "password-hash": "1.2.x",
+    "async":"0.2.x"
   },
   "license": "MIT"
 }

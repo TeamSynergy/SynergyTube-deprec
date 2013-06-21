@@ -279,6 +279,7 @@ img {
 .view-container{
 	background: #888;
 	float:left;
+	position: relative;
 }
 .view-submit{
 	background: #9d9d9d;
@@ -292,6 +293,23 @@ img {
 }
 .view-container-content{
 	padding: 10px;
+}
+.view-container-spinner{
+	position: absolute;
+	display: none;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	vertical-align: center;
+	background: rgba(0,0,0,.6);
+	color: #eee;
+	font-size: 120px;
+}
+.view-container-spinner > i{
+	position: absolute;
+	top: 50%;
+	margin-left: -60px;
+	margin-top: -60px;
 }
 
 .type_3 > .txt{

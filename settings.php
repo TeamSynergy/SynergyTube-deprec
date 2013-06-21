@@ -38,7 +38,7 @@
 		</div>
 
 		<div class="row">
-			<ul class="tab-bar column span_3" click-children="clkTabBar" allow-hash selector="li">
+			<ul class="tab-bar column span_3">
 				<li class="active"><a href="#profile"><i class="icon-user"></i> Profile</a></li>
 				<li><a href="#channels"><i class="icon-th-list"></i> Channels</a></li>
 				<li><a href="#synch"><i class="icon-tasks"></i> Synchronization</a></li>
@@ -46,10 +46,13 @@
 			</ul>
 
 			<div class="column span_13 view-container">
+				<div class="view-container-spinner">
+					<i class="icon-repeat icon-spin"></i>
+				</div>
 
 				<div id="profile" class="view-container-content">
 					<form enctype="multipart/form-data">
-						<img class="img-rounded pull-left avatar-change-help" id="imgShow" alt="Preview" src="https://secure.gravatar.com/avatar/null?d=mm">
+						<img class="img-rounded pull-left avatar-change-help" id="imgShow" alt="Preview" ng-src="{{orgPicture}}">
 						<p><strong>Change Avatar</strong><br>You can Upload GIF, PNG and JPG. (File Size Limit is 2mb)</p>
 						<input type="file" id="imgInp" alt-change="imageUpload">
 					</form>
@@ -57,13 +60,13 @@
 					<div class="credentials row">
 						<div class="column span_8">
 							<label for="txtName">Change <abbr title="The name that's displayed for everyone. Warning! Not the Login Name - You can't change that.">Displayname</abbr>:</label>
-							<input id="txtName" ng-model="txtName" type="text" placeholder="New Displayname" on-change="show_confirm()">
+							<input id="txtName" ng-model="txtName" type="text" placeholder="New Displayname">
 
 							<label for="txtEmail">Change Email:</label>
 							<input id="txtEmail" ng-model="txtEmail" type="text" placeholder="New Email" on-change="show_confirm()">
 
-							<label for="txtNewPwd">Change Password:</label>
-							<input id="txtNewPwd" ng-model="txtNewPwd" type="password" placeholder="New Password" on-change="show_confirm()">
+							<label for="txtPassword">Change Password:</label>
+							<input id="txtPassword" ng-model="txtPassword" type="password" placeholder="New Password" on-change="show_confirm()">
 						</div>
 						<div class="confirmation column span_8" style="display:none">
 							<label>Enter Password:</label>
