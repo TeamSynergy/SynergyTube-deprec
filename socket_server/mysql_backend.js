@@ -77,7 +77,7 @@ exports.createStructure = function(db_config, callback){
 	c("CREATE TABLE IF NOT EXISTS relFavourites (channel_id int(11) NOT NULL, user_id int(11) NOT NULL, PRIMARY KEY(channel_id,user_id))",function(){
 		console.log("created table relFavourites");
     
-	c("CREATE TABLE IF NOT EXISTS `relskips` ( `media_id` int(10) NOT NULL, `user_id` int(11) NOT NULL, UNIQUE KEY `user_id` (`user_id`), UNIQUE KEY `user_id_2` (`user_id`))",function(){
+	c("CREATE TABLE IF NOT EXISTS `relSkips` ( `media_id` int(10) NOT NULL, `user_id` int(11) NOT NULL, UNIQUE KEY `user_id` (`user_id`), UNIQUE KEY `user_id_2` (`user_id`))",function(){
 		console.log("created table relSkips");
 	
 	c("CREATE TABLE IF NOT EXISTS tblChannels (_id int(11) NOT NULL AUTO_INCREMENT, name varchar(45) NOT NULL, " +
