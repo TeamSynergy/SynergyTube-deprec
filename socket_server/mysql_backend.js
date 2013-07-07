@@ -425,7 +425,7 @@ exports.channel.playlist.skipVoteCurrent = function(channel_id, user_id, fn){
 						exports.onQueryError(err);
 					else {
 						var _c = rows[0]._c;
-						sql.query('SELECT tblchannels.skip_limit_multiplier as "_l" FROM `tblchannels` WHERE tblchannels._id = '+sql.escape(channel_id), function(err, rows){
+						sql.query('SELECT tblChannels.skip_limit_multiplier as "_l" FROM `tblChannels` WHERE tblChannels._id = '+sql.escape(channel_id), function(err, rows){
 							if(err)
 								exports.onQueryError(err);
 							else
