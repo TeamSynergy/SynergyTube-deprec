@@ -82,7 +82,7 @@ exports.createStructure = function(db_config, callback){
 	
 	c("CREATE TABLE IF NOT EXISTS tblChannels (_id int(11) NOT NULL AUTO_INCREMENT, name varchar(45) NOT NULL, " +
 		"cover_id varchar(45) NOT NULL, cover_repeat varchar(10) NOT NULL, cover_pos_x varchar(10) NOT NULL, cover_pos_y varchar(10) NOT NULL, " +
-		"custom_url varchar(45) NOT NULL, owner_id int(11) NOT NULL, description varchar(400) NOT NULL, user_limit int(11) NOT NULL, " +
+		"custom_url varchar(45) NOT NULL, owner_id int(11) NOT NULL, description varchar(400) NOT NULL, user_limit int(11) NOT NULL, skip_limit_multiplier int(11) NOT NULL, " +
 		"PRIMARY KEY(_id), UNIQUE KEY name_UNIQUE (name), UNIQUE KEY custom_url_UNIQUE (custom_url)) DEFAULT CHARSET=utf8",function(){
 		console.log("created table tblChannels");
 	
@@ -100,7 +100,7 @@ exports.createStructure = function(db_config, callback){
 		console.log("created table tblTracking");
 	
 	c("CREATE TABLE IF NOT EXISTS tblUser(_id int(11) NOT NULL AUTO_INCREMENT, login_name varchar(45) NOT NULL, display_name varchar(45) NOT NULL, " +
-		"email varchar(90) NOT NULL, avatar_id varchar(45) DEFAULT NULL, strategy varchar(10) NOT NULL, hash varchar(200) NOT NULL, session_id char(64) DEFAULT NULL, " +
+		"email varchar(90) NOT NULL, avatar_id varchar(45) NOT NULL, strategy varchar(10) NOT NULL, hash varchar(200) NOT NULL, session_id char(64) DEFAULT NULL, " +
 		"is_valid tinyint(1) NOT NULL, validate_hash char(64) NOT NULL, PRIMARY KEY(_id), UNIQUE KEY login_name_UNIQUE (login_name), UNIQUE KEY email_UNIQUE (email), " +
 		"UNIQUE KEY display_name_UNIQUE (display_name)) DEFAULT CHARSET=utf8",function(){
 		console.log("created table tblUser");
