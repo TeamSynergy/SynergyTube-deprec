@@ -1,4 +1,4 @@
-﻿var states = ["Waiting for Server...", "Crunching Data...", "Waiting for Media-Player...", "Here you go!"];
+var states = ["Waiting for Server...", "Crunching Data...", "Waiting for Media-Player...", "Here you go!"];
 var loading_lock = false;
 var change_state = function(new_state){
 	if(!loading_lock){
@@ -78,21 +78,21 @@ function channel_controller($scope){
 	$scope.start_time = null;
 	$scope.reordered = false;
 	$scope.removed = false;
-	
+
 	socket.on('channel.init', function(data){
 		change_state(2);
 		console.log(data);
 		console.log("received: " + data.playlist.length + " media items; " + data.last_chat.length + " messages;")
-    
+
 		$scope.channel_id = channel_id;
 		$scope.playlist = data.playlist;
-		
+
 		$scope.chat = data.last_chat;
 		$scope.online = data.users_online;
 		$scope.guests = data.guest_online;
 		$scope.favs = data.favs;
 		$scope.views = data.views;
-		
+
 		if(data.now_playing){
 			$scope.active_item = data.now_playing._id;
 			$scope.start_time = data.now_playing.start_time;
@@ -103,10 +103,10 @@ function channel_controller($scope){
 		} else {
 			// Throw something like: "You have to add at least one item";
 		}
-		
+
 		$scope.logged_in = data.logged_in;
 		$scope.already_faved = data.already_faved;
-		
+
 		if(data.logged_in){
 			$scope.is_admin = data.user_data.is_admin;
 			$scope.login_name = data.user_data.login_name;
@@ -133,9 +133,9 @@ function channel_controller($scope){
         console.log("waiting for a video to be added...");
       }
 		}, 1000);
-		
+
 		$scope.$apply();
-		
+
 		if(typeof $('.channel-chat > ul')[0] !== "undefined")
 			$('.channel-chat > ul').scrollTop($('.channel-chat > ul')[0].scrollHeight);
 	});
@@ -186,7 +186,8 @@ function channel_controller($scope){
 			animate_bg($('#skips i.icon-eject'), 0, 20); //we should make the coming skip obvious
 	});
 	socket.on('chat.incoming', function(data){
-		$scope.chat.push(data.content);
+		$scope.chat = [data.content].concat($scope.chat); // well that's a quite funny story if you ask me...
+		//$scope.chat.push(data.content);
 		$scope.$apply();
 		$('.channel-chat-inner > ul').animate({ scrollTop: $('.channel-chat-inner > ul')[0].scrollHeight},800);
 	});
@@ -252,7 +253,7 @@ function channel_controller($scope){
 		console.log("channel full");
 		change_error("Sorry, this Channel has reached its User-Limit. Come back soon!");
 	});
-  
+
 	socket.on('user.session_id', function(data){
 		createCookie("session_id", data.content.session_id);
 		$scope.password = "";
@@ -268,7 +269,7 @@ function channel_controller($scope){
 		$scope.alert_stack.push({ text: "Huray! We've created your account! Go check your Emails for the confirmation link in order to activate your Account." });
 		$scope.$apply();
 	});
-  
+
 	$scope.debug = function(){
 		alert("Debug-Message");
 	}
@@ -301,11 +302,11 @@ function channel_controller($scope){
       $('.channel-cover-cp').slideUp();
     }
 	};
-  
+
 	$scope.dismiss_alert = function(alert){
 		$scope.alert_stack.splice($scope.alert_stack.indexOf(alert), 1);
 	};
-	
+
 	$scope.getTime = function(t){
 		t = new Date(t);
 		return (t.getHours() < 10 ? '0' : '') + t.getHours() + ":" + (t.getMinutes() < 10 ? '0' : '') + t.getMinutes();
@@ -452,7 +453,7 @@ function channel_controller($scope){
 			socket.emit('chat.load_more', { append_at: $scope.chat[$scope.chat.length - 1].timestamp });
 		}
 	};
-	
+
 	$scope.$watch("playlist", function(value){
 		if($scope.reordered || $scope.removed){
 			var r = value.map(function(e){ return { _id: e._id, position: e.position }; });
@@ -466,7 +467,7 @@ function channel_controller($scope){
 
 //funny that jquery won't do this itself
 function animate_bg(ele, from, to) {
-    ele.css("background-color", "rgba(255, 127, 127, " + (from += from > to ? -1 : 1) / 10 + ")"); 
-    if(from != to)  
+    ele.css("background-color", "rgba(255, 127, 127, " + (from += from > to ? -1 : 1) / 10 + ")");
+    if(from != to)
         setTimeout(function() { animate_bg(ele, from, to) }, 20);
 }
