@@ -85,7 +85,7 @@ app.directive('parseUrl', function() {
 		scope.$watch(element, function(){
 			var value = element.html();
 			angular.forEach(value.match(urlPattern), function(url){
-				value = value.replace(url,	"<a target=\"" + attrs.parseUrl + "\" href="+ url + ">" + url +"</a>");
+				value = value.replace(url, "<a target=\"" + attrs.parseUrl + "\" href=\""+ url + "\">" + url +"</a>");
 			});
 			element.html(value);
 		});
