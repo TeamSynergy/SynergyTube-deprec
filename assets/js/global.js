@@ -65,7 +65,7 @@ app.directive('onResize', function(){
 });
 app.directive('onChange', function(){
 	return function(scope, element, attrs){
-		$(element[0]).live('input', function(){
+		$(element[0]).on('input', function(){
 			scope.$apply(attrs.onChange);
 		});
 	};
