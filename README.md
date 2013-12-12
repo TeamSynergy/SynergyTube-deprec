@@ -1,5 +1,6 @@
 # SynergyTube - The foolish SynchTube
-***
+# Status: deprecated.
+**see [node-synergytube](https://github.com/TeamSynergy/node-synergytube)**
 
 ## Introduction
 ### What it is
